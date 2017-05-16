@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Index</title>
+  <meta name="description" content="Code">
+  <meta name="author" content="ISU">
+
+  <link rel="stylesheet" href="css/Site.css">
+
+  <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
+  <link rel="stylesheet" href="CodeMirror/theme/solarized.css">
+  <script src="CodeMirror/lib/codemirror.js"></script>
+  <script src="CodeMirror/mode/python/python.js"></script>
+
+  <script src="skulpt/skulpt.min.js"></script>
+  <script src="skulpt/skulpt-stdlib.js"></script>
+	
+
+</head>
+
+<body>
+  <!-- <script src="js/scripts.js"></script> -->
+
+<div class="editor">
+	<div class="left">
+
+		<textarea id="code" name="code">
+import turtle
+
+t = turtle.Turtle()
+
+for c in ['red', 'green', 'yellow', 'blue']:
+	t.color(c)
+	t.forward(75)
+	t.left(90)
+
+print "Hello World"
+		</textarea>
+
+	</div>
+	<div class="right">
+
+		<input type="button" id="runButton" value="Run">
+
+
+		<div id="mycanvas" class="graphicalOutput"></div>
+		<pre id="output" ></pre>
+
+
+	</div>
+</div>
+
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
