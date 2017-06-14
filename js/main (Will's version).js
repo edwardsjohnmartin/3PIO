@@ -38,7 +38,7 @@ var test;             //This stores the TEST code that will be appended to the s
   }
 function outf(text) {
     var mypre = document.getElementById("output");
-    studentOut = mypre.innerHTML = mypre.innerHTML + text;
+    mypre.innerHTML = mypre.innerHTML + text;
 }
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
@@ -61,12 +61,12 @@ function run() {
 
     myPromise.then(function(mod) {
         console.log('success');
+        var runMethod = mod.tp$getattr('TEST');
+        var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
+        alert(ret.v);
     },
         function(err) {
           var line_num = Number(err.toString().split("on line", 2)[1]);
         console.log(err.toString());
     });
-    var runMethod = mod.tp$getattr('TEST');
-    var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
-    alert(ret.v);
   }
