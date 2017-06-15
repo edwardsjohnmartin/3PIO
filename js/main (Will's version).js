@@ -67,6 +67,11 @@ function run() {
     },
         function(err) {
           var line_num = Number(err.toString().split("on line", 2)[1]);
-        console.log(err.toString());
+        if (err.args.v[0].v === "EOF in multi-line string") {
+          alert("ERROR: It looks like you have an open multi-line string.")
+        }
+        else {
+          alert(err.toString());
+        }
     });
   }
