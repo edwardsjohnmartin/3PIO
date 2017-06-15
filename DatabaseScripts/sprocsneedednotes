@@ -1,0 +1,33 @@
+stored procedures needed
+
+
+DEFAULT
+roles
+participation_types
+languages
+tags
+lessons
+completion_status
+courses
+
+Slightly different
+exercises
+projects
+sections
+concepts
+project_teams
+project_code_files
+functions
+
+Linking...
+exercise_starter_code_files
+project_starter_code_files
+tags_to_exercises
+exercises_to_lessons
+lessons_to_concepts
+completion_status_to_exercise
+completion_status_to_project
+project_grades
+users_to_sections
+
+
