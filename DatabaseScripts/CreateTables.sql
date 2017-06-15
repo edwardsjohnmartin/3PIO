@@ -1,6 +1,7 @@
 CREATE TABLE roles (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE users (
@@ -9,22 +10,26 @@ CREATE TABLE users (
 	name text,
 	hash character[64], --32 bytes for sha-256
 	salt text, --?
-	role_id integer REFERENCES roles
+	role_id integer REFERENCES roles,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE participation_types (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE languages (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE tags (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE exercises (
@@ -34,14 +39,16 @@ CREATE TABLE exercises (
 	test_code text,
 	--hash uuid, --probably won't use this
 	language_id integer REFERENCES languages,
-	make_file text
+	make_file text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE exercise_starter_code_files(
 	id serial PRIMARY KEY,
 	exercise_id integer REFERENCES exercises,
-	file_name text,
-	file_contents text
+	name text,
+	contents text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE projects (
@@ -51,30 +58,35 @@ CREATE TABLE projects (
 	--hash uuid,
 	language_id integer REFERENCES languages,
 	make_file text,
-	max_grade double precision
+	max_grade double precision,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE project_starter_code_files(
-	file_id serial PRIMARY KEY,
+	id serial PRIMARY KEY,
 	project_id integer REFERENCES projects,
-	file_name text,
-	file_contents text
+	name text,
+	contents text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE lessons (
 	id serial PRIMARY KEY,
 	name text,
-	owner_id integer REFERENCES users
+	owner_id integer REFERENCES users,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE completion_status (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE courses (
 	id serial PRIMARY KEY,
-	name text
+	name text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE sections (
@@ -83,7 +95,8 @@ CREATE TABLE sections (
 	course_id integer REFERENCES courses,
 	teacher_id integer REFERENCES users,
 	start_date timestamp,
-	end_date timestamp
+	end_date timestamp,
+	is_deleted boolean DEFAULT false
 );
 
 --modules
@@ -93,7 +106,8 @@ CREATE TABLE concepts ( --order by date? have an order?
 	section_id integer REFERENCES sections,
 	project_id integer REFERENCES projects,
 	project_open_date timestamp,
-	project_due_date timestamp
+	project_due_date timestamp,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE tags_to_exercises (
@@ -116,7 +130,8 @@ CREATE TABLE lessons_to_concepts (
 CREATE TABLE project_teams (
 	id serial PRIMARY KEY,
 	concept_id integer REFERENCES concepts,
-	user_id integer REFERENCES users
+	user_id integer REFERENCES users,
+	is_deleted boolean DEFAULT false
 );
 
 --where to put the code?
@@ -124,7 +139,8 @@ CREATE TABLE project_code_files ( --i need multiple files
 	team_id integer REFERENCES project_teams,
 	id serial PRIMARY KEY,
 	file_name text,
-	file_content text
+	file_content text,
+	is_deleted boolean DEFAULT false
 );
 
 CREATE TABLE completion_status_to_exercise (
@@ -152,7 +168,7 @@ CREATE TABLE project_grades ( --might need a better name
 	grade double precision
 );
 
-CREATE TABLE users_to_section (
+CREATE TABLE users_to_sections (
 	user_id integer REFERENCES users,
 	section_id integer REFERENCES sections,
 	participation_type_id integer REFERENCES participation_types --not teacher. grader or student.
@@ -164,5 +180,8 @@ CREATE TABLE functions (
 	user_id integer REFERENCES users,
 	name text,
 	code text,
-	UNIQUE(section_id, user_id, name)
+	UNIQUE(section_id, user_id, name),
+	is_deleted boolean DEFAULT false
 );
+
+CREATE TYPE key_value_pair AS (key integer, value text);
