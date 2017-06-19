@@ -73,6 +73,7 @@ CREATE TABLE project_starter_code_files(
 CREATE TABLE lessons (
 	id serial PRIMARY KEY,
 	name text,
+	description text,
 	owner_id integer REFERENCES users,
 	is_deleted boolean DEFAULT false
 );
@@ -168,7 +169,7 @@ CREATE TABLE project_grades ( --might need a better name
 	grade double precision
 );
 
-CREATE TABLE users_to_sections (
+CREATE TABLE users_to_sections ( --monikers probably need to go here... also need to make sure they're unique per section
 	user_id integer REFERENCES users,
 	section_id integer REFERENCES sections,
 	participation_type_id integer REFERENCES participation_types --not teacher. grader or student.
