@@ -25,6 +25,8 @@ class Type extends Enum //where should i include this?
 	const FUNCTION =	16;
 	const COURSE =		17;
 	const PARTICIPATION_TYPE =	18;
+  const ROLE = 19;
+  const DOUBLE = 20;
 
 
 

@@ -37,7 +37,7 @@
 				break;
 			case 'participation_type':
 				require_once('models/participation_type.php');
-				$controller = new Participation_TypeController();
+				$controller = new Participation_Type_Controller();
 				break;
 			case 'course':
 				require_once('models/course.php');
@@ -51,6 +51,34 @@
 				require_once('models/project.php');
 				$controller = new ProjectController();
 				break;
+			case 'lesson':
+				require_once('models/lesson.php');
+				$controller = new LessonController();
+				break;
+			case 'role':
+				require_once('models/role.php');
+				$controller = new RoleController();
+				break;
+			case 'tag':
+				require_once('models/tag.php');
+				$controller = new TagController();
+				break;
+			case 'completion_status':
+				require_once('models/completion_status.php');
+				$controller = new Completion_Status_Controller();
+				break;
+			case 'exercise':
+				require_once('models/exercise.php');
+				$controller = new ExerciseController();
+				break;
+			case 'user':
+				require_once('models/user.php');
+				$controller = new UserController();
+				break;
+			case 'function':
+				require_once('models/function.php');
+				$controller = new FunctionController();
+				break;
 		}
 
 		$controller->{ $action }(); //i would guess that these brackets are unnecessary/optional
@@ -63,7 +91,14 @@
 						'participation_type' => ['index', 'read', 'create', 'update'],
 						'course' => ['index', 'read', 'create', 'update'],
 						'concept' => ['index', 'read', 'create', 'update'],
-						'project' => ['index', 'read', 'create', 'update']
+						'project' => ['index', 'read', 'create', 'update'],
+						'lesson' => ['index', 'read', 'create', 'update'],
+						'role' => ['index', 'read', 'create', 'update'],
+						'tag' => ['index', 'read', 'create', 'update'],
+						'completion_status' => ['index', 'read', 'create', 'update'],
+						'exercise' => ['index', 'read', 'create', 'update'],
+						'user' => ['index', 'read', 'create', 'update'],
+						'function' => ['index', 'read', 'create', 'update']
 						);
 
 	if(array_key_exists($controller, $controllers))
