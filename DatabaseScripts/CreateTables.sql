@@ -8,8 +8,8 @@ CREATE TABLE users (
 	id serial PRIMARY KEY,
 	email text,
 	name text,
-	hash character[64], --32 bytes for sha-256
-	salt text, --?
+	hash character[64], -- 32 bytes for sha-256
+	salt text, -- ?
 	role_id integer REFERENCES roles,
 	is_deleted boolean DEFAULT false
 );
@@ -37,7 +37,7 @@ CREATE TABLE exercises (
 	name text,
 	description text,
 	test_code text,
-	--hash uuid, --probably won't use this
+	-- hash uuid, -- probably won't use this
 	language_id integer REFERENCES languages,
 	make_file text,
 	is_deleted boolean DEFAULT false
@@ -55,7 +55,7 @@ CREATE TABLE projects (
 	id serial PRIMARY KEY,
 	name text,
 	description text,
-	--hash uuid,
+	-- hash uuid,
 	language_id integer REFERENCES languages,
 	make_file text,
 	max_grade double precision,
@@ -100,8 +100,8 @@ CREATE TABLE sections (
 	is_deleted boolean DEFAULT false
 );
 
---modules
-CREATE TABLE concepts ( --order by date? have an order?
+-- modules
+CREATE TABLE concepts ( -- order by date? have an order?
 	id serial PRIMARY KEY,
 	name text,
 	section_id integer REFERENCES sections,
@@ -135,8 +135,8 @@ CREATE TABLE project_teams (
 	is_deleted boolean DEFAULT false
 );
 
---where to put the code?
-CREATE TABLE project_code_files ( --i need multiple files
+-- where to put the code?
+CREATE TABLE project_code_files ( -- i need multiple files
 	team_id integer REFERENCES project_teams,
 	id serial PRIMARY KEY,
 	file_name text,
@@ -148,7 +148,7 @@ CREATE TABLE completion_status_to_exercise (
 	exercise_id integer REFERENCES exercises,
 	lesson_id integer REFERENCES lessons,
 	concept_id integer REFERENCES concepts,
-	--now, should i have the section id here, too? it's not really necessary, but would it be convenient?
+	-- now, should i have the section id here, too? it's not really necessary, but would it be convenient?
 	date_updated timestamp,
 	completion_status_id integer REFERENCES completion_status,
 	user_id integer REFERENCES users
@@ -162,17 +162,17 @@ CREATE TABLE completion_status_to_project (
 	team_id integer REFERENCES project_teams
 );
 
-CREATE TABLE project_grades ( --might need a better name
-	project_id integer REFERENCES projects, --since each concept has only one project, i don't need this
+CREATE TABLE project_grades ( -- might need a better name
+	project_id integer REFERENCES projects, -- since each concept has only one project, i don't need this
 	concept_id integer REFERENCES concepts,
-	team_id integer REFERENCES project_teams, --are there any other ids i need?
+	team_id integer REFERENCES project_teams, -- are there any other ids i need?
 	grade double precision
 );
 
-CREATE TABLE users_to_sections ( --monikers probably need to go here... also need to make sure they're unique per section
+CREATE TABLE users_to_sections ( -- monikers probably need to go here... also need to make sure they're unique per section
 	user_id integer REFERENCES users,
 	section_id integer REFERENCES sections,
-	participation_type_id integer REFERENCES participation_types --not teacher. grader or student.
+	participation_type_id integer REFERENCES participation_types -- not teacher. grader or student.
 );
 
 CREATE TABLE functions (
