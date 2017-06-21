@@ -207,18 +207,13 @@
 		public function create() //from self
 		{
 			$model_name = static::class;
-			//$this->tags = array(1, 2, 4);
-			$db = Db::getWriter();
-			//$this->tags = 'ARRAY[' . join( array_map("pg_escape_string", $this->tags) ) . ']';
-			//$this->tags = static::php_array_to_pg_array($this->tags);
 
-			//print_r($this->get_db_properties());
-			
+			$db = Db::getWriter();
+
 			$props = $this->get_db_properties();
 
 			$function_name = 'sproc_write_' . $model_name . '_create';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props)));
-			//echo static::build_query($function_name, array_keys($props));
 			$req->execute($props);
 
 			$this->set_id($req->fetchColumn()); //something like that. i'm using the setter here but not the getter above, which should i do?
@@ -271,41 +266,10 @@
 			return $str;
 		}
 
-		public function is_valid() //todo: make sure types are correct
+		public function is_valid() //or should i make abstract and force user to define(?) and where should the check happen? before trying to go to db? or outside?
 		{
+			//ooh i should check if the types are correct here?
 			return true;
 		}
-
-		private static function php_array_to_pg_array($t)
-		{
-		  //$t is array to be escaped. $u will be string literal.
-		  $tv=array();
-		  foreach($t as $key=>$val){
-			$tv[$key]="\"" .
-			  str_replace("\"",'\\"', str_replace('\\','\\\\',$val)) . "\"
-		";
-		  }
-		  $u= implode(",",$tv) ;
-		  $u="'{" . pg_escape_string($u) . "}'";
-			return $u;
-		}
-
-private static function to_pg_array($set) {
-    settype($set, 'array'); // can be called with a scalar or array
-    $result = array();
-    foreach ($set as $t) {
-        if (is_array($t)) {
-            $result[] = to_pg_array($t);
-        } else {
-            $t = str_replace('"', '\\"', $t); // escape double quote
-            if (! is_numeric($t)) // quote only non-numeric values
-                $t = '"' . $t . '"';
-            $result[] = $t;
-        }
-    }
-    return '{' . implode(",", $result) . '}'; // format
-}
-
-
 	}
 ?>

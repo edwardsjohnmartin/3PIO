@@ -5,6 +5,6 @@
 		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'description' => Type::STRING, 'owner' => Type::USER); //use the enum
 		protected $name;
 		protected $description;
-		protected $user;
+		protected $owner;
 	}
 ?>
