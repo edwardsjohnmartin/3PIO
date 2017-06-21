@@ -14,21 +14,29 @@ class Type extends Enum //where should i include this?
 	//these should go first
 	const EMAIL =		7; //should this be a type?
 	const PASSWORD =	8;
-
-	const MODEL =		9; //can check if greater than model?
-	const LANGUAGE =	10;
-	const PROBLEM =		11;
-	const USER =		12;
-	const LESSON =		13;
-	const PROJECT =		14;
-	const SECTION =		15; //this is a problem
-	const CONCEPT =		16;
-	const FUNCTION =	17;
-	const COURSE =		18;
-	const PARTICIPATION_TYPE =	19;
-	const ROLE = 20;
-
-
+	
+	
+	//const MODEL =		9;
+	const LANGUAGE =	9;
+	const PROBLEM =		10;
+	const USER =		11;
+	const LESSON =		12;
+	const PROJECT =		13;
+	const SECTION =		14; //this is a problem
+	const CONCEPT =		15;
+	const FUNCTION =	16;
+	const COURSE =		17;
+	const PARTICIPATION_TYPE =	18;
+	const ROLE = 19;
+	
+	public static function is_model($type) { 
+		if ($type >= static::LANGUAGE) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
 	//i want an "is model function"
 	//right now i'm using > Type::MODEL which depends on models being last.

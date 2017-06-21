@@ -32,10 +32,9 @@ def VALIDATE_VAR(desired_var_name, desired_type_str, *args):
         
 def TEST(student_input, student_output):
     problems = ""
-    #returns = [VALIDATE_VAR("my_int", "int", 5), VALIDATE_VAR("my_bool", "bool", False)]
     returns = [True]
     
-    if "Hello World!" not in student_output:
+    if "Hello World!\n" != student_output:
         problems = problems + 'You must print the string "Hello World!"' + "\n"
     
     for thing in returns:
@@ -45,6 +44,7 @@ def TEST(student_input, student_output):
         return "Success!"
     else:
         return problems
+
 
 
 

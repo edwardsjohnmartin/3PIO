@@ -29,8 +29,8 @@
 			//namely the db fill (set from json) and set properties (set int key)
 			foreach(static::$types as $prop => $type)
 			{
-				if($type > Type::MODEL)
-				{
+				// if($type > Type::MODEL) {
+				if (Type::is_model($type)) {
 					if(!is_int($this->$prop)) //well...
 					{
 						$this->$prop = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
@@ -273,7 +273,47 @@
 
 		public function is_valid() //todo: make sure types are correct
 		{
+			foreach (static::$types as $key => $value) {
+				switch ($value) {
+					case (Type::INTEGER):
+						if (!is_int($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::DOUBLE):
+						if (!is_numeric($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::BOOLEAN):
+						if (!is_bool($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::DATETIME):
+						if (!(($this->$key) instanceof DateTime)) {
+							return false;
+						}
+						break;
+					case (Type::STRING):
+					case (Type::CODE):
+					case (Type::EMAIL):
+					case (Type::PASSWORD):
+						if (!is_string($this->$key)) {
+							return false;
+						}
+						break;
+					default:
+						if (Type::is_model($value) && !(is_int($this->$key))) {
+							return false;
+						}
+						elseif (!(Type::is_model($value))) {
+							return false;
+						}
+				}
+			}
 			return true;
+						
 		}
 
 		private static function php_array_to_pg_array($t)
