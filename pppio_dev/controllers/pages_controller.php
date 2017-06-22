@@ -3,8 +3,6 @@
 	{
 		public function home()
 		{
-			$first_name = 'Jac';
-			$last_name = '♡';
 			require_once('views/pages/home.php');
 		}
 

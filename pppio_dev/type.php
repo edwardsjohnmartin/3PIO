@@ -27,8 +27,11 @@ class Type extends Enum //where should i include this?
 	const COURSE =		18;
 	const PARTICIPATION_TYPE =	19;
 	const ROLE = 20;
+	const TAG = 21;
 
-
+	const LIST_MODEL = 22;
+	const LIST_TAG = 23;
+	const LIST_EXERCISE = 24;
 
 	//i want an "is model function"
 	//right now i'm using > Type::MODEL which depends on models being last.

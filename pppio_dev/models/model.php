@@ -27,21 +27,37 @@
 			//this is probably very inefficient.. but it's convenient... what to do
 			//i really should take care of this elsewhere. leave for now.
 			//namely the db fill (set from json) and set properties (set int key)
-			foreach(static::$types as $prop => $type)
+			foreach(static::$types as $prop => $type) //actually just having an array would be much nicer
 			{
-				if($type > Type::MODEL)
+				if($type > Type::LIST_MODEL)// && $type < Type::LIST_MODEL)
+				{
+					if(!is_int($this->$prop)) //well...
+					{
+						$temp = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
+						$arr = array();
+						foreach($temp as $kvp)
+						{
+							if($kvp->key != null) $arr[$kvp->key] = $kvp->value;
+						}
+						$this->$prop = $arr;
+						//print_r($this->$prop);
+					}
+					//else //where is this used? anywhere?
+					//{
+					//	$value = $this->$prop;
+					//	$this->$prop = new key_value_pair();
+					//	$this->$prop->key = $value;
+					//}
+				}
+				else if($type > Type::MODEL && $type < Type::LIST_MODEL)
 				{
 					if(!is_int($this->$prop)) //well...
 					{
 						$this->$prop = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
-					}
-					else
-					{
-						$value = $this->$prop;
-						$this->$prop = new key_value_pair();
-						$this->$prop->key = $value;
+						//print_r($this->$prop);
 					}
 				}
+
 			}
 		}
 
@@ -78,7 +94,6 @@
 		//please go through this
 		public function set_properties($args) //should be able to accept the return value of get_properties
 		{
-			//each arg...
 			foreach($args as $key => $value)
 			{
 				if(property_exists($this, $key) && (!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])) //i could also check if it's in the types
@@ -98,7 +113,15 @@
 			{
 				if(!isset(static::$db_hidden_props[$key]) || !static::$db_hidden_props[$key])
 				{
-					$ret_props[$key] = $this->$key; //something like that...
+					if(static::$types[$key] > Type::LIST_MODEL)
+					{
+						$ret_props[$key] = static::php_array_to_pg_array($this->$key);
+					}
+					else
+					{
+						$ret_props[$key] = $this->$key;
+					}
+					 //something like that...
 					/*
 					//if the type is a model...
 					if(static::$types[$key] > Type::MODEL) //i should also check the type!!
@@ -207,18 +230,17 @@
 		public function create() //from self
 		{
 			$model_name = static::class;
-			//$this->tags = array(1, 2, 4);
 			$db = Db::getWriter();
-			//$this->tags = 'ARRAY[' . join( array_map("pg_escape_string", $this->tags) ) . ']';
-			//$this->tags = static::php_array_to_pg_array($this->tags);
-
-			//print_r($this->get_db_properties());
 			
 			$props = $this->get_db_properties();
 
 			$function_name = 'sproc_write_' . $model_name . '_create';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props)));
+
+			//print_r($props);
 			//echo static::build_query($function_name, array_keys($props));
+
+
 			$req->execute($props);
 
 			$this->set_id($req->fetchColumn()); //something like that. i'm using the setter here but not the getter above, which should i do?
@@ -226,12 +248,16 @@
 
 		public function update() //use self. don't return. except maybe boolean?
 		{
+			//print_r($this);
 			$model_name = static::class;
-
 			$db = Db::getWriter();
 
 			$props = $this->get_db_properties();
 			$props['id'] = $this->id; //use id getter? probably should for consistency, probably shouldn't for speed, and i can trust my own self (class)
+
+
+			//print_r($this->get_properties());
+
 			$function_name = 'sproc_write_' . $model_name . '_update';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props))); //something like that
 			$req->execute($props);
@@ -286,26 +312,9 @@
 		";
 		  }
 		  $u= implode(",",$tv) ;
-		  $u="'{" . pg_escape_string($u) . "}'";
+		  $u="{" . pg_escape_string($u) . "}";
 			return $u;
 		}
-
-private static function to_pg_array($set) {
-    settype($set, 'array'); // can be called with a scalar or array
-    $result = array();
-    foreach ($set as $t) {
-        if (is_array($t)) {
-            $result[] = to_pg_array($t);
-        } else {
-            $t = str_replace('"', '\\"', $t); // escape double quote
-            if (! is_numeric($t)) // quote only non-numeric values
-                $t = '"' . $t . '"';
-            $result[] = $t;
-        }
-    }
-    return '{' . implode(",", $result) . '}'; // format
-}
-
 
 	}
 ?>

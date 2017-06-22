@@ -18,6 +18,8 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   </head>
   <body>
 	<nav class="navbar navbar-default">
@@ -30,7 +32,7 @@
 		    <span class="icon-bar"></span>
 		    <span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="#">3PIO</a>
+		  <a class="navbar-brand" href="/">3PIO</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -50,19 +52,19 @@
 		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-				<li><a href="/?controller=project&action=index">Projects</a></li>
-				<li><a href="">Lessons</a></li>
-				<li><a href="/?controller=problem&action=index">Problems</a></li>
+				<li><a href="#">Projects</a></li>
+				<li><a href="/?controller=lesson&action=index">Lessons</a></li>
+				<li><a href="#">Exercises</a></li>
 		      </ul>
 			</li>
 
 		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-				<li><a href="/?controller=course&action=index">Courses</a></li>
-				<li><a href="/?controller=section&action=index">Sections</a></li>
-				<li><a href="/?controller=concept&action=index">Concepts</a></li>
-				<li><a href="/?controller=language&action=index">Languages</a></li>
+				<li><a href="#">Courses</a></li>
+				<li><a href="#">Sections</a></li>
+				<li><a href="#">Concepts</a></li>
+				<li><a href="#">Languages</a></li>
 		      </ul>
 			</li>
 
@@ -73,7 +75,7 @@
 			<li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin stuff <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-		        <li><a href="/?controller=participation_type&action=index">Participation Types</a></li>
+		        <li><a href="#">Participation Types</a></li>
 		        <li><a href="#">Roles</a></li>
 		      </ul>
 		    </li>
@@ -81,7 +83,7 @@
 
 		  <ul class="nav navbar-nav navbar-right">
 		    <li><a href="#">Settings</a></li>
-		    <li><a href="#">TeacherPersonName</a></li>
+		    <li><a href="#">User</a></li>
 		    <li><a href="#">Log out</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
@@ -109,8 +111,6 @@
 		<?php require_once('routes.php'); ?>
 	</div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
   </body>

@@ -10,7 +10,7 @@ foreach($models as $model)
 ?>
 <tr>
 	<td>
-		<?php echo $model->value; ?>
+		<?php echo htmlspecialchars($model->value); ?>
 	</td>
 	<td>
 		<a href="<?php echo '/?controller=' . $this->model_name . '&action=read&id=' . $model->key;?>">View</a><br>

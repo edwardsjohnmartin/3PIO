@@ -84,7 +84,8 @@
 		$controller->{ $action }(); //i would guess that these brackets are unnecessary/optional
 	}
 
-	$controllers = array('pages' => ['home', 'error'],
+	$controllers = array(
+						'pages' => ['home', 'error'],
 						'language' => ['index', 'read', 'create', 'update'],
 						'problem' => ['index', 'read', 'create', 'update', 'tryit'],
 						'section' => ['index', 'read', 'create', 'update'],

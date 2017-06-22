@@ -55,18 +55,53 @@
 
 		static function label($property)
 		{
-			return '<label for="' . $property . '">' .  str_replace('_', ' ', ucfirst($property)) . '</label>'; //should replace "_" with " "
+			return '<label for="' . $property . '">' .  str_replace('_', ' ', ucfirst($property)) . '</label>';
 		}
 
-		static function span($type, $key, $value)
+		static function span($type, $key, $value) //todo: would be nice to have different displays. like labels for tags.
 		{
 			if($type == Type::CODE)
 			{
 				$value = static::span_code($key, $value);
 			}
-			else if($type >= Type::MODEL) //...please be more careful than this
+			else if($type > Type::MODEL && $type < Type::LIST_MODEL) //...please be more careful than this
 			{
-				$value = $value->value; //seriously be more careful than that
+				$typestr = strtolower((new Type($type))->getKey());
+				$value ='<a href="?controller=' . $typestr . '&action=read&id=' . $value->key . '">' . htmlspecialchars($value->value) . '</a>'; //seriously be more careful than that
+			}
+			else if($type > Type::LIST_MODEL) //really
+			{
+				$typestr = substr(strtolower((new Type($type))->getKey()), 5);
+				$str = '';
+				reset($value);
+				if(key($value) != null)
+				{
+
+					if($type == Type::LIST_TAG)
+					{
+						$str .= '<div class="list-group">';
+						foreach($value as $key => $val)
+						{
+							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="label label-primary">' . htmlspecialchars($val) . '</a> ';
+						}
+						$str .= '</div>';
+					}
+					else
+					{
+						$str .= '<div class="list-group">';
+						foreach($value as $key => $val)
+						{
+							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="list-group-item">' . htmlspecialchars($val) . '</a>';
+						}
+						$str .= '</div>';
+					}
+
+				}
+				$value = $str;
+			}
+			else
+			{
+				$value = htmlspecialchars($value);
 			}
 			return '<div>' . $value . '</div>';
 		}
@@ -76,7 +111,7 @@
 			//it's kind of sloppy to do the include here
 			include_once('views/shared/CodeMirror.php');	
 			//$input = '<input type="text" id="' . $property .'" name="' . $property . '" value="' . nl2br($value) . '">';
-			$input = '<textarea id="' . $property .'" name="' . $property .'">' . $value . '</textarea>';
+			$input = '<textarea id="' . $property .'" name="' . $property .'">' . htmlspecialchars($value) . '</textarea>';
 			//put the language properly.
 			//var editor' . $property . ' = 
 			$js = '<script type="text/javascript">CodeMirror.fromTextArea(document.getElementById("' . $property . '"), {
@@ -112,13 +147,19 @@
 			{
 				return static::input_code($property, $value);
 			}
-			else if($type > Type::MODEL) //should put function on enum. 'is model'
+			else if($type > Type::MODEL && $type < Type::LIST_MODEL) //should put function on enum. 'is model'
 			{
 				//get what model it is, if any, or if it's not a proper one (better be) then show string input
 				//return 'need a select for ' . (new Type($type))->getKey();
 				$type = strtolower((new Type($type))->getKey());
 				require_once('models/' . $type . '.php');
-				return static::input_dropdown($property, $value, $type::pairs()); //haha...
+				return static::input_select($property, $value, $type::pairs()); //haha...
+			}
+			else if($type > Type::LIST_MODEL) // todo: do a safer check
+			{
+				$type = substr(strtolower((new Type($type))->getKey()), 5); //it will be called "LIST_something"
+				require_once('models/' . $type . '.php');
+				return static::input_select_multiple($property, $value, $type::pairs()); //maybe pairs should just be arrays... another step though
 			}
 			else //assume string
 			{
@@ -129,22 +170,22 @@
 
 		static function input_integer($property, $value = null)
 		{
-			return '<input type="number" class="form-control" name="' . $property . '" value="' . $value . '">'; 
+			return '<input type="number" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">'; 
 		}
 
 		static function input_boolean($property, $value = null)
 		{
-			return '<input type="checkbox" class="form-control" name="' . $property . '" value="' . $value . '">'; //may want to pass in value.
+			return '<input type="checkbox" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">'; //may want to pass in value.
 		}
 
 		static function input_datetime($property, $value = null)
 		{
-			return '<input type="datetime-local" class="form-control" name="' . $property . '" value="' . $value . '">';
+			return '<input type="datetime-local" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
 		}
 
 		static function input_string($property, $value = null)
 		{
-			return '<input type="text" class="form-control" name="' . $property . '" value="' . $value . '">';
+			return '<input type="text" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
 		}
 
 		static function input_code($property, $value = null)
@@ -152,7 +193,7 @@
 			//it's kind of sloppy to do the include here
 			include_once('views/shared/CodeMirror.php');	
 			//$input = '<input type="text" id="' . $property .'" name="' . $property . '" value="' . nl2br($value) . '">';
-			$input = '<textarea id="' . $property .'" name="' . $property .'">' . $value . '</textarea>';
+			$input = '<textarea id="' . $property .'" name="' . $property .'">' . htmlspecialchars($value) . '</textarea>';
 			//put the language properly.
 			//var editor' . $property . ' = 
 			$js = '<script type="text/javascript">CodeMirror.fromTextArea(document.getElementById("' . $property . '"), {
@@ -167,7 +208,7 @@
 		return $input . $js;
 		}
 
-		static function input_dropdown($property, $value = null, $options)
+		static function input_select($property, $value = null, $options)
 		{
 			$select = '<select class="form-control" name="'. $property . '" >';
 			foreach($options as $option)
@@ -177,12 +218,40 @@
 				{
 					$select .= 'selected';
 				}
-				$select .= '>' . $option->value . '</option>';
+				$select .= '>' . htmlspecialchars($option->value) . '</option>';
 			}
 			$select .= '</select>';
 			return $select;
 		}
 		
+		static function input_select_multiple($property, $value = null, $options) //these are in the wrong order on update for lesson's exercises
+		{
+			include_once('views/shared/MultiSelect.php');	
+			$select = '<select class="form-control" name="'. $property . '[]" id="' . $property . '" multiple>';
+			if($value != null)
+			{
+				reset($value);
+				if(key($value) != null) {
+					foreach($value as $key => $val)
+					{
+						$select .= '<option value="' . $key. '" selected>' . htmlspecialchars($val) . '</option>';
+					}
+				}
+			}
+			foreach($options as $option)
+			{
+				if($value != null && !array_key_exists($option->key, $value))
+				{
+					$select .= '<option value="' . $option->key . '">' . htmlspecialchars($option->value) . '</option>';
+				}
+			}
+
+			$select .= '</select>';
+
+			$js = '<script type="text/javascript">$("#' . $property . '").multiSelect({ keepOrder: true });</script>';
+			return $select . $js;
+		}
+
 		static function input_submit($value = 'Submit')
 		{
 			return '<input type="submit" class="form-control" value="' . $value . '">';
