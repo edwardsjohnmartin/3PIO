@@ -64,12 +64,12 @@
 			{
 				$value = static::span_code($key, $value);
 			}
-			else if($type > Type::MODEL && $type < Type::LIST_MODEL) //...please be more careful than this
+			else if(Type::is_model($type)) //...please be more careful than this
 			{
 				$typestr = strtolower((new Type($type))->getKey());
 				$value ='<a href="?controller=' . $typestr . '&action=read&id=' . $value->key . '">' . htmlspecialchars($value->value) . '</a>'; //seriously be more careful than that
 			}
-			else if($type > Type::LIST_MODEL) //really
+			else if(Type::is_list_model($type)) //really
 			{
 				$typestr = substr(strtolower((new Type($type))->getKey()), 5);
 				$str = '';
@@ -147,7 +147,7 @@
 			{
 				return static::input_code($property, $value);
 			}
-			else if($type > Type::MODEL && $type < Type::LIST_MODEL) //should put function on enum. 'is model'
+			else if(Type::is_model($type)) //should put function on enum. 'is model'
 			{
 				//get what model it is, if any, or if it's not a proper one (better be) then show string input
 				//return 'need a select for ' . (new Type($type))->getKey();
@@ -155,7 +155,7 @@
 				require_once('models/' . $type . '.php');
 				return static::input_select($property, $value, $type::pairs()); //haha...
 			}
-			else if($type > Type::LIST_MODEL) // todo: do a safer check
+			else if(Type::is_list_model($type)) // todo: do a safer check
 			{
 				$type = substr(strtolower((new Type($type))->getKey()), 5); //it will be called "LIST_something"
 				require_once('models/' . $type . '.php');
@@ -240,7 +240,7 @@
 			}
 			foreach($options as $option)
 			{
-				if($value != null && !array_key_exists($option->key, $value))
+				if($value == null || $value != null && !array_key_exists($option->key, $value))
 				{
 					$select .= '<option value="' . $option->key . '">' . htmlspecialchars($option->value) . '</option>';
 				}

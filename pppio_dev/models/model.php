@@ -29,7 +29,7 @@
 			//namely the db fill (set from json) and set properties (set int key)
 			foreach(static::$types as $prop => $type) //actually just having an array would be much nicer
 			{
-				if($type > Type::LIST_MODEL)// && $type < Type::LIST_MODEL)
+				if(Type::is_list_model($type))// && $type < Type::LIST_MODEL)
 				{
 					if(!is_int($this->$prop)) //well...
 					{
@@ -49,7 +49,7 @@
 					//	$this->$prop->key = $value;
 					//}
 				}
-				else if($type > Type::MODEL && $type < Type::LIST_MODEL)
+				else if(Type::is_model($type))
 				{
 					if(!is_int($this->$prop)) //well...
 					{
@@ -113,7 +113,7 @@
 			{
 				if(!isset(static::$db_hidden_props[$key]) || !static::$db_hidden_props[$key])
 				{
-					if(static::$types[$key] > Type::LIST_MODEL)
+					if(is_list_model(static::$types[$key]))
 					{
 						$ret_props[$key] = static::php_array_to_pg_array($this->$key);
 					}
@@ -299,7 +299,47 @@
 
 		public function is_valid() //todo: make sure types are correct
 		{
+			foreach (static::$types as $key => $value) {
+				switch ($value) {
+					case (Type::INTEGER):
+						if (!is_int($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::DOUBLE):
+						if (!is_numeric($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::BOOLEAN):
+						if (!is_bool($this->$key)) {
+							return false;
+						}
+						break;
+					case (Type::DATETIME):
+						if (!(($this->$key) instanceof DateTime)) {
+							return false;
+						}
+						break;
+					case (Type::STRING):
+					case (Type::CODE):
+					case (Type::EMAIL):
+					case (Type::PASSWORD):
+						if (!is_string($this->$key)) {
+							return false;
+						}
+						break;
+					default:
+						if (Type::is_model($value) && !(is_int($this->$key))) {
+							return false;
+						}
+						elseif (!(Type::is_model($value))) {
+							return false;
+						}
+				}
+			}
 			return true;
+						
 		}
 
 		private static function php_array_to_pg_array($t)

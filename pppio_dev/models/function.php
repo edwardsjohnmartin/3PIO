@@ -4,7 +4,7 @@
 	{
 		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'section' => Type::SECTION, 'user' => Type::USER, 'code' => Type::CODE); //use the enum
 		protected $name;
-		protected $class;
+		protected $section;
 		protected $user;
 		protected $code;
 	}
