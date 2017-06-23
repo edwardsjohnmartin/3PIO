@@ -32,6 +32,18 @@ class Type extends Enum //where should i include this?
 	//const LIST_MODEL = 22;
 	const LIST_TAG = 21;
 	const LIST_EXERCISE = 22;
+	const LIST_LANGUAGE = 23;
+	const LIST_PROBLEM = 24;
+	const LIST_USER = 25;
+	const LIST_LESSON = 26;
+	const LIST_PROJECT = 27;
+	const LIST_SECTION = 28;
+	const LIST_CONCEPT = 29;
+	const LIST_FUNCTION = 30;
+	const LIST_COURSE =	31;
+	const LIST_PARTICIPATION_TYPE =	32;
+	const LIST_ROLE = 33;
+	
 	
 	public static function is_model($type)
 	{ 
@@ -40,7 +52,7 @@ class Type extends Enum //where should i include this?
 
 	public static function is_list_model($type)
 	{
-		return ($type >= static::LIST_TAG && $type <= static::LIST_EXERCISE);
+		return ($type >= static::LIST_TAG && $type <= static::LIST_ROLE);
 	}
 
 	//i want an "is model function"
