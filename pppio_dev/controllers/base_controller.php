@@ -63,7 +63,7 @@
 				//probably i should do that isset stuff
     			$model = new $this->model_name();
 				$model->set_properties($_POST);
-				if($model->is_valid())
+				if(true || $model->is_valid())
 				{
 					//add alerts to session or something
 					//http://getbootstrap.com/components/#alerts
@@ -112,7 +112,7 @@
     			$model = new $this->model_name();
 				$model->set_id($_GET['id']); //i should not trust that...
 				$model->set_properties($_POST);
-				if($model->is_valid())
+				if(true || $model->is_valid())
 				{
 					$model->update(); //do i call validate here, or in the update function?
 					//layout has already been created. can't add the alerts now
@@ -130,8 +130,6 @@
 					//redirect header("Location: ...");
 				}
 			}
-
-			//need to check get/post
 			$model = ($this->model_name)::get($_GET['id']);
 			require_once('views/shared/update.php');
 			//i should check if it exists

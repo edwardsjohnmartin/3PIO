@@ -31,11 +31,11 @@
 			{
 				if(Type::is_list_model($type))// && $type < Type::LIST_MODEL)
 				{
-					if(!is_int($this->$prop)) //well...
+					if(!is_array($this->$prop)) //this will either be an array of ints or a json
 					{
 						$temp = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
 						$arr = array();
-						foreach($temp as $kvp)
+						foreach((array)$temp as $kvp) //why does this break on post if i don't tell it it's an array? they're the same. it knows it's an array. and it wasn't doing this before.
 						{
 							if($kvp->key != null) $arr[$kvp->key] = $kvp->value;
 						}
@@ -54,7 +54,6 @@
 					if(!is_int($this->$prop)) //well...
 					{
 						$this->$prop = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
-						//print_r($this->$prop);
 					}
 				}
 
@@ -101,7 +100,6 @@
 					$this->$key = $value;
 				}
 			}
-
 		}
 
 		//how to handle key of object instead of value itself?
@@ -113,7 +111,7 @@
 			{
 				if(!isset(static::$db_hidden_props[$key]) || !static::$db_hidden_props[$key])
 				{
-					if(is_list_model(static::$types[$key]))
+					if(Type::is_list_model(static::$types[$key]))
 					{
 						$ret_props[$key] = static::php_array_to_pg_array($this->$key);
 					}
@@ -254,7 +252,6 @@
 
 			$props = $this->get_db_properties();
 			$props['id'] = $this->id; //use id getter? probably should for consistency, probably shouldn't for speed, and i can trust my own self (class)
-
 
 			//print_r($this->get_properties());
 

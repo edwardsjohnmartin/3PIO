@@ -214,7 +214,7 @@
 			foreach($options as $option)
 			{
 				$select .= '<option value="' . $option->key . '"';
-				if($value != null && $value->key === $option->key)
+				if($value != null && ((is_int($value) && $value == $option->key)  || (is_object($value) && $value->key === $option->key)))
 				{
 					$select .= 'selected';
 				}
@@ -232,7 +232,7 @@
 			{
 				reset($value);
 				if(key($value) != null) {
-					foreach($value as $key => $val)
+					foreach($value as $key => $val) // todo... this can either be a key value array or an int array (if sent back).
 					{
 						$select .= '<option value="' . $key. '" selected>' . htmlspecialchars($val) . '</option>';
 					}
@@ -247,10 +247,31 @@
 			}
 
 			$select .= '</select>';
-
-			$js = '<script type="text/javascript">$("#' . $property . '").multiSelect({ keepOrder: true });</script>';
+			//https://stackoverflow.com/questions/13243417/jquery-multiselect-selected-data-order
+			$js = '<script type="text/javascript">$("#' . $property . '").multiSelect({ keepOrder: true,
+				afterSelect: function(value){
+        $(\'#' . $property . ' option[value="\'+value+\'"]\').remove();
+        $("#' . $property . '").append($("<option></option>").attr("value",value).attr(\'selected\', \'selected\'));
+      	}
+			});
+			</script>';
 			return $select . $js;
 		}
+
+/*
+
+				afterSelect: function(value, text){
+		        var get_val = $("#' . $property . '").val();
+		        var hidden_val = (get_val != "") ? get_val+"," : get_val;
+		        $("#' . $property . '").val(hidden_val+""+value);
+		      },
+		      afterDeselect: function(value, text){
+		        var get_val = $("#' . $property . '").val();
+		        var new_val = get_val.replace(value, "");
+		        $("#' . $property . '").val(new_val);
+			}
+*/
+
 
 		static function input_submit($value = 'Submit')
 		{
