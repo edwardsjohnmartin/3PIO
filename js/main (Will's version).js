@@ -1,4 +1,6 @@
-var test;             //This stores the TEST code that will be appended to the student code.
+var methods; 		  //This will be used to store the string containing the methods the TEST code will use. It will be appended to the student's code.
+var test;             //This stores the TEST code that will be appended to the student's code.
+
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         mode: {name: "python",
                version: 2,
@@ -9,10 +11,8 @@ var test;             //This stores the TEST code that will be appended to the s
 		theme: "solarized dark"
     });
 
-
-  //editor.on('change', disableSubmitBtn);
 	document.getElementById("runButton").onclick = run;
-
+	
   window.onload = function() {
         var fileInput = document.getElementById('fileInput');
         var doc = document.getElementById('output');
@@ -24,7 +24,7 @@ var test;             //This stores the TEST code that will be appended to the s
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     test = reader.result;
-                    mod = Sk.importMainWithBody("<stdin>", false, test, true);
+					mod = Sk.importMainWithBody("<stdin>", false, test, true);
                     var runMethod = mod.tp$getattr('GET_PROMPT');
                     var ret = Sk.misceval.callsim(runMethod);
                     document.getElementById('prompt').innerHTML = ret.v;
