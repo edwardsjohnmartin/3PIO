@@ -86,10 +86,20 @@
 			{
 				return call('pages', 'error');
 			}
-			//something like this
-			$model = ($this->model_name)::get($_GET['id']);
-			//todo: should show error if there isn't one with that id!
-			require_once('views/shared/read.php'); //just show all properties... do this one first as a test
+			else
+			{
+				//something like this
+				$model = ($this->model_name)::get($_GET['id']);
+				if($model == null)
+				{
+					return call('pages', 'error');
+				}
+				else
+				{
+					//todo: should show error if there isn't one with that id!
+					require_once('views/shared/read.php'); //just show all properties... do this one first as a test
+				}
+			}
 		}
 
 		//get id from get, get the rest from post
@@ -107,6 +117,7 @@
 			}
 
 			//if there is post data...
+			//todo: i need to check if the model actually exists on post, too!!!!
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				//probably i should do that isset stuff
     			$model = new $this->model_name();
@@ -130,9 +141,17 @@
 					//redirect header("Location: ...");
 				}
 			}
+			
 			$model = ($this->model_name)::get($_GET['id']);
-			require_once('views/shared/update.php');
-			//i should check if it exists
+			if($model == null)
+			{
+				return call('pages', 'error');
+			}
+			else
+			{
+				require_once('views/shared/update.php');
+			}
+			//i need to be better about the order of things.
 
 		}
 

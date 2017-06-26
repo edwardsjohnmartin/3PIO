@@ -153,7 +153,7 @@
 		}
 
 		//maybe rename these
-		public static function all()
+		public static function get_all()
 		{
 			$model_name = static::class;
 
@@ -257,6 +257,7 @@
 
 			$function_name = 'sproc_write_' . $model_name . '_update';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props))); //something like that
+			print_r(static::build_query($function_name, array_keys($props)));
 			$req->execute($props);
 		}
 
@@ -274,7 +275,7 @@
 		//i could even pass in values for limit, offset, and order by
 		//but it wouldn't be in the stored function.
 		//it's a possibility to keep in mind.
-		private static function build_query($function_name, $keys = array()) //pass in array_keys of params //i feel like i should pass in not just the keys... why go through another time?
+		protected static function build_query($function_name, $keys = array()) //pass in array_keys of params //i feel like i should pass in not just the keys... why go through another time?
 		{
 			//loop through to get preparation string
 			//named notation

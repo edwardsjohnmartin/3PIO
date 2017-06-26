@@ -2,7 +2,7 @@
 	require_once('controllers/base_controller.php');
 	class ProblemController extends BaseController
 	{
-		public function tryIt() //what to call this? //this is not case sensitive. i'm calling it lowercase.
+		public function try_it()
 		{
 			//this should eventually require the lesson, class, etc. ids.
 			if (!isset($_GET['id']))
@@ -11,8 +11,6 @@
 			}
 			$model = ($this->model_name)::get($_GET['id']); //what if it's null? don't want that.. need to be careful of that in base, too
 			require_once('views/shared/editor.php');
-			
 		}
-
 	}
 ?>

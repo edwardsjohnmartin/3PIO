@@ -22,7 +22,7 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 -- i don't think i will ever want to use this! i probably shouldn't allow it.
 CREATE OR REPLACE FUNCTION sproc_read_exercise_get_all()
 RETURNS TABLE(id int, name text, description text, starter_code text, test_code text, language json, tags json) AS $$
-	SELECT e.id, e.name, e.description, escf.contents AS starter_code, e.test_code, row_to_json(ROW(l.id, l.name)::key_value_pair) AS language, array_to_json(array_agg(ROW(t.id, t.name)::key_value_pair)) AS tags
+	SELECT e.id, e.name, e.description, escf.contents AS starter_code, e.test_code, row_to_json(ROW(l.id, l.name)::key_value_pair) AS language, array_to_json(array_agg(ROW(t.id, t.name)::key_value_pair ORDER BY t.name)) AS tags
 	FROM exercises e
 	INNER JOIN languages l ON (e.language_id = l.id)
 	INNER JOIN exercise_starter_code_files escf ON (e.id = escf.exercise_id)
@@ -42,7 +42,7 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 -- if there are no tags, it gives [{"key":null,"value":null}]. not really ideal.
 CREATE OR REPLACE FUNCTION sproc_read_exercise_get(id int)
 RETURNS TABLE(id int, name text, description text, starter_code text, test_code text, language json, tags json) AS $$
-	SELECT e.id, e.name, e.description, escf.contents AS starter_code, e.test_code, row_to_json(ROW(l.id, l.name)::key_value_pair) AS language, array_to_json(array_agg(ROW(t.id, t.name)::key_value_pair)) AS tags
+	SELECT e.id, e.name, e.description, escf.contents AS starter_code, e.test_code, row_to_json(ROW(l.id, l.name)::key_value_pair) AS language, array_to_json(array_agg(ROW(t.id, t.name)::key_value_pair ORDER BY t.name)) AS tags
 	FROM exercises e
 	INNER JOIN languages l ON (e.language_id = l.id)
 	INNER JOIN exercise_starter_code_files escf ON (e.id = escf.exercise_id)

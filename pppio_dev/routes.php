@@ -87,17 +87,17 @@
 	$controllers = array(
 						'pages' => ['home', 'error'],
 						'language' => ['index', 'read', 'create', 'update'],
-						'problem' => ['index', 'read', 'create', 'update', 'tryit'],
-						'section' => ['index', 'read', 'create', 'update'],
+						//'problem' => ['index', 'read', 'create', 'update', 'try_it'],
+						'section' => ['index', 'read', 'create', 'update', 'read_student'],
 						'participation_type' => ['index', 'read', 'create', 'update'],
 						'course' => ['index', 'read', 'create', 'update'],
 						'concept' => ['index', 'read', 'create', 'update'],
 						'project' => ['index', 'read', 'create', 'update'],
-						'lesson' => ['index', 'read', 'create', 'update'],
+						'lesson' => ['index', 'read', 'create', 'update', 'read_student'],
 						'role' => ['index', 'read', 'create', 'update'],
 						'tag' => ['index', 'read', 'create', 'update'],
 						'completion_status' => ['index', 'read', 'create', 'update'],
-						'exercise' => ['index', 'read', 'create', 'update'],
+						'exercise' => ['index', 'read', 'create', 'update', 'try_it'],
 						'user' => ['index', 'read', 'create', 'update'],
 						'function' => ['index', 'read', 'create', 'update']
 						);

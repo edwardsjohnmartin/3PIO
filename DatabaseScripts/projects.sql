@@ -1,5 +1,7 @@
 --important! these assume only one starter code file, but the database is designed so that more starter code files can be used later
 
+--i'm assuming one starter code file. if there is any number of files other than one, things break.
+
 --i should limit my inner joins...
 
 CREATE OR REPLACE FUNCTION sproc_read_project_count()

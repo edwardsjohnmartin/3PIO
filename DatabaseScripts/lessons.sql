@@ -7,11 +7,14 @@ RETURNS bigint AS $$
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_lesson_get_subset(lim bigint, off bigint)
-RETURNS TABLE(id int, name text, description text, owner json) AS $$
-	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner
+RETURNS TABLE(id int, name text, description text, owner json, exercises json) AS $$
+	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name)::key_value_pair ORDER BY etl.exercise_number)) AS exercises
 	FROM lessons l
 	INNER JOIN users u ON (l.owner_id = u.id)
+	LEFT JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+	LEFT JOIN exercises AS e ON etl.exercise_id = e.id
 	WHERE NOT l.is_deleted
+	GROUP BY l.id, u.id
 	ORDER BY l.id
 	LIMIT sproc_read_lesson_get_subset.lim OFFSET sproc_read_lesson_get_subset.off;
 $$ LANGUAGE SQL SECURITY DEFINER;
@@ -19,10 +22,10 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 --i don't think i will ever want to use this! i probably shouldn't allow it.
 CREATE OR REPLACE FUNCTION sproc_read_lesson_get_all()
 RETURNS TABLE(id int, name text, description text, owner json, exercises json) AS $$
-	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name)::key_value_pair)) AS exercises
+	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name)::key_value_pair ORDER BY etl.exercise_number)) AS exercises
 	FROM lessons l
 	INNER JOIN users u ON (l.owner_id = u.id)
-	LEFT JOIN (SELECT * FROM exercises_to_lessons ORDER BY exercise_number) AS etl ON l.id = etl.lesson_id
+	LEFT JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
 	LEFT JOIN exercises AS e ON etl.exercise_id = e.id
 	WHERE NOT l.is_deleted
 	GROUP BY l.id, u.id
@@ -37,10 +40,10 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_lesson_get(id int)
 RETURNS TABLE(id int, name text, description text, owner json, exercises json) AS $$
-	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name)::key_value_pair)) AS exercises
+	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name)::key_value_pair ORDER BY etl.exercise_number)) AS exercises
 	FROM lessons l
 	INNER JOIN users u ON (l.owner_id = u.id)
-	LEFT JOIN (SELECT * FROM exercises_to_lessons ORDER BY exercise_number) AS etl ON l.id = etl.lesson_id
+	LEFT JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
 	LEFT JOIN exercises AS e ON etl.exercise_id = e.id
 	WHERE l.id = sproc_read_lesson_get.id AND NOT l.is_deleted
 	GROUP BY l.id, u.id;
@@ -54,18 +57,20 @@ RETURNS TABLE(id int) AS $$
 	BEGIN
 	INSERT INTO lessons AS l (name, description, owner_id)
 	VALUES (sproc_write_lesson_create.name, sproc_write_lesson_create.description, sproc_write_lesson_create.owner) RETURNING l.id into ret_id;
-	INSERT INTO exercises_to_lessons AS etl (lesson_id, exercise_id, exercise_number) SELECT ret_id, * FROM unnest(exercises) WITH ORDINALITY; -- should i write a loop or is there a way...
+	INSERT INTO exercises_to_lessons AS etl (lesson_id, exercise_id, exercise_number) SELECT ret_id, * FROM unnest(exercises) WITH ORDINALITY;
 	RETURN QUERY SELECT ret_id AS id;
 	END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION sproc_write_lesson_update(id int, name text, description text, owner int)
+CREATE OR REPLACE FUNCTION sproc_write_lesson_update(id int, name text, description text, owner int, exercises int[])
 RETURNS VOID AS $$
 UPDATE lessons AS l
 	SET name = sproc_write_lesson_update.name,
 	description = sproc_write_lesson_update.description,
 	owner_id = sproc_write_lesson_update.owner
 	WHERE l.id = sproc_write_lesson_update.id;
+DELETE FROM exercises_to_lessons AS etl WHERE sproc_write_lesson_update.id = etl.lesson_id;
+INSERT INTO exercises_to_lessons AS etl (lesson_id, exercise_id, exercise_number) SELECT sproc_write_lesson_update.id, * FROM unnest(exercises) WITH ORDINALITY;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_write_lesson_delete(id int) --should this be delete/undelete, pass in boolean?

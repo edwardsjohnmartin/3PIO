@@ -1,0 +1,23 @@
+.tile
+{
+	width: 100%;
+	height: 0px;
+	max-height: 0px;
+	padding: 0;
+	padding-bottom: 100%;
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	margin: 15px 0%;
+}
+
+.tile > span
+{
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	transform: translate(-50%, -50%);
+	font-size: 2em;
+}
