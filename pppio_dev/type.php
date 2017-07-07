@@ -54,8 +54,5 @@ class Type extends Enum //where should i include this?
 	{
 		return ($type >= static::LIST_TAG && $type <= static::LIST_ROLE);
 	}
-
-	//i want an "is model function"
-	//right now i'm using > Type::MODEL which depends on models being last.
 }
 ?>

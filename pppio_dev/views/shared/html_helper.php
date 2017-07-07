@@ -74,7 +74,7 @@
 				$typestr = substr(strtolower((new Type($type))->getKey()), 5);
 				$str = '';
 				reset($value);
-				if(key($value) != null)
+				if(key($value) != null) // ... is this necessary?
 				{
 
 					if($type == Type::LIST_TAG)
@@ -82,7 +82,7 @@
 						$str .= '<div class="list-group">';
 						foreach($value as $key => $val)
 						{
-							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="label label-primary">' . htmlspecialchars($val) . '</a> ';
+							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="label label-primary">' . htmlspecialchars($val->value) . '</a> ';
 						}
 						$str .= '</div>';
 					}
@@ -91,7 +91,7 @@
 						$str .= '<div class="list-group">';
 						foreach($value as $key => $val)
 						{
-							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="list-group-item">' . htmlspecialchars($val) . '</a>';
+							$str .= '<a href="?controller=' . $typestr . '&action=read&id=' . $key . '" class="list-group-item">' . htmlspecialchars($val->value) . '</a>';
 						}
 						$str .= '</div>';
 					}
@@ -234,7 +234,7 @@
 				if(key($value) != null) {
 					foreach($value as $key => $val) // todo... this can either be a key value array or an int array (if sent back).
 					{
-						$select .= '<option value="' . $key. '" selected>' . htmlspecialchars($val) . '</option>';
+						$select .= '<option value="' . $key. '" selected>' . htmlspecialchars($val->value) . '</option>';
 					}
 				}
 			}

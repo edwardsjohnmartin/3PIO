@@ -8,7 +8,7 @@
 
 		public function error()
 		{
-			header("HTTP/1.0 404 Not Found");
+			//header("HTTP/1.0 404 Not Found");
 			require_once('views/pages/error.php');
 		}
 

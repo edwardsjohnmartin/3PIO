@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--where do i get the user and stuff to fill the layout correctly...-->
 
@@ -43,29 +44,25 @@
 		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-		        <li><a href="#">CS1181-01</a></li>
-		        <li><a href="#">CS1181-02</a></li>
-		        <li><a href="#">CS1182-01</a></li>
-		        <li role="separator" class="divider"></li>
-		        <li><a href="#">Separated link</a></li>
+		        <li><a href="/?controller=Section&action=read_student&id=2">CS1181-01</a></li>
 		      </ul>
 		    </li>
 		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-				<li><a href="#">Projects</a></li>
+				<li><a href="/?controller=project&action=index">Projects</a></li>
 				<li><a href="/?controller=lesson&action=index">Lessons</a></li>
-				<li><a href="#">Exercises</a></li>
+				<li><a href="/?controller=exercise&action=index">Exercises</a></li>
 		      </ul>
 			</li>
 
 		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-				<li><a href="#">Courses</a></li>
-				<li><a href="#">Sections</a></li>
-				<li><a href="#">Concepts</a></li>
-				<li><a href="#">Languages</a></li>
+				<li><a href="/?controller=course&action=index">Courses</a></li>
+				<li><a href="/?controller=section&action=index">Sections</a></li>
+				<li><a href="/?controller=concept&action=index">Concepts</a></li>
+				<li><a href="/?controller=language&action=index">Languages</a></li>
 		      </ul>
 			</li>
 

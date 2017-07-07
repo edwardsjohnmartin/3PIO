@@ -33,14 +33,21 @@
 				{
 					if(!is_array($this->$prop)) //this will either be an array of ints or a json
 					{
+
+						
 						$temp = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
 						$arr = array();
 						foreach((array)$temp as $kvp) //why does this break on post if i don't tell it it's an array? they're the same. it knows it's an array. and it wasn't doing this before.
 						{
-							if($kvp->key != null) $arr[$kvp->key] = $kvp->value;
+							if($kvp->key != null) $arr[$kvp->key] = $kvp; //->value;
 						}
 						$this->$prop = $arr;
 						//print_r($this->$prop);
+						/*
+						$this->$prop = json_decode($this->$prop);
+						//print_r($this);
+*/
+
 					}
 					//else //where is this used? anywhere?
 					//{
@@ -257,7 +264,6 @@
 
 			$function_name = 'sproc_write_' . $model_name . '_update';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props))); //something like that
-			print_r(static::build_query($function_name, array_keys($props)));
 			$req->execute($props);
 		}
 

@@ -81,6 +81,7 @@ CREATE TABLE lessons (
 CREATE TABLE completion_status (
 	id serial PRIMARY KEY,
 	name text NOT NULL,
+	importance integer CHECK(inverse_importance >= 0) UNIQUE, -- this is for getting the status of exercises, lessons, etc. the highest importance will be chosen for the lesson status based on the exercise statuses!
 	is_deleted boolean DEFAULT false NOT NULL
 );
 
@@ -130,9 +131,13 @@ CREATE TABLE lessons_to_concepts (
 
 CREATE TABLE project_teams (
 	id serial PRIMARY KEY,
-	concept_id integer REFERENCES concepts NOT NULL,
-	user_id integer REFERENCES users NOT NULL,
+	concept_id integer REFERENCES concepts NOT NULL, -- there should be a constraint so that concept/user pairs are unique
 	is_deleted boolean DEFAULT false NOT NULL
+);
+
+CREATE TABLE users_to_project_teams (
+	project_team_id integer REFERENCES project_teams NOT NULL,
+	user_id integer REFERENCES users NOT NULL
 );
 
 -- where to put the code?
@@ -148,18 +153,15 @@ CREATE TABLE completion_status_to_exercise (
 	exercise_id integer REFERENCES exercises NOT NULL,
 	lesson_id integer REFERENCES lessons NOT NULL,
 	concept_id integer REFERENCES concepts NOT NULL,
-	-- now, should i have the section id here, too? it's not really necessary, but would it be convenient?
 	date_updated timestamp NOT NULL,
 	completion_status_id integer REFERENCES completion_status NOT NULL,
 	user_id integer REFERENCES users NOT NULL
 );
 
-CREATE TABLE completion_status_to_project (
-	project_id integer REFERENCES projects NOT NULL,
-	concept_id integer REFERENCES concepts NOT NULL,
+CREATE TABLE completion_status_to_project ( 
 	date_updated timestamp NOT NULL,
 	completion_status_id integer REFERENCES completion_status NOT NULL,
-	team_id integer REFERENCES project_teams NOT NULL
+	project_team_id integer REFERENCES project_teams NOT NULL -- team is unique for concept
 );
 
 CREATE TABLE project_grades ( -- might need a better name
@@ -186,3 +188,4 @@ CREATE TABLE functions (
 );
 
 CREATE TYPE key_value_pair AS (key integer, value text);
+CREATE TYPE key_value_status AS (key integer, value text, status integer);

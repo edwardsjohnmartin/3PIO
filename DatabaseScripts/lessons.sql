@@ -49,6 +49,20 @@ RETURNS TABLE(id int, name text, description text, owner json, exercises json) A
 	GROUP BY l.id, u.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION sproc_read_lesson_get_for_concept_and_user(id int, concept_id int, user_id int)
+RETURNS TABLE(id int, name text, description text, owner json, exercises json) AS $$
+	SELECT l.id, l.name, l.description, row_to_json(ROW(u.id, u.name)::key_value_pair) AS owner, array_to_json(array_agg(ROW(e.id, e.name, COALESCE(cste.completion_status_id, (SELECT id FROM completion_status WHERE importance = (SELECT max(importance) FROM completion_status)))) ORDER BY etl.exercise_number)) AS exercises
+	FROM lessons l
+	INNER JOIN users u ON (l.owner_id = u.id)
+	JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+	JOIN exercises AS e ON etl.exercise_id = e.id
+	JOIN lessons_to_concepts AS ltc on ltc.lesson_id = l.id
+	JOIN concepts AS c ON c.id = ltc.concept_id
+	LEFT JOIN completion_status_to_exercise AS cste ON cste.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_exercise WHERE exercise_id = e.id AND user_id = sproc_read_lesson_get_for_concept_and_user.user_id AND concept_id = c.id AND lesson_id = l.id)
+	WHERE l.id = sproc_read_lesson_get_for_concept_and_user.id AND c.id = sproc_read_lesson_get_for_concept_and_user.concept_id
+	GROUP BY l.id, u.id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
 -- who will make sure that the exercise ids are valid...
 CREATE OR REPLACE FUNCTION sproc_write_lesson_create(name text, description text, owner int, exercises int[])
 RETURNS TABLE(id int) AS $$

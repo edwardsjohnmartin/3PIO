@@ -37,13 +37,35 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_concept_get_all_for_section(section_id int)
 RETURNS TABLE(id int, name text, section json, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
-	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name)::key_value_pair ORDER BY lesson_number)) AS lessons
+	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name)::key_value_pair ORDER BY ltc.lesson_number)) AS lessons
 	FROM concepts c
 	INNER JOIN sections s ON (c.section_id = s.id)
 	INNER JOIN projects p ON (c.project_id = p.id)
 	LEFT JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
 	LEFT JOIN lessons AS l on ltc.lesson_id = l.id
 	WHERE NOT c.is_deleted AND c.section_id = sproc_read_concept_get_all_for_section.section_id
+	GROUP BY c.id, s.id, p.id
+	ORDER BY c.project_open_date;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_get_all_for_section_and_user(section_id int, user_id int)
+RETURNS TABLE(id int, name text, section json, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
+	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name, cs.id) ORDER BY ltc.lesson_number)) AS lessons
+	FROM concepts c
+	INNER JOIN sections s ON (c.section_id = s.id)
+	INNER JOIN projects p ON (c.project_id = p.id)
+	LEFT JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
+	LEFT JOIN lessons AS l on ltc.lesson_id = l.id
+	LEFT JOIN (SELECT l.id AS lesson_id, MAX(COALESCE(cs.importance, (SELECT MAX(importance) FROM completion_status))) AS importance FROM concepts AS c
+	JOIN lessons_to_concepts AS ltc on ltc.concept_id = c.id
+	JOIN lessons AS l ON l.id = ltc.lesson_id
+	JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+	JOIN exercises AS e ON etl.exercise_id = e.id
+	LEFT JOIN completion_status_to_exercise AS cste ON cste.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_exercise WHERE exercise_id = e.id AND user_id = sproc_read_concept_get_all_for_section_and_user.user_id AND concept_id = c.id AND lesson_id = l.id)
+	LEFT JOIN completion_status AS cs ON cs.id = cste.completion_status_id
+	GROUP BY l.id, ltc.lesson_number) AS inner_query ON l.id = inner_query.lesson_id
+	LEFT JOIN completion_status AS cs ON cs.importance = inner_query.importance
+	WHERE NOT c.is_deleted AND c.section_id = sproc_read_concept_get_all_for_section_and_user.section_id
 	GROUP BY c.id, s.id, p.id
 	ORDER BY c.project_open_date;
 $$ LANGUAGE SQL SECURITY DEFINER;
@@ -56,13 +78,34 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_concept_get(id int)
 RETURNS TABLE(id int, name text, section json, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
-	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name)::key_value_pair ORDER BY lesson_number)) AS lessons
+	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name)::key_value_pair ORDER BY ltc.lesson_number)) AS lessons
 	FROM concepts c
 	INNER JOIN sections s ON (c.section_id = s.id)
 	INNER JOIN projects p ON (c.project_id = p.id)
 	LEFT JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
 	LEFT JOIN lessons AS l on ltc.lesson_id = l.id
 	WHERE c.id = sproc_read_concept_get.id AND NOT c.is_deleted
+	GROUP BY c.id, s.id, p.id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_get_for_user(id int, user_id int)
+RETURNS TABLE(id int, name text, section json, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
+	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name, cs.id) ORDER BY ltc.lesson_number)) AS lessons
+	FROM concepts c
+	INNER JOIN sections s ON (c.section_id = s.id)
+	INNER JOIN projects p ON (c.project_id = p.id)
+	LEFT JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
+	LEFT JOIN lessons AS l on ltc.lesson_id = l.id
+	LEFT JOIN (SELECT l.id AS lesson_id, MAX(COALESCE(cs.importance, (SELECT MAX(importance) FROM completion_status))) AS importance FROM concepts AS c
+	JOIN lessons_to_concepts AS ltc on ltc.concept_id = c.id
+	JOIN lessons AS l ON l.id = ltc.lesson_id
+	JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+	JOIN exercises AS e ON etl.exercise_id = e.id
+	JOIN completion_status_to_exercise AS cste ON cste.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_exercise WHERE exercise_id = e.id AND user_id = sproc_read_concept_get_for_user.user_id AND concept_id = c.id AND lesson_id = l.id)
+	JOIN completion_status AS cs ON cs.id = cste.completion_status_id
+	GROUP BY l.id, ltc.lesson_number) AS inner_query ON l.id = inner_query.lesson_id
+	LEFT JOIN completion_status AS cs ON cs.importance = inner_query.importance
+	WHERE c.id = sproc_read_concept_get_for_user.id AND NOT c.is_deleted
 	GROUP BY c.id, s.id, p.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
