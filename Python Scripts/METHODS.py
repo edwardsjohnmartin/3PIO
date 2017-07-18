@@ -1,5 +1,35 @@
-def VALIDATE_VAR(desired_var_name, desired_type_str, *args):
+def VALIDATE_VAR(desired_var_name, desired_type_str, desired_return, *args):
     student_var = globals().get(desired_var_name, None)
+
+    if desired_type_str == 'function':
+        func_name = desired_var_name
+        student_func = student_var
+        arg_types = []
+
+        for arg in args:
+            arg_type = str(type(arg)).split("<type '")[1].split("'>")[0]
+            arg_types.append(arg_type)
+
+        if student_var != None:
+            if str(type(student_func)).split("<type '")[1].split("'>")[0] == 'function':
+                if (len(args) > 0):
+                    try:
+                        if (globals()[func_name](*args) != desired_return):
+                            return "{0} does not return the proper value.".format(func_name)
+                        else:
+                            return True
+                    except:
+                        return "{0} must accept {1} arguments in the order: {2}.".format(func_name, str(len(args)), str(arg_types))
+                else:
+                    if (globals()[func_name]() != desired_return):
+                        return "{0} does not return the proper value.".format(func_name)
+                    else:
+                        return True
+            else:
+                return "{0} must be a function.".format(func_name)
+        else:
+            return "You must create a function named {0}.".format(func_name)
+
     
     if student_var != None:
         if str(type(student_var)).split("<type '")[1].split("'>")[0] == desired_type_str:
@@ -7,7 +37,7 @@ def VALIDATE_VAR(desired_var_name, desired_type_str, *args):
                 if (student_var == args[0]):
                     return True
                 else:
-                    return "{0} must be equal to {1}.".format(desired_var_name, str(args[0]))
+                    return "{0} is not the correct value.".format(desired_var_name)
             elif (len(args) > 1):
                 if (len(student_var) == len(args)):
                     arg_list = []
@@ -24,5 +54,15 @@ def VALIDATE_VAR(desired_var_name, desired_type_str, *args):
     else:
         return "You must declare a(n) {0} named {1}.".format(desired_type_str, desired_var_name)
 
+
+def pointless(num, string, arr):
+    pass
+
+
 def GET_PROMPT():
     return prompt
+
+print(VALIDATE_VAR('pointless', 'function', None, 5, "", []))
+
+#print(globals())
+

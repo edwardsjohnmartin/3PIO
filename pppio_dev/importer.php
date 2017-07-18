@@ -66,5 +66,17 @@
 		} 
 	}
 
-		
+	$myfile = fopen("importer test.txt", "r") or die("Unable to open file!");
+	
+	$filestring = fread($myfile, filesize("importer test.txt"));
+	$filestring = (string)$filestring;
+	
+	fclose($myfile);
+	
+	$importer = new Importer($filestring);
+	$lessons = $importer->get_lessons();
+	
+	echo '<pre>';
+	print_r($lessons);
+	echo '</pre>';
 ?>
