@@ -1,6 +1,12 @@
+#This method is used for ensuring that certain student-created variables/functions exist and either contain or produce the correct values.
+#PARAMETERS
+#desired_var_name: String -- The name of the variable/function that should exist.
+#desired_type_str: String -- For variables, this is the type the variable should be. For functions, set this to 'function'.
+#desired_return:      Any -- For variables, this will not be checked. For functions, this is the return value the function should produce.
+#*args:               Any -- For variables, this is the desired value or values the variable should contain. For functions, these are the arguments passed in.
 def VALIDATE_VAR(desired_var_name, desired_type_str, desired_return, *args):
     student_var = globals().get(desired_var_name, None)
-
+    
     if desired_type_str == 'function':
         func_name = desired_var_name
         student_func = student_var
@@ -53,16 +59,3 @@ def VALIDATE_VAR(desired_var_name, desired_type_str, desired_return, *args):
             return "{0} should be of type {1}.".format(desired_var_name, desired_type_str)
     else:
         return "You must declare a(n) {0} named {1}.".format(desired_type_str, desired_var_name)
-
-
-def pointless(num, string, arr):
-    pass
-
-
-def GET_PROMPT():
-    return prompt
-
-print(VALIDATE_VAR('pointless', 'function', None, 5, "", []))
-
-#print(globals())
-
