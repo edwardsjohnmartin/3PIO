@@ -1,3 +1,5 @@
+from METHODS import VALIDATE_VAR
+
 prompt = "Declare a list named <strong>my_bool</strong> and assign it a value of <strong>7 < 8</strong>."
 
 def TEST(student_input, student_output):
@@ -9,11 +11,14 @@ def TEST(student_input, student_output):
         if thing != True:
             problems = problems + thing+"\n"
 
-    if (all(x in student_input for x in strings) == False:
+    if (all(x in student_input for x in strings) == False):
         problems = problems + "You must assign '7 < 8' to my_bool."
         
     if problems == "":
         return "Success!"
     else:
         return problems
+
+my_bool = False
+print(TEST("7 < 8", ""))
 
