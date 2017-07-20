@@ -8,11 +8,18 @@
 	//print_r(count($concepts));
 	$completed_concept_count = 0;
 	$total_concept_count = count($concepts);
-	foreach($concepts as $concept)
+	if($total_concept_count > 0)
 	{
-		if($concept->get_properties()['project']->status == Completion_Status::COMPLETED) $completed_concept_count++;
+		foreach($concepts as $concept)
+		{
+			if($concept->get_properties()['project']->status == Completion_Status::COMPLETED) $completed_concept_count++;
+		}
+		$section_completion_percentage = $completed_concept_count/(float)$total_concept_count * 100;
 	}
-	$section_completion_percentage = $completed_concept_count/(float)$total_concept_count * 100;
+	else
+	{
+		$section_completion_percentage = 0;
+	}
 
 	echo '<h1>' . $section_props['name'] . '</h1>';
 
@@ -23,7 +30,8 @@
 		</div>';
 
 	echo '<div class="panel-group" id="accordion">';
-	$is_current = false;
+	//this is a mess
+	$is_current = $completed_concept_count == 0;
 	$found_current = false;
 	foreach($concepts as $concept)
 	{
@@ -63,9 +71,9 @@
 			  	<ul class="list-group">';
 				foreach($concept_props['lessons'] as $lesson_key => $lesson_obj) //does php do this smartly? i assume they do
 				{
-					echo '<a href="/?controller=lesson&action=read_student&id=' . htmlspecialchars($lesson_key) . '" class="list-group-item';
+					echo '<a href="/?controller=lesson&action=read_student&id=' . $lesson_key . '&concept_id=' . $concept->get_id() . '" class="list-group-item';
 					if($lesson_obj->status == Completion_Status::COMPLETED) echo ' list-group-item-success';
-					echo '">' . $lesson_obj->value .'<span class="pull-right"></span></a>'; //use the due date of the project... need to display?
+					echo '">' . htmlspecialchars($lesson_obj->value) .'<span class="pull-right"></span></a>'; //use the due date of the project... need to display?
 
 				}
 				/*<a href="lesson.html" class="list-group-item">Logic Statements <span class="pull-right">6/7/2017 11:00 PM</span></a>

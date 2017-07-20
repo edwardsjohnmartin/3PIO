@@ -11,5 +11,21 @@
 		protected $end_date;
 		//protected $concepts;
 		protected $users;
+
+
+		public static function get_pairs_for_user($user_id) //expecting multiple
+		{
+			$db = Db::getReader();
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_section_get_pairs_for_user';
+			$req = $db->prepare(static::build_query($function_name, array('user_id')));
+			$req->execute(array('user_id' => $user_id));
+
+			require_once('models/key_value_pair.php');
+			return $req->fetchAll(PDO::FETCH_CLASS, 'key_value_pair');
+		}
+
+
 	}
 ?>

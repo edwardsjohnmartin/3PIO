@@ -28,8 +28,11 @@
 					//i need to include the course model
 					require_once('models/concept.php');
 
-					$concepts = concept::get_all_for_section_and_user($_GET['id'], 1);
-					require_once('views/section/read_student.php');
+					$concepts = concept::get_all_for_section_and_user($_GET['id'], $_SESSION['user']->get_id());
+					//require_once('views/section/read_student.php');
+
+					$view_to_show = 'views/section/read_student.php';
+					require_once('views/shared/layout.php');
 				}
 			}
 		}

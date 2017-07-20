@@ -6,9 +6,9 @@ CREATE TABLE roles (
 
 CREATE TABLE users (
 	id serial PRIMARY KEY,
-	email text NOT NULL,
+	email text NOT NULL UNIQUE,
 	name text NOT NULL,
-	hash character[64] NOT NULL, -- 32 bytes for sha-256
+	hash text NOT NULL, -- 32 bytes for sha-256
 	salt text NOT NULL, -- ?
 	role_id integer REFERENCES roles NOT NULL,
 	is_deleted boolean DEFAULT false NOT NULL
@@ -189,3 +189,4 @@ CREATE TABLE functions (
 
 CREATE TYPE key_value_pair AS (key integer, value text);
 CREATE TYPE key_value_status AS (key integer, value text, status integer);
+CREATE TYPE user_partial AS (id integer, email text, name text, role integer);

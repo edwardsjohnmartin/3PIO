@@ -64,7 +64,7 @@
 			{
 				$value = static::span_code($key, $value);
 			}
-			else if(Type::is_model($type)) //...please be more careful than this
+			else if(Type::is_model($type))
 			{
 				$typestr = strtolower((new Type($type))->getKey());
 				$value ='<a href="?controller=' . $typestr . '&action=read&id=' . $value->key . '">' . htmlspecialchars($value->value) . '</a>'; //seriously be more careful than that
@@ -143,6 +143,10 @@
 			{
 				return static::input_datetime($property, $value);
 			}
+			else if($type == Type::PASSWORD)
+			{
+				return static::input_password($property, $value);
+			}
 			else if($type == Type::CODE)
 			{
 				return static::input_code($property, $value);
@@ -186,6 +190,11 @@
 		static function input_string($property, $value = null)
 		{
 			return '<input type="text" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
+		}
+
+		static function input_password($property, $value = null)
+		{
+			return '<input type="password" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
 		}
 
 		static function input_code($property, $value = null)

@@ -42,6 +42,14 @@ RETURNS SETOF key_value_pair AS $$
 	ORDER BY s.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION sproc_read_section_get_pairs_for_user(user_id int)
+RETURNS SETOF key_value_pair AS $$
+	SELECT s.id, s.name FROM users_to_sections AS uts
+	JOIN sections AS s ON uts.section_id = s.id
+	WHERE uts.user_id = sproc_read_section_get_pairs_for_user.user_id AND NOT s.is_deleted
+	ORDER BY s.id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
 CREATE OR REPLACE FUNCTION sproc_read_section_get(id int)
 RETURNS TABLE(id int, name text, course json, teacher json, start_date timestamp, end_date timestamp, users json) AS $$
 	SELECT s.id, s.name, row_to_json(ROW(c.id, c.name)::key_value_pair) AS course, row_to_json(ROW(t.id, t.name)::key_value_pair) AS teacher, s.start_date, s.end_date, array_to_json(array_agg(ROW(u.id, u.name)::key_value_pair ORDER BY u.name)) AS users

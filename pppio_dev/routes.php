@@ -97,8 +97,8 @@
 						//'role' => ['index', 'read', 'create', 'update'],
 						'tag' => ['index', 'read', 'create', 'update'],
 						'completion_status' => ['index', 'read', 'create', 'update'],
-						'exercise' => ['index', 'read', 'create', 'update', 'try_it'],
-						//'user' => ['index', 'read', 'create', 'update'],
+						'exercise' => ['index', 'read', 'create', 'update', 'try_it', 'mark_as_completed'],
+						'user' => ['log_in', 'log_out', 'create'], //['index', 'read', 'create', 'update'],
 						'function' => ['index', 'read', 'create', 'update']
 						);
 

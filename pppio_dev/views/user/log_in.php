@@ -7,8 +7,9 @@
 	//i want to be able to get the properties something that's not already created...
 	//i can just use the types...
 	echo $this->model_name;
-	$properties = $this->model_name::get_available_properties();
-	$types = $this->model_name::get_types();
+
+	$properties = array('email' => '', 'password' => '');
+	$types = array('email' => Type::EMAIL, 'password' => Type::PASSWORD);
 	echo HtmlHelper::form($types, $properties);
 ?>
 

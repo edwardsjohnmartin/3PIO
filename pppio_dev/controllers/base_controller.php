@@ -45,9 +45,13 @@
 
 			//pagination
 			$models = ($this->model_name)::pairs(); //rename from all.. do this in the view...?
-			require_once('views/shared/index.php');
+			//require_once('views/shared/index.php');
 			//how will view know which properties to show? actually it looks like just about every model will have a name... maybe should put that in the base model, and use that for the link text
 			//probably will want to have some kind of overall description of the model, or at least an option for it...
+
+			$view_to_show = 'views/shared/index.php';
+			require_once('views/shared/layout.php');
+
 		}
 
 		public function create()
@@ -74,9 +78,9 @@
 					header('Location: ' . '/?controller=' . $this->model_name . '&action=index');
 				}
 			}
-			require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
-
-
+			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
+			$view_to_show = 'views/shared/create.php';
+			require_once('views/shared/layout.php');
 		}
 
 		//should be called show or view instead?
@@ -97,7 +101,10 @@
 				else
 				{
 					//todo: should show error if there isn't one with that id!
-					require_once('views/shared/read.php'); //just show all properties... do this one first as a test
+					//require_once('views/shared/read.php'); //just show all properties... do this one first as a test
+
+					$view_to_show = 'views/shared/read.php';
+					require_once('views/shared/layout.php');
 				}
 			}
 		}
@@ -149,7 +156,9 @@
 			}
 			else
 			{
-				require_once('views/shared/update.php');
+				//require_once('views/shared/update.php');
+				$view_to_show = 'views/shared/update.php';
+				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.
 

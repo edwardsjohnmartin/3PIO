@@ -304,42 +304,49 @@
 		public function is_valid() //todo: make sure types are correct
 		{
 			foreach (static::$types as $key => $value) {
-				switch ($value) {
-					case (Type::INTEGER):
-						if (!is_int($this->$key)) {
-							return false;
-						}
-						break;
-					case (Type::DOUBLE):
-						if (!is_numeric($this->$key)) {
-							return false;
-						}
-						break;
-					case (Type::BOOLEAN):
-						if (!is_bool($this->$key)) {
-							return false;
-						}
-						break;
-					case (Type::DATETIME):
-						if (!(($this->$key) instanceof DateTime)) {
-							return false;
-						}
-						break;
-					case (Type::STRING):
-					case (Type::CODE):
-					case (Type::EMAIL):
-					case (Type::PASSWORD):
-						if (!is_string($this->$key)) {
-							return false;
-						}
-						break;
-					default:
-						if (Type::is_model($value) && !(is_int($this->$key))) {
-							return false;
-						}
-						elseif (!(Type::is_model($value))) {
-							return false;
-						}
+				if(!array_key_exists($key, static::$hidden_props))
+				{
+					switch ($value) {
+						case (Type::INTEGER):
+							if (!is_int($this->$key)) {
+								return false;
+							}
+							break;
+						case (Type::DOUBLE):
+							if (!is_numeric($this->$key)) {
+								return false;
+							}
+							break;
+						case (Type::BOOLEAN):
+							if (!is_bool($this->$key)) {
+								return false;
+							}
+							break;
+						case (Type::DATETIME):
+							if (!(($this->$key) instanceof DateTime)) {
+								return false;
+							}
+							break;
+						case (Type::STRING):
+						case (Type::CODE):
+						case (Type::PASSWORD):
+							if (!is_string($this->$key)) {
+								return false;
+							}
+							break;
+						case (Type::EMAIL):
+							if(!is_string($this->$key) || !filter_var($this->$key, FILTER_VALIDATE_EMAIL)) {
+								return false;
+							}
+							break;
+						default:
+							if (Type::is_model($value) && !(is_int($this->$key))) {
+								return false;
+							}
+							elseif (!(Type::is_model($value))) {
+								return false;
+							}
+					}
 				}
 			}
 			return true;
