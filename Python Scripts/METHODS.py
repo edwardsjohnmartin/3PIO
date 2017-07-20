@@ -1,3 +1,7 @@
+#place prof variables here
+
+
+
 #This method is used for ensuring that certain student-created variables/functions exist and either contain or produce the correct values.
 #PARAMETERS
 #desired_var_name: String -- The name of the variable/function that should exist.
@@ -59,3 +63,26 @@ def VALIDATE_VAR(desired_var_name, desired_type_str, desired_return, *args):
             return "{0} should be of type {1}.".format(desired_var_name, desired_type_str)
     else:
         return "You must declare a(n) {0} named {1}.".format(desired_type_str, desired_var_name)
+
+
+def TEST(student_input, student_output):
+    problems = []
+
+    returns = globals().get('returns', [])
+    in_strings = globals().get('in_strings', [])
+    out_string = globals().get('out_string', None)
+    
+    for thing in returns:
+        if thing != True:
+            problems.append(thing)
+
+    if (all(x in student_input for x in in_strings) == False):
+        problems.append("You must include the following strings in your code: {0}.".format(str(in_strings)))
+
+    if out_string != None:
+        if student_output != out_string:
+            problems.append("Your output is incorrect.")
+
+    return problems
+
+
