@@ -7,29 +7,23 @@
 	class Importer
 	{
 		//$regex_string is used for verifying that the file is in the correct format and retrieving the names of the lessons.
-		private	$regex_string = '/Lesson: ([a-z|A-Z|0-9 ]+)((?:\r\n|\n)Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
+		static private $regex_string = '/Lesson: ([a-z|A-Z|0-9 ]+)((?:\r\n|\n)Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
 		
 		//$exercise_regex is used for retrieving the specific attributes (prompt, starter code, test code) of each exercise.
-		private $exercise_regex = '/(Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
-		private $file_string;
-		private $lessons = [];	//Holds all the lessons
-
-		public function __construct($fs)
-		{
-			$this->file_string = $fs;
-		}
+		private static $exercise_regex = '/(Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
 		
-		public function get_lessons()
+		public static function get_lessons($file_string)
 		{
-			if (preg_match_all($this->regex_string, $this->file_string, $matches, PREG_OFFSET_CAPTURE)) 
+			$lessons = [];
+			if (preg_match_all(static::$regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
 			{
-
+				
 				for ($i=0; $i < count($matches[0]); $i++)
 				{
 					$lesson_name = $matches[1][$i][0];	//name of the current lesson
 					$lesson = new Lesson(); 	//current lesson
 				
-					preg_match_all($this->exercise_regex, $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
+					preg_match_all(static::$exercise_regex, $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
 					
 					$exercises = [];	//Holds the exercises for the current lesson
 					
@@ -57,26 +51,9 @@
 					$lessons[] = $lesson;
 				}
 				
-				return $lessons;
 			}
-			else 
-			{
-				echo "No match found.";
-			}
+			return $lessons;
 		} 
 	}
-
-	$myfile = fopen("importer test.txt", "r") or die("Unable to open file!");
 	
-	$filestring = fread($myfile, filesize("importer test.txt"));
-	$filestring = (string)$filestring;
-	
-	fclose($myfile);
-	
-	$importer = new Importer($filestring);
-	$lessons = $importer->get_lessons();
-	
-	echo '<pre>';
-	print_r($lessons);
-	echo '</pre>';
 ?>
