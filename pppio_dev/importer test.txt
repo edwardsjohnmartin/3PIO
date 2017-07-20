@@ -1,20 +1,5 @@
-Lesson: Print
+Lesson: 1
 Ex:
-	{This is the prompt.}
-	{This is the starter code.}
-	{And this is the TEST.}
-
-
-Lesson: Loops
-Ex:
-	{This is the prompt for exercise 1.}
-	{This is the starter code for exercise 1.}
-	{And this is the TEST for exercise 1.}
-Ex:
-	{This is the prompt for exercise 2.}
-	{This is the starter code for exercise 2.}
-	{And this is the TEST for exercise 2.}
-Ex:
-	{This is the prompt for exercise 3.}
-	{This is the starter code for exercise 3.}
-	{And this is the TEST for exercise 3.}
+	{prompt}
+	{starter}
+	{test}

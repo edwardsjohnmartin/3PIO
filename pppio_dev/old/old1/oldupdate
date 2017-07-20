@@ -1,0 +1,64 @@
+
+
+
+<!--
+<?php
+	class UpdateView
+	{
+		private $model;
+
+		function __construct($model) //who calls meeeeeeeee
+		{
+			$this->model = $model;
+		}
+
+		//return it or just print it?
+		function getHTML() //rename this...
+		{
+			return ''; //stuff...
+			//templates and stuff?
+			//so many things...
+			//i think it will be better if i don't write my own. i could but i think it will be worse. and i'll be able to get to the important stuff fast if the framework part is already written.
+		}
+
+	}
+
+
+
+?>
+
+
+<p>the name property on the model...?</p>
+
+<?php
+$model = $model_name::get($id); //whereeeeeee
+$props = get_object_vars($model); //this will be a problem because i should use getters and setters
+foreach($props as $key => $value) { ?>
+	<p>
+		<?php echo $key ?>
+		<?php echo $value
+		//need some kind of tags around these
+		//use input. name is key. i probably need to be careful about not allowing html/js. where to check...
+		//need to deal with what type of input... text, number, etc...
+		//gettype? type hinting?
+		//type hinting is not available in this case. it's for functions.
+		//i should create some type of helper 
+		//types i need
+		//integer - number
+		//string - text
+		//datetime - datetime? text? should have class for styling
+		//boolean - checkbox
+
+		//but checking the type of the value won't work for the first (if it's empty)...
+		//can use settype! in constructor for models? hmm....
+
+		//id from db in test site was integer as it should have been
+
+		?>
+	</p>
+<?php }
+//if the user has privileges, we should also show the create/edit/delete... i still need to know the model name here to create the links, even if models are fetched in the controller. ah but... if i set it in the controller, i know it... of course...
+
+//maybe this should be a class and have a function for output. that way it can be told the model... that was in an example
+ ?>
+-->

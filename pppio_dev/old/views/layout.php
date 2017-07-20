@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--where do i get the user and stuff to fill the layout correctly...-->
 
@@ -12,7 +11,6 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/site.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,8 +18,6 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   </head>
   <body>
 	<nav class="navbar navbar-default">
@@ -34,37 +30,29 @@
 		    <span class="icon-bar"></span>
 		    <span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="/">3PIO</a>
+		  <a class="navbar-brand" href="#">3PIO</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav">
-		    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
-		    
-
-				<?php
-					if(isset($_SESSION['sections']) && $_SESSION['sections'] != null && count($_SESSION['sections']) >0)
-					{
-						
-						echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a><ul class="dropdown-menu">';
-						foreach($_SESSION['sections'] as $kvp)
-						{
-							echo '<li><a href="/?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
-						}
-						echo '</ul></li>';
-					}
-
-				?>
-			<?php
-			if(isset($_SESSION['user']) && $_SESSION['user'] != null)
-			{
-		    echo '<li class="dropdown">
+		    <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+		    <li class="dropdown">
+		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a>
+		      <ul class="dropdown-menu">
+		        <li><a href="#">CS1181-01</a></li>
+		        <li><a href="#">CS1181-02</a></li>
+		        <li><a href="#">CS1182-01</a></li>
+		        <li role="separator" class="divider"></li>
+		        <li><a href="#">Separated link</a></li>
+		      </ul>
+		    </li>
+		    <li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
 				<li><a href="/?controller=project&action=index">Projects</a></li>
-				<li><a href="/?controller=lesson&action=index">Lessons</a></li>
-				<li><a href="/?controller=exercise&action=index">Exercises</a></li>
+				<li><a href="">Lessons</a></li>
+				<li><a href="/?controller=problem&action=index">Problems</a></li>
 		      </ul>
 			</li>
 
@@ -76,38 +64,25 @@
 				<li><a href="/?controller=concept&action=index">Concepts</a></li>
 				<li><a href="/?controller=language&action=index">Languages</a></li>
 		      </ul>
-			</li>';
-			}
-			?>
+			</li>
 
 
-			<li><a href="/?controller=Importer&action=index">Importer</a></li>
-		    <!-- <li><a href="#">Users</a></li>
+
+		    <li><a href="#">Users</a></li>
 
 			<li class="dropdown">
 		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin stuff <span class="caret"></span></a>
 		      <ul class="dropdown-menu">
-		        <li><a href="#">Participation Types</a></li>
+		        <li><a href="/?controller=participation_type&action=index">Participation Types</a></li>
 		        <li><a href="#">Roles</a></li>
 		      </ul>
-		    </li>-->
+		    </li>
 		  </ul>
 
 		  <ul class="nav navbar-nav navbar-right">
-			<?php
-			if(isset($_SESSION['user']) && $_SESSION['user'] != null)
-			{
-				echo '<li><a href="#">Settings</a></li>
-				<li><a href="#">' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>
-		    	<li><a href="/?controller=user&action=log_out">Log out</a></li>';
-			}
-			else
-			{
-				echo '<li><a href="/?controller=user&action=create">Create account</a></li>
-					<li><a href="/?controller=user&action=log_in">Log in</a></li>';
-			}
-
-			 ?>
+		    <li><a href="#">Settings</a></li>
+		    <li><a href="#">TeacherPersonName</a></li>
+		    <li><a href="#">Log out</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
@@ -123,7 +98,7 @@
 		?>
 		<div class="alert alert-success alert-dismissible" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<?php echo htmlspecialchars($alert); ?>
+			<?php echo $alert; ?>
 		</div>
 		<?php
 		//get rid of alert...
@@ -131,9 +106,11 @@
 		}
 		}
 		?>
-		<?php require_once($view_to_show); ?>
+		<?php require_once('routes.php'); ?>
 	</div>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
   </body>
