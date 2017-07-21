@@ -35,10 +35,14 @@ def __UNIVERSAL_VALIDATOR(desired_var_name, desired_type_str, desired_return, *a
                     except:
                         return "{0} must accept {1} arguments in the order: {2}.".format(func_name, str(len(args)), str(arg_types))
                 else:
-                    if (globals()[func_name]() != desired_return):
-                        return "{0} does not return the proper value.".format(func_name)
-                    else:
-                        return True
+                    try:
+                        if (globals()[func_name]() != desired_return):
+                            return "{0} does not return the proper value.".format(func_name)
+                        else:
+                            return True
+                    except:
+                        return "{0} must accept no arguments.".format(func_name)
+                    
             else:
                 return "{0} must be a function.".format(func_name)
         else:
@@ -88,16 +92,16 @@ def __VALIDATE_VAR(var_name, desired_type, *args):
 # --------------------------------------------------------------------
 def test_val(var_name, var_val):
     var_type = str(type(var_val)).split("<type '")[1].split("'>")[0]
-    __returns.append(VALIDATE_VAR(var_name, var_type, var_val))
+    __returns.append(__VALIDATE_VAR(var_name, var_type, var_val))
 
 def test_func(func_name, desired_return, *params):
-    __returns.append(VALIDATE_FUNC(func_name, desired_return, *params))
+    __returns.append(__VALIDATE_FUNC(func_name, desired_return, *params))
 
-def check_in(string):
+def test_in(string):
     __in_strings.append(string)
 
-def check_out(string):
-    __out_string = string
+def test_out(string):
+    __out_string = string + "\n"
 
 # --------------------------------------------------------------------
 
@@ -112,7 +116,7 @@ def __TEST(student_input, student_output):
             problems.append(thing)
 
     if (all(x in student_input for x in __in_strings) == False):
-        problems.append("You must include the following strings in your code: {0}.".format(str(in_strings)))
+        problems.append("You must include the following string(s) in your code: {0}.".format(str(in_strings)))
 
     if __out_string != None:
         if student_output != __out_string:
@@ -121,3 +125,13 @@ def __TEST(student_input, student_output):
     return problems
 
 # --------------------------------------------------------------------
+
+my_tuple = [7, 5]
+
+def pointless(nothing):
+    pass
+
+test_val('my_tuple', [7])
+test_func('pointless', None)
+
+print(__returns)
