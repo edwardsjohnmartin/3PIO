@@ -7,10 +7,10 @@
 	class Importer
 	{
 		//$regex_string is used for verifying that the file is in the correct format and retrieving the names of the lessons.
-		static private $regex_string = '/Lesson: ([a-z|A-Z|0-9 ]+)((?:\r\n|\n)Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
+		static private $regex_string = '/Lesson: ([^\n]+)((?:\r\n|\n)Ex:(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\})+/';
 		
 		//$exercise_regex is used for retrieving the specific attributes (prompt, starter code, test code) of each exercise.
-		private static $exercise_regex = '/(Ex:(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\}(?:\r\n|\n)\t\{([^}]*)\})+/';
+		private static $exercise_regex = '/(Ex:(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\})+/';
 		
 		public static function get_lessons($file_string)
 		{
