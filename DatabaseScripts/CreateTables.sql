@@ -14,6 +14,24 @@ CREATE TABLE users (
 	is_deleted boolean DEFAULT false NOT NULL
 );
 
+CREATE TABLE permission_types (
+	id serial PRIMARY KEY,
+	name text NOT NULL,
+	is_deleted boolean DEFAULT false NOT NULL
+);
+
+CREATE TABLE securables (
+	id serial PRIMARY KEY,
+	name text NOT NULL,
+	is_deleted boolean DEFAULT false NOT NULL
+);
+
+CREATE TABLE permissions_to_roles (
+	role_id integer REFERENCES roles NOT NULL,
+	permission_type_id integer REFERENCES permission_types NOT NULL,
+	securable_id integer REFERENCES securables NOT NULL
+);
+
 CREATE TABLE participation_types (
 	id serial PRIMARY KEY,
 	name text NOT NULL,

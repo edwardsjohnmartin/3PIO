@@ -34,7 +34,6 @@ RETURNS TABLE(id int, name text, section json, project json, project_open_date t
 	ORDER BY c.project_open_date;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
-
 CREATE OR REPLACE FUNCTION sproc_read_concept_get_all_for_section(section_id int)
 RETURNS TABLE(id int, name text, section json, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
 	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, row_to_json(ROW(p.id, p.name)::key_value_pair) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name)::key_value_pair ORDER BY ltc.lesson_number)) AS lessons
@@ -51,6 +50,14 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION sproc_read_concept_get_pairs()
 RETURNS SETOF key_value_pair AS $$
 	SELECT c.id, c.name FROM concepts AS c WHERE NOT c.is_deleted
+	ORDER BY c.id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_get_pairs_for_owner(owner_id int)
+RETURNS SETOF key_value_pair AS $$
+	SELECT c.id, c.name FROM concepts AS c
+	JOIN sections AS s ON s.id = c.section_id
+	WHERE NOT c.is_deleted AND s.teacher_id = sproc_read_concept_get_pairs_for_owner.owner_id
 	ORDER BY c.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 

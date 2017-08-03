@@ -42,11 +42,17 @@ RETURNS SETOF key_value_pair AS $$
 	ORDER BY s.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION sproc_read_section_get_pairs_for_user(user_id int)
+CREATE OR REPLACE FUNCTION sproc_read_section_get_pairs_for_owner(owner_id int)
+RETURNS SETOF key_value_pair AS $$
+	SELECT s.id, s.name FROM sections AS s WHERE NOT s.is_deleted AND s.teacher_id = sproc_read_section_get_pairs_for_owner.owner_id
+	ORDER BY s.id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_section_get_pairs_for_student(user_id int)
 RETURNS SETOF key_value_pair AS $$
 	SELECT s.id, s.name FROM users_to_sections AS uts
 	JOIN sections AS s ON uts.section_id = s.id
-	WHERE uts.user_id = sproc_read_section_get_pairs_for_user.user_id AND NOT s.is_deleted
+	WHERE uts.user_id = sproc_read_section_get_pairs_for_student.user_id AND NOT s.is_deleted
 	ORDER BY s.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 

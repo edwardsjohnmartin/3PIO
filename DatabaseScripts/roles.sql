@@ -45,3 +45,21 @@ RETURNS VOID AS $$
 	SET is_deleted = TRUE
 	WHERE r.id = sproc_write_role_delete.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
+
+/*
+CREATE OR REPLACE FUNCTION sproc_read_role_get_permissions_for_role(id int)
+RETURNS TABLE(securable_id int, permission_types int[]) AS $$
+	SELECT ptr.securable_id as securable, array_agg(ptr.permission_type_id) AS permission_types FROM permissions_to_roles AS ptr
+	WHERE ptr.role_id = sproc_read_role_get_permissions_for_role.id
+	GROUP BY ptr.securable_id
+	ORDER BY ptr.securable_id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+*/
+
+CREATE OR REPLACE FUNCTION sproc_read_role_get_permissions_for_role(id int)
+RETURNS TABLE(securable_id int, permission_type int) AS $$
+	SELECT ptr.securable_id as securable, ptr.permission_type_id AS permission_type FROM permissions_to_roles AS ptr
+	WHERE ptr.role_id = sproc_read_role_get_permissions_for_role.id
+	ORDER BY ptr.securable_id, ptr.permission_type_id;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
