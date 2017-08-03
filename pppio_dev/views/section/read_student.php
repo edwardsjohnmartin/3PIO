@@ -1,7 +1,7 @@
 <?php
 	//you'd better escape everything properly jac!
 	require_once('views/shared/html_helper.php');
-	require_once('completion_status.php');
+	require_once('enums/completion_status.php');
 	//print_r($section);
 	$section_props = $section->get_properties();
 

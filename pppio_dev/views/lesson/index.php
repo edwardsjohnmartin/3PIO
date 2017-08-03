@@ -1,7 +1,8 @@
 <?php
 if(has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::CREATE)))
 {
-	echo '<a href="/?controller=' . $this->model_name . '&action=create" class="btn btn-primary">Create</a><br>';
+echo '<a href="/?controller=' . $this->model_name . '&action=create" class="btn btn-primary">Create</a>';
+echo '<a href="/?controller=' . $this->model_name . '&action=create_file" class="btn btn-primary">Create from file</a><br>';
 }
 ?>
 
@@ -10,7 +11,7 @@ if(has_permission(new Permission(constant('Securable::' . strtoupper($this->mode
 //i am expecting $models to be defined!!!!!
 //where do i store things like how many pages there should be?
 //
-$can_edit = has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::EDIT));
+$can_edit = has_permission(new Permission(Securable::LESSON, Permission_Type::EDIT));
 foreach($models as $k => $v)
 {
 ?>

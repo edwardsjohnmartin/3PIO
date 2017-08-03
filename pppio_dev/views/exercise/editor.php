@@ -1,15 +1,14 @@
 <?php
 
-	require_once('completion_status.php');
+	require_once('enums/completion_status.php');
 //	this expects either a problem or a project.
 //id, name, description, starter code
 $exercise_props = $exercise->get_properties();
 $lesson_props = $lesson->get_properties();
 $concept_id = intval($_GET['concept_id']);
 
-echo '<link rel="stylesheet" href="css/site.css">
-<link rel="stylesheet" href="css/editor.css">';
-include_once('views/shared/CodeMirror.php');
+echo '<link rel="stylesheet" href="css/editor.css">';
+require_once('views/shared/CodeMirror.php');
 echo '<script src="js/skulpt/skulpt.min.js"></script>
 <script src="js/skulpt/skulpt-stdlib.js"></script>';
 
@@ -114,6 +113,7 @@ echo '</div></div>';
 //trying latest -> color tiles
 //trying last -> link is next exercise
 //link
+
 echo	'<script>';
 echo	'var exercise_id = ' . $exercise->get_id() . ';'; //use to get id of tile to color
 echo	'var lesson_id = ' . $lesson->get_id() . ';'; //use to get id of tile to color
@@ -133,6 +133,12 @@ echo	'var link = "' . '/?controller=exercise&action=try_it&id=' . $next_exercise
 	}
 //echo	'var completion_link = "' . '/?controller=exercise&action=mark_as_completed&id=' . $exercise->get_id() . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '";';
 echo	'</script>';
+//If the MIME type specified is not a JavaScript type the content embedded within its tags is treated as a data block which won't be processed by the browser.
+echo '<script type="text/x-python" id="test_code_to_run">';
+require('py_test/METHODS.py');
+echo $exercise_props['test_code'];
+echo '</script>';
+
 echo '<script src="js/editor.js"></script>';
 
-
+?>

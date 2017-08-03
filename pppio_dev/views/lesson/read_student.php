@@ -1,7 +1,7 @@
 <?php
 
 	require_once('views/shared/html_helper.php');
-	require_once('completion_status.php');
+	require_once('enums/completion_status.php');
 
 	$lesson_props = $lesson->get_properties();
 	$exercises = $lesson_props['exercises'];

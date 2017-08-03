@@ -2,7 +2,7 @@
 	require_once('models/model.php');
 	require_once('models/lesson.php');
 	require_once('models/exercise.php');
-	require_once('type.php');
+	require_once('enums/type.php');
 	
 	class Importer
 	{
@@ -36,7 +36,7 @@
 						$test_code = $exercise_matches[4][$j][0];
 						
 						//For now, I'm just assuming that the language is Python, which is why 'language' is always 1.
-						$ex_attributes = array('description' => $prompt, 'starter_code' => $starter_code, 'test_code' => $test_code, 'language' => 1);
+						$ex_attributes = array('description' => $prompt, 'starter_code' => $starter_code, 'test_code' => $test_code);
 						$exercise->set_properties($ex_attributes);
 						
 						$exercises[] = $exercise;

@@ -44,12 +44,16 @@
 			//this is a decision that needs to be made...
 
 			//pagination
-			$models = ($this->model_name)::pairs(); //rename from all.. do this in the view...?
+			$models = ($this->model_name)::get_pairs(); //rename from all.. do this in the view...?
 			//require_once('views/shared/index.php');
 			//how will view know which properties to show? actually it looks like just about every model will have a name... maybe should put that in the base model, and use that for the link text
 			//probably will want to have some kind of overall description of the model, or at least an option for it...
 
-			$view_to_show = 'views/shared/index.php';
+			$view_to_show = 'views/' . strtolower($this->model_name) . '/index.php';
+			if(!file_exists($view_to_show))
+			{
+				$view_to_show = 'views/shared/index.php';
+			}
 			require_once('views/shared/layout.php');
 
 		}
@@ -64,22 +68,39 @@
 			//i should show errors somehow. how?
 
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-				//probably i should do that isset stuff
-    			$model = new $this->model_name();
-				$model->set_properties($_POST);
-				if(true || $model->is_valid())
+				$postedToken = filter_input(INPUT_POST, 'token');
+				if(!empty($postedToken) && isTokenValid($postedToken))
 				{
-					//add alerts to session or something
-					//http://getbootstrap.com/components/#alerts
-					//redirect header("Location: ...");
-					$model->create();
-					$_SESSION['alerts'][] = 'Successfully created!';
-					session_write_close();
-					header('Location: ' . '/?controller=' . $this->model_name . '&action=index');
+					//probably i should do that isset stuff
+					$model = new $this->model_name();
+					$model->set_properties($_POST);
+					if($model->is_valid())
+					{
+						//add alerts to session or something
+						//http://getbootstrap.com/components/#alerts
+						//redirect header("Location: ...");
+						$model->create();
+						//$_SESSION['alerts'][] = 'Successfully created!';
+						add_alert('Successfully created!', Alert_Type::SUCCESS);
+						//session_write_close();
+						return redirect($this->model_name, 'index');
+					}
+					else
+					{
+						add_alert('Please try again.', Alert_Type::DANGER);
+					}
+				}
+				else
+				{
+					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
 			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
-			$view_to_show = 'views/shared/create.php';
+			$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
+			if(!file_exists($view_to_show))
+			{
+				$view_to_show = 'views/shared/create.php';
+			}
 			require_once('views/shared/layout.php');
 		}
 
@@ -103,7 +124,12 @@
 					//todo: should show error if there isn't one with that id!
 					//require_once('views/shared/read.php'); //just show all properties... do this one first as a test
 
-					$view_to_show = 'views/shared/read.php';
+				//$view_to_show = 'views/shared/read.php';
+					$view_to_show = 'views/' . strtolower($this->model_name) . '/read.php';
+					if(!file_exists($view_to_show))
+					{
+						$view_to_show = 'views/shared/read.php';
+					}
 					require_once('views/shared/layout.php');
 				}
 			}
@@ -126,26 +152,39 @@
 			//if there is post data...
 			//todo: i need to check if the model actually exists on post, too!!!!
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-				//probably i should do that isset stuff
-    			$model = new $this->model_name();
-				$model->set_id($_GET['id']); //i should not trust that...
-				$model->set_properties($_POST);
-				if(true || $model->is_valid())
+				$postedToken = filter_input(INPUT_POST, 'token');
+				if(!empty($postedToken) && isTokenValid($postedToken))
 				{
-					$model->update(); //do i call validate here, or in the update function?
-					//layout has already been created. can't add the alerts now
-					//but redirecting anyway
-					//could use ajax instead
-					//for now, i'll stick to a redirect
-					//add alerts to session or something
-					//i want to redirect, but it doesn't seem like the php way...
-					$_SESSION['alerts'][] = 'Successfully updated!';
-					session_write_close();
-					header('Location: ' . '/?controller=' . $this->model_name . '&action=index');
+					//probably i should do that isset stuff
+					$model = new $this->model_name();
+					$model->set_id($_GET['id']); //i should not trust that...
+					$model->set_properties($_POST);
+					if($model->is_valid())
+					{
+						$model->update(); //do i call validate here, or in the update function?
+						//layout has already been created. can't add the alerts now
+						//but redirecting anyway
+						//could use ajax instead
+						//for now, i'll stick to a redirect
+						//add alerts to session or something
+						//i want to redirect, but it doesn't seem like the php way...
+						//$_SESSION['alerts'][] = 'Successfully updated!';
+						add_alert('Successfully updated!', Alert_Type::SUCCESS);
+						//session_write_close();
+						return redirect($this->model_name, 'index');
 					
-					//http://getbootstrap.com/components/#alerts
-					//exit properly first!
-					//redirect header("Location: ...");
+						//http://getbootstrap.com/components/#alerts
+						//exit properly first!
+						//redirect header("Location: ...");
+					}
+					else
+					{
+						add_alert('Please try again.', Alert_Type::DANGER);
+					}
+				}
+				else
+				{
+					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
 			
@@ -157,7 +196,11 @@
 			else
 			{
 				//require_once('views/shared/update.php');
-				$view_to_show = 'views/shared/update.php';
+				$view_to_show = 'views/' . strtolower($this->model_name) . '/update.php';
+				if(!file_exists($view_to_show))
+				{
+					$view_to_show = 'views/shared/update.php';
+				}
 				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.
@@ -173,10 +216,7 @@
 				return call('pages', 'error');
 			}
 			//something like this
-			$model = ($this->model_name)::find($_GET['id']);
-
-
-
+			$model = ($this->model_name)::get($_GET['id']);
 		} //delete is similar to read, but with yes/no delete this
 
 	}

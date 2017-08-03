@@ -12,6 +12,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="css/site.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -21,7 +22,9 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/bootstrap-datetimepicker.js"></script>
   </head>
   <body>
 	<nav class="navbar navbar-default">
@@ -43,41 +46,57 @@
 		    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
 		    
 
-				<?php
-					if(isset($_SESSION['sections']) && $_SESSION['sections'] != null && count($_SESSION['sections']) >0)
-					{
-						
-						echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a><ul class="dropdown-menu">';
-						foreach($_SESSION['sections'] as $kvp)
-						{
-							echo '<li><a href="/?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
-						}
-						echo '</ul></li>';
-					}
+<?php
+		if(isset($_SESSION['user']) && $_SESSION['user'] != null)
+		{
 
-				?>
-			<?php
-			if(isset($_SESSION['user']) && $_SESSION['user'] != null)
+			if(isset($_SESSION['sections']) && $_SESSION['sections'] != null && count($_SESSION['sections']) >0)
 			{
-		    echo '<li class="dropdown">
-		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
-		      <ul class="dropdown-menu">
-				<li><a href="/?controller=project&action=index">Projects</a></li>
-				<li><a href="/?controller=lesson&action=index">Lessons</a></li>
-				<li><a href="/?controller=exercise&action=index">Exercises</a></li>
-		      </ul>
-			</li>
-
-		    <li class="dropdown">
-		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
-		      <ul class="dropdown-menu">
-				<li><a href="/?controller=course&action=index">Courses</a></li>
-				<li><a href="/?controller=section&action=index">Sections</a></li>
-				<li><a href="/?controller=concept&action=index">Concepts</a></li>
-				<li><a href="/?controller=language&action=index">Languages</a></li>
-		      </ul>
-			</li>';
+			
+				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a><ul class="dropdown-menu">';
+				foreach($_SESSION['sections'] as $kvp)
+				{
+					echo '<li><a href="/?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
+				}
+				echo '</ul></li>';
 			}
+
+
+				$can_read_section = has_permission(new Permission(Securable::SECTION, Permission_Type::READ));
+				$can_read_project = has_permission(new Permission(Securable::PROJECT, Permission_Type::READ));
+				$can_read_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::READ));
+				$can_read_exercise = has_permission(new Permission(Securable::EXERCISE, Permission_Type::READ));
+				$can_read_concept = has_permission(new Permission(Securable::CONCEPT, Permission_Type::READ));
+
+			if ($can_read_section || $can_read_project || $can_read_lesson || $can_read_exercise)
+			{
+				echo '<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
+				  <ul class="dropdown-menu">';
+					if ($can_read_section) echo '<li><a href="/?controller=section&action=index">Sections</a></li>';
+					if ($can_read_concept) echo '<li><a href="/?controller=concept&action=index">Concepts</a></li>';
+					if ($can_read_project) echo '<li><a href="/?controller=project&action=index">Projects</a></li>';
+					if ($can_read_lesson) echo '<li><a href="/?controller=lesson&action=index">Lessons</a></li>';
+					if ($can_read_exercise) echo '<li><a href="/?controller=exercise&action=index">Exercises</a></li>';
+				  echo '</ul>
+				</li>';
+			}
+
+			$can_read_course = has_permission(new Permission(Securable::COURSE, Permission_Type::READ));
+			$can_read_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::READ));
+
+			if($can_read_course || $can_read_language)
+			{
+				echo '<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
+				  <ul class="dropdown-menu">';
+					if ($can_read_course) echo '<li><a href="/?controller=course&action=index">Courses</a></li>';
+					if ($can_read_language) echo '<li><a href="/?controller=language&action=index">Languages</a></li>';
+				  echo '</ul>
+				</li>';
+			}
+
+		}
 			?>
 
 
@@ -118,17 +137,22 @@
 		<?php
 		if(isset($_SESSION['alerts']))
 		{
-		foreach($_SESSION['alerts'] as $alert)
-		{
-		?>
-		<div class="alert alert-success alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<?php echo htmlspecialchars($alert); ?>
-		</div>
-		<?php
-		//get rid of alert...
+			foreach($_SESSION['alerts'] as $alert)
+			{
+				$alert_type_class = '';
+				if ($alert->type == Alert_Type::SUCCESS) $alert_type_class = 'alert-success';
+				elseif($alert->type == Alert_Type::INFO) $alert_type_class = 'alert-info';
+				elseif($alert->type == Alert_Type::WARNING) $alert_type_class = 'alert-warning';
+				elseif($alert->type == Alert_Type::DANGER) $alert_type_class = 'alert-danger';
+			?>
+			<div class="alert <?php echo $alert_type_class; ?> alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<?php echo $alert->message; ?>
+			</div>
+			<?php
+			//get rid of alert...
+			}
 		unset($_SESSION['alerts']);
-		}
 		}
 		?>
 		<?php require_once($view_to_show); ?>

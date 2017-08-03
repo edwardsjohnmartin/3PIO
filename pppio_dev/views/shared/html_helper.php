@@ -34,18 +34,37 @@
 		//need empty form and filled form options
 		//should set ids
 		//dropdowns for model types... how do i know what model types are?
-		static function form($types, $properties, $action = null) //should pass in... action, submit test, post/get
+		static function form($types, $properties, $action = null, $custom_multiselect_options = null) //should pass in... action, submit test, post/get
 		{
+			if($custom_multiselect_options === null) $custom_multiselect_options = array();
 			//where to put breaks and labels
 			//where to pass in action
+			if(in_array(Type::FILE, $types))
+			{
+				$enctype = 'multipart/form-data';
+			}
+			else
+			{
+				$enctype = 'application/x-www-form-urlencoded';
+			}
+
 			if($action === null) $action = $_SERVER["REQUEST_URI"];
-			$form = '<form action="' . $action . '" method="post">';
+			$form = '<form action="' . $action . '" method="post" enctype="' . $enctype . '">';
+			$form .= static::input_token();
 			foreach($properties as $key => $value)
 			{
 				if(isset($types[$key])) //it had better be set! should i just use string if it's not set?
 				{
+
 					$form .= static::label($key);
-					$form .= static::input($types[$key], $key, $value);
+					if(array_key_exists($key, $custom_multiselect_options))
+					{
+						$form .= static::input($types[$key], $key, $value, $custom_multiselect_options[$key]);
+					}
+					else
+					{
+						$form .= static::input($types[$key], $key, $value);
+					}
 				}
 			}
 			$form .= static::input_submit();
@@ -127,7 +146,7 @@
 		return $input . $js;
 		}
 
-		static function input($type, $property, $value = null)
+		static function input($type, $property, $value = null, $options = null)
 		{
 			//better way for types? i thought enum, but i also want models.
 			//check type and call different input functions...
@@ -151,19 +170,37 @@
 			{
 				return static::input_code($property, $value);
 			}
+			else if($type == Type::FILE)
+			{
+				return static::input_file($property);
+			}
 			else if(Type::is_model($type)) //should put function on enum. 'is model'
 			{
 				//get what model it is, if any, or if it's not a proper one (better be) then show string input
 				//return 'need a select for ' . (new Type($type))->getKey();
-				$type = strtolower((new Type($type))->getKey());
-				require_once('models/' . $type . '.php');
-				return static::input_select($property, $value, $type::pairs()); //haha...
+				if($options === null)
+				{
+					$type = strtolower((new Type($type))->getKey());
+					require_once('models/' . $type . '.php');
+					return static::input_select($property, $value, $type::get_pairs()); //haha...
+				}
+				else
+				{
+					return static::input_select($property, $value, $options);
+				}
 			}
 			else if(Type::is_list_model($type)) // todo: do a safer check
 			{
-				$type = substr(strtolower((new Type($type))->getKey()), 5); //it will be called "LIST_something"
-				require_once('models/' . $type . '.php');
-				return static::input_select_multiple($property, $value, $type::pairs()); //maybe pairs should just be arrays... another step though
+				if($options === null)
+				{
+					$type = substr(strtolower((new Type($type))->getKey()), 5); //it will be called "LIST_something"
+					require_once('models/' . $type . '.php');
+					return static::input_select_multiple($property, $value, $type::get_pairs()); //maybe pairs should just be arrays... another step though
+				}
+				else
+				{
+					return static::input_select_multiple($property, $value, $options);
+				}
 			}
 			else //assume string
 			{
@@ -184,7 +221,12 @@
 
 		static function input_datetime($property, $value = null)
 		{
-			return '<input type="datetime-local" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
+			//return '<input type="datetime-local" class="form-control" name="' . $property . '" id="' . $property . '" value="' . htmlspecialchars($value) . '">'
+			return ' <div class="input-group date" id="' . $property . '">
+                    <input type="text" class="form-control" name="' . $property . '"/>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>'
+		.  '<script type="text/javascript">$(function () {$(\'#' . $property . '\').datetimepicker({defaultDate: "' . htmlspecialchars($value) . '"});});</script>';
 		}
 
 		static function input_string($property, $value = null)
@@ -217,17 +259,22 @@
 		return $input . $js;
 		}
 
+		static function input_file($property)
+		{
+			return '<input type="file" name="' . $property . '">';
+		}
+
 		static function input_select($property, $value = null, $options)
 		{
 			$select = '<select class="form-control" name="'. $property . '" >';
-			foreach($options as $option)
+			foreach($options as $k => $v)
 			{
-				$select .= '<option value="' . $option->key . '"';
-				if($value != null && ((is_int($value) && $value == $option->key)  || (is_object($value) && $value->key === $option->key)))
+				$select .= '<option value="' . $k . '"';
+				if($value != null && ((is_int($value) && $value == $k)  || (is_object($value) && $value->key === $k)))
 				{
 					$select .= 'selected';
 				}
-				$select .= '>' . htmlspecialchars($option->value) . '</option>';
+				$select .= '>' . htmlspecialchars($v) . '</option>';
 			}
 			$select .= '</select>';
 			return $select;
@@ -247,11 +294,11 @@
 					}
 				}
 			}
-			foreach($options as $option)
+			foreach($options as $k => $v)
 			{
-				if($value == null || $value != null && !array_key_exists($option->key, $value))
+				if($value == null || $value != null && !array_key_exists($k, $value))
 				{
-					$select .= '<option value="' . $option->key . '">' . htmlspecialchars($option->value) . '</option>';
+					$select .= '<option value="' . $k . '">' . htmlspecialchars($v) . '</option>';
 				}
 			}
 
@@ -287,6 +334,10 @@
 			return '<input type="submit" class="form-control" value="' . $value . '">';
 		}
 
+		static function input_token()
+		{
+			return '<input type="hidden" name="token" value="' . getToken() . '"/>';
+		}
 
 	}
 

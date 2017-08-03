@@ -40,14 +40,7 @@ function run() {
 		if(ret.v.length == 0 || ret.v[0].v == null)
 		{
 		//success
-			if(trying_latest)
-			{
-				markAsComplete(exercise_id, lesson_id, concept_id);
-			}
-			else
-			{
-				completeExercise();
-			}
+			markSuccess('Success!');
 		}
 		else
 		{
@@ -78,54 +71,11 @@ function run() {
     });
   }
 
-/*
-		if(trying_latest)
-		{
-			markAsComplete(exercise_id, lesson_id, concept_id);
-		}
-		else
-		{
-			completeExercise();
-		}
-*/
-
-function markAsComplete(exercise_id, lesson_id, concept_id) //i should only do this if i'm trying the latest!!
-{
-	$.ajax({
-		method: "POST",
-		url: "/?controller=exercise&action=mark_as_completed",
-		data: { id: exercise_id, lesson_id: lesson_id, concept_id: concept_id },
-		success: function(data) {
-			if(data.success)
-			{
-				completeExercise();
-			}
-			else
-			{
-				markError('Something went wrong.');
-			}
-		}
-	});
-}
-
-function completeExercise()
+function markSuccess(successMessage)
 {
 	infoAlert.classList.remove('alert-danger');
 	infoAlert.classList.add('alert-success');
-	infoAlert.innerHTML = 'Good job! ';
-	if(trying_last)
-	{
-		infoAlert.innerHTML += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Continue</span></a>';
-	}
-	else
-	{
-		infoAlert.innerHTML += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
-
-	}
-	if(trying_latest)
-	{
-		updateTiles();
-	}
+	infoAlert.innerHTML = successMessage;
 }
 
 function markError(errorMessage)
@@ -134,19 +84,3 @@ function markError(errorMessage)
 	infoAlert.classList.add('alert-danger');
 	infoAlert.innerHTML = errorMessage;
 }
-
-function updateTiles()
-{
-			var current_tile = document.getElementById('exercise-' + exercise_id);
-			current_tile.classList.remove('btn-default');
-			current_tile.classList.add('btn-success');
-
-			if(!trying_last)
-			{
-				var next_tile = document.getElementById('exercise-' + next_exercise_id);
-				next_tile.innerHTML = '<span>' + next_index + '</span>';
-				next_tile.classList.remove('disabled');
-				next_tile.href = link;
-			}
-}
-

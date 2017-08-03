@@ -9,7 +9,8 @@
 	echo $this->model_name;
 	$properties = $this->model_name::get_available_properties();
 	$types = $this->model_name::get_types();
-	echo HtmlHelper::form($types, $properties);
+	if(!isset($options)) $options = null;
+	echo HtmlHelper::form($types, $properties, null, $options);
 ?>
 
 

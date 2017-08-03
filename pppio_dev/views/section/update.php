@@ -12,7 +12,12 @@ okay, i should make the view a class, and pass in the model. where is it called 
 	//i want to be able to get the properties something that's not already created...
 	//i can just use the types...
 	echo $this->model_name;
-	if(!isset($options)) $options = null;
-	echo HtmlHelper::form($model::get_types(), $model->get_properties(), null, $options);
+
+
+	$properties = $model->get_properties();
+	$types = $model::get_types();
+	unset($properties['teacher']);
+	unset($types['teacher']);
+	echo HtmlHelper::form($types, $properties);
 ?>
 

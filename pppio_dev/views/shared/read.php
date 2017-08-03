@@ -7,5 +7,10 @@
 	//i can just use the types...
 	echo $this->model_name;
 	echo HtmlHelper::view($model::get_types(), $model->get_properties());
+
+if(has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::EDIT)))
+{
+	echo '<a href="/?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
+}
 ?>
 

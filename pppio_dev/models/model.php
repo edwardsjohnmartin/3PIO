@@ -29,12 +29,10 @@
 			//namely the db fill (set from json) and set properties (set int key)
 			foreach(static::$types as $prop => $type) //actually just having an array would be much nicer
 			{
-				if(Type::is_list_model($type))// && $type < Type::LIST_MODEL)
+				if(Type::is_list_model($type))
 				{
 					if(!is_array($this->$prop)) //this will either be an array of ints or a json
 					{
-
-						
 						$temp = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
 						$arr = array();
 						foreach((array)$temp as $kvp) //why does this break on post if i don't tell it it's an array? they're the same. it knows it's an array. and it wasn't doing this before.
@@ -42,19 +40,7 @@
 							if($kvp->key != null) $arr[$kvp->key] = $kvp; //->value;
 						}
 						$this->$prop = $arr;
-						//print_r($this->$prop);
-						/*
-						$this->$prop = json_decode($this->$prop);
-						//print_r($this);
-*/
-
 					}
-					//else //where is this used? anywhere?
-					//{
-					//	$value = $this->$prop;
-					//	$this->$prop = new key_value_pair();
-					//	$this->$prop->key = $value;
-					//}
 				}
 				else if(Type::is_model($type))
 				{
@@ -177,8 +163,7 @@
 
 		}
 
-		//this seems like abuse
-		public static function pairs()
+		public static function get_pairs()
 		{
 			$model_name = static::class;
 
@@ -187,9 +172,7 @@
 			$function_name = 'sproc_read_' . $model_name . '_get_pairs';
 			$req = $db->query(static::build_query($function_name));
 
-			require_once('models/key_value_pair.php');
-			return $req->fetchAll(PDO::FETCH_CLASS, 'key_value_pair'); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
-
+			return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 		}
 
 		//should have pairs subset (too? only?)
@@ -304,7 +287,7 @@
 		public function is_valid() //todo: make sure types are correct
 		{
 			foreach (static::$types as $key => $value) {
-				if(!array_key_exists($key, static::$hidden_props))
+				if(!array_key_exists($key, static::$hidden_props) && !array_key_exists($key, static::$db_hidden_props))
 				{
 					switch ($value) {
 						case (Type::INTEGER):
@@ -323,7 +306,7 @@
 							}
 							break;
 						case (Type::DATETIME):
-							if (!(($this->$key) instanceof DateTime)) {
+							if (!validate_date($this->$key)) {
 								return false;
 							}
 							break;
@@ -340,10 +323,18 @@
 							}
 							break;
 						default:
-							if (Type::is_model($value) && !(is_int($this->$key))) {
-								return false;
+							if (Type::is_model($value)) {
+								if (!(is_numeric($this->$key) && is_int($this->$key + 0))) {
+									return false;
+								}
 							}
-							elseif (!(Type::is_model($value))) {
+							elseif (Type::is_list_model($value)) {
+								if (!(is_array($this->$key) || $this->$key == null)) //todo: also need to check if each key is an int
+								{
+									return false;
+								}
+							}
+							else {
 								return false;
 							}
 					}

@@ -1,7 +1,7 @@
 <?php
 	class PagesController
 	{
-		public function home()
+		public function index()
 		{
 			//require_once('views/pages/home.php');
 			$view_to_show = 'views/pages/home.php';

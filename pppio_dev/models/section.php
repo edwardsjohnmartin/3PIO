@@ -13,12 +13,12 @@
 		protected $users;
 
 
-		public static function get_pairs_for_user($user_id) //expecting multiple
+		public static function get_pairs_for_student($user_id) //expecting multiple
 		{
 			$db = Db::getReader();
 			$user_id = intval($user_id);
 
-			$function_name = 'sproc_read_section_get_pairs_for_user';
+			$function_name = 'sproc_read_section_get_pairs_for_student';
 			$req = $db->prepare(static::build_query($function_name, array('user_id')));
 			$req->execute(array('user_id' => $user_id));
 
@@ -26,6 +26,17 @@
 			return $req->fetchAll(PDO::FETCH_CLASS, 'key_value_pair');
 		}
 
+		public static function get_pairs_for_owner($owner_id)
+		{
+			$db = Db::getReader(); 
+			$owner_id = intval($owner_id);
+
+			$function_name = 'sproc_read_section_get_pairs_for_owner';
+			$req = $db->prepare(static::build_query($function_name, array('owner_id')));
+			$req->execute(array('owner_id' => $owner_id));
+
+			return $req->fetchAll(PDO::FETCH_KEY_PAIR);  // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
+		}
 
 	}
 ?>

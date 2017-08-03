@@ -1,4 +1,70 @@
 <?php
+
+	//stuff that doesn't belong here
+	function validate_date($date)
+	{
+		$d = DateTime::createFromFormat('m/d/Y g:i A', $date);
+		return $d && $d->format('m/d/Y g:i A') === $date;
+	}
+
+	function add_alert($message, $alert_type)
+	{
+		$_SESSION['alerts'][] = new alert($message, $alert_type);
+	}
+
+	function has_permission($permission)
+	{
+		$has_permission = false;
+		if(array_key_exists('permissions', $_SESSION) && $_SESSION['permissions'] != null && array_key_exists($permission->securable, $_SESSION['permissions']) && array_key_exists($permission->permission_type, $_SESSION['permissions'][$permission->securable]))
+		{
+			$has_permission = $_SESSION['permissions'][$permission->securable][$permission->permission_type];
+		}
+		return $has_permission; //probably need to check
+
+	}
+
+	//https://stackoverflow.com/questions/4614052/how-to-prevent-multiple-form-submission-on-multiple-clicks-in-php
+	/**
+	 * Creates a token usable in a form
+	 * @return string
+	 */
+	function getToken(){
+	  $token = sha1(mt_rand());
+	  if(!isset($_SESSION['tokens'])){
+		$_SESSION['tokens'] = array($token => 1);
+	  }
+	  else{
+		$_SESSION['tokens'][$token] = 1;
+	  }
+	  return $token;
+	}
+
+	/**
+	 * Check if a token is valid. Removes it from the valid tokens list
+	 * @param string $token The token
+	 * @return bool
+	 */
+	function isTokenValid($token){
+	  if(!empty($_SESSION['tokens'][$token])){
+		unset($_SESSION['tokens'][$token]);
+		return true;
+	  }
+	  return false;
+	}
+
+	//end stuff that doesn't belong here
+
+
+	function redirect($controller, $action) //i'm using 'return' when calling to be consistent with call but it's not necessary
+	{
+		header('Location: ' . '/?controller=' . $controller . '&action=' . $action);
+	}
+
+	function redirect_to_index() //i'm using 'return' when calling to be consistent with call but it's not necessary
+	{
+		header('Location: ' . '/');
+	}
+
 	function call($controller, $action)
 	{
 		require_once('controllers/' . $controller . '_controller.php');
@@ -35,10 +101,6 @@
 				require_once('models/section.php');
 				$controller = new SectionController();
 				break;
-			case 'participation_type':
-				require_once('models/participation_type.php');
-				$controller = new Participation_Type_Controller();
-				break;
 			case 'course':
 				require_once('models/course.php');
 				$controller = new CourseController();
@@ -63,10 +125,6 @@
 				require_once('models/tag.php');
 				$controller = new TagController();
 				break;
-			case 'completion_status':
-				require_once('models/completion_status.php');
-				$controller = new Completion_Status_Controller();
-				break;
 			case 'exercise':
 				require_once('models/exercise.php');
 				$controller = new ExerciseController();
@@ -84,34 +142,95 @@
 				$controller = new ImporterController;
 				break;
 		}
-
-		$controller->{ $action }(); //i would guess that these brackets are unnecessary/optional
+		$controller->$action();
 	}
 
-	$controllers = array(
-						'pages' => ['home', 'error'],
-						'language' => ['index', 'read', 'create', 'update'],
-						//'problem' => ['index', 'read', 'create', 'update', 'try_it'],
-						'section' => ['index', 'read', 'create', 'update', 'read_student'],
-						//'participation_type' => ['index', 'read', 'create', 'update'],
-						'course' => ['index', 'read', 'create', 'update'],
-						'concept' => ['index', 'read', 'create', 'update'],
-						'project' => ['index', 'read', 'create', 'update'],
-						'lesson' => ['index', 'read', 'create', 'update', 'read_student'],
-						//'role' => ['index', 'read', 'create', 'update'],
-						'tag' => ['index', 'read', 'create', 'update'],
-						'completion_status' => ['index', 'read', 'create', 'update'],
-						'exercise' => ['index', 'read', 'create', 'update', 'try_it', 'mark_as_completed'],
-						'user' => ['log_in', 'log_out', 'create'], //['index', 'read', 'create', 'update'],
-						'function' => ['index', 'read', 'create', 'update'],
-						'importer' => ['index']
-						);
+	require_once('models/permission.php');
+	$controllers = [ //having all the permissions here is not optimal. also all but the page/index and page/error and importer/index should require login.
+						'pages' => ['index'=>[], 'error'=>[]],
+						'language' => [
+										'index'=>[new Permission(Securable::LANGUAGE, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::LANGUAGE, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::LANGUAGE, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::LANGUAGE, Permission_Type::EDIT)]
+									],
+						'section' => [
+										'index'=>[new Permission(Securable::SECTION, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::SECTION, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::SECTION, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::SECTION, Permission_Type::EDIT)],
+										'read_student'=>[]
+									],
+						'course' =>  [
+										'index'=>[new Permission(Securable::COURSE, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::COURSE, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::COURSE, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::COURSE, Permission_Type::EDIT)]
+									],
+						'concept' =>  [
+										'index'=>[new Permission(Securable::CONCEPT, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::CONCEPT, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::CONCEPT, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::CONCEPT, Permission_Type::EDIT)]
+									],
+						'project' =>  [
+										'index'=>[new Permission(Securable::PROJECT, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::PROJECT, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::PROJECT, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::PROJECT, Permission_Type::EDIT)]
+									],
+						'lesson' =>  [
+										'index'=>[new Permission(Securable::LESSON, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::LESSON, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::LESSON, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::LESSON, Permission_Type::EDIT)],
+										'create_file'=>[new Permission(Securable::LESSON, Permission_Type::CREATE)],
+										'read_student'=>[]
+									],
+						'tag' =>  [
+										'index'=>[new Permission(Securable::TAG, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::TAG, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::TAG, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::TAG, Permission_Type::EDIT)]
+									],
+						'exercise' =>  [
+										'index'=>[new Permission(Securable::EXERCISE, Permission_Type::READ)],
+										'read'=>[new Permission(Securable::EXERCISE, Permission_Type::READ)],
+										'create'=>[new Permission(Securable::EXERCISE, Permission_Type::CREATE)],
+										'update'=>[new Permission(Securable::EXERCISE, Permission_Type::EDIT)],
+										'try_it'=>[],
+										'mark_as_completed'=>[],
+									],
+						'user' => ['log_in'=>[], 'log_out'=>[], 'create'=>[]], //['index', 'read', 'create', 'update'],
+						'importer' => ['index' =>[]]
+						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
+						//'role' => ['index', 'read', 'create', 'update']
+						];
 
 	if(array_key_exists($controller, $controllers))
 	{
-		if(in_array($action, $controllers[$controller]))
+		if(array_key_exists($action, $controllers[$controller]))
 		{
-			call($controller, $action);
+			$can_access = true;
+			foreach($controllers[$controller][$action] as $permission)
+			{
+				if(!has_permission($permission))
+				{
+					$can_access = false;
+					break;
+				}
+			}
+
+			if($can_access)
+			{
+				call($controller, $action);
+			}
+			else
+			{
+				add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+				call('pages', 'error'); //todo: i should set the status code
+			}
+
 		}
 		else
 		{
