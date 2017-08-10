@@ -37,21 +37,20 @@
 	{
 	$concept_props = $concept->get_properties();
     echo '<div class="panel ';
-	if ($concept_props['project']->status == Completion_Status::COMPLETED)
+	if($found_current) //i shouldn't allow a link if already found current. this makes the assumption that they'll be completed in order
 	{
-		echo 'panel-success';
-		$completed_last = true;
+		echo 'panel-default';
+		$is_current = false;
 	}
-	elseif(!$found_current)
+	elseif($is_current)
 	{
 		echo 'panel-primary';
 		$found_current = true;
-		$is_current = true;
-		$completed_last = false;
 	}
-	else
+	elseif ($concept_props['project']->status == Completion_Status::COMPLETED)
 	{
-		echo 'panel-default';
+		echo 'panel-success';
+		$is_current = true;
 	}
 	echo '">
       <div class="panel-heading">
@@ -61,33 +60,42 @@
         </h4>
       </div>
       <div id="collapseConcept' . $concept->get_id() . '" class="panel-collapse collapse';
-		if($is_current) echo ' in';
+		if($is_current && $found_current) echo ' in'; // this is unclear
 		echo '">
         <div class="panel-body">';
-
-
-		echo '<ul class="list-group concept-list-group">';
 			if(count($concept_props['lessons']) > 0)
 			{
-				$lesson_complete = true;
-				foreach($concept_props['lessons'] as $lesson_key => $lesson_obj)
+			  	echo '<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				<div class="panel-heading">Lessons</div>
+			  	<ul class="list-group">';
+				foreach($concept_props['lessons'] as $lesson_key => $lesson_obj) //does php do this smartly? i assume they do
 				{
-					$lesson_complete = ($lesson_obj->status == Completion_Status::COMPLETED);
-					if(!$lesson_complete) break;
-				}
+					echo '<a href="/?controller=lesson&action=read_student&id=' . $lesson_key . '&concept_id=' . $concept->get_id() . '" class="list-group-item';
+					if($lesson_obj->status == Completion_Status::COMPLETED) echo ' list-group-item-success';
+					echo '">' . htmlspecialchars($lesson_obj->value) .'<span class="pull-right"></span></a>'; //use the due date of the project... need to display?
 
-				echo '<a href="\?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
-				if($lesson_complete) echo ' list-group-item-success';
-				echo '">Exercises</a>';
+				}
+				/*<a href="lesson.html" class="list-group-item">Logic Statements <span class="pull-right">6/7/2017 11:00 PM</span></a>
+				<a href="#" class="list-group-item">If Statements <span class="pull-right">6/7/2017 11:00 PM</span></a>
+				<a href="#" class="list-group-item">If-elseif Statements <span class="pull-right">6/7/2017 11:00 PM</span></a>
+				<a href="#" class="list-group-item">Switch Statements <span class="pull-right">6/7/2017 11:00 PM</span></a>*/
+		  	echo '</ul>
+			</div>';
 			}
-			echo '<a class="list-group-item'; ///?controller=project&action=read&id=' . $concept_props['project']->key .' //this should actually be the concept id
+			echo '<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">Projects</div>
+			  	<ul class="list-group">
+					<a href="/?controller=project&action=read&id=' . $concept_props['project']->key .'" class="list-group-item';
 					if($concept_props['project']->status == Completion_Status::COMPLETED) echo ' list-group-item-success';
-					echo '">' . 'Project' . '</a>';
-		echo '</ul>';
-	echo '</div>
+					echo '">' . htmlspecialchars($concept_props['project']->value) . '</a> <!-- put either the open date or the due date?-->
+		  		</ul>
+			</div>
+		</div>
       </div>
     </div>';
-	$is_current = false;
+
 	}
 	echo '</div>';
 

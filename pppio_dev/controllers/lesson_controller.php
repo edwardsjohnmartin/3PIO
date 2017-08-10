@@ -12,20 +12,27 @@
 
 		public function read_student() //the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
 		{
-			//this needs to make sure student is in class
-
 			if (!isset($_GET['id']) || !isset($_GET['concept_id']) || !lesson::can_access($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id())) //should show a permission error possibly
 			{
 				return call('pages', 'error');
 			}
-			//something like this
-			$lesson = ($this->model_name)::get_for_concept_and_user($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id());
-			//todo: should show error if there isn't one with that id!
-
-			//where should all models be included? in the controller? right now the one that goes with the controller is included in routes.
-			//i need to include the course model
-
+			$lesson = lesson::get_for_concept_and_student($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id());
 			$view_to_show = 'views/lesson/read_student.php';
+			require_once('views/shared/layout.php');
+
+		}
+
+		public function read_for_concept_for_student() //the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
+		{
+			require_once('models/concept.php');
+
+			if (!isset($_GET['concept_id']) || !lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id()))
+			{
+				return call('pages', 'error');
+			}
+			$concept = concept::get($_GET['concept_id']);
+			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
+			$view_to_show = 'views/lesson/read_for_concept_for_student.php';
 			require_once('views/shared/layout.php');
 
 		}
@@ -61,7 +68,13 @@
 				}
 			}
 			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
-			$view_to_show = 'views/' . 'lesson' . '/create.php';
+			$view_to_show = 'views/shared/create.php';
+			$properties = lesson::get_available_properties();
+			$types = lesson::get_types();
+			unset($properties['exercises']);
+			unset($types['exercises']);
+			unset($properties['owner']);
+			unset($types['owner']);
 			require_once('views/shared/layout.php');
 		}
 
@@ -198,7 +211,13 @@
 			}
 			else
 			{
-				$view_to_show = 'views/lesson/update.php';
+				$properties = $model->get_properties();
+				$types = $model::get_types();
+				unset($properties['exercises']);
+				unset($types['exercises']);
+				unset($properties['owner']);
+				unset($types['owner']);
+				$view_to_show = 'views/shared/update.php';
 				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.

@@ -41,7 +41,11 @@
 				}
 			}
 			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
-			$view_to_show = 'views/' . 'section' . '/create.php';
+			$view_to_show = 'views/shared/create.php';
+			$properties = $this->model_name::get_available_properties();
+			$types = $this->model_name::get_types();
+			unset($properties['teacher']);
+			unset($types['teacher']);
 			require_once('views/shared/layout.php');
 		}
 		
@@ -92,7 +96,11 @@
 			}
 			else
 			{
-				$view_to_show = 'views/section/update.php';
+				$view_to_show = 'views/shared/update.php';
+				$properties = $model->get_properties();
+				$types = $model::get_types();
+				unset($properties['teacher']);
+				unset($types['teacher']);
 				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.

@@ -1,0 +1,175 @@
+/*
+
+    DECLARE @cnt INT = 1;
+    DECLARE @match BIT = 1;
+    DECLARE @dummy BIT = 1; -- Used to ensure equal time for assignment
+    DECLARE @charA int;
+    DECLARE @charB int;
+
+    WHILE @cnt < 51
+    BEGIN
+            SET @charA = UNICODE(SUBSTRING(@pswd1, @cnt, 1));
+            SET @charB = UNICODE(SUBSTRING(@pswd2, @cnt, 1));
+            IF(@charA ^ @charB <> 0)
+                SET @match = 0;
+            ELSE
+                SET @dummy = 0;
+        SET @cnt = @cnt + 1;
+    END;
+    RETURN @match;
+
+*/
+
+CREATE OR REPLACE FUNCTION constant_time_equals(str_a text, str_b text)
+RETURNS bool AS $$
+	DECLARE
+		match bool = true;
+		dummy bool = true; -- Used to ensure equal time for assignment
+		char_a int;
+		char_b int;
+	BEGIN
+	FOR i in 1..64 LOOP
+		char_a = ascii(substr(str_a, i, 1));
+		char_b = ascii(substr(str_b, i, 1));
+		IF ((char_a # char_b) <> 0) THEN
+			match = false;
+		ELSE
+			dummy = false;
+		END IF;
+	END LOOP;
+	RETURN match;
+	END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+
+-- check login...?
+
+CREATE OR REPLACE FUNCTION sproc_read_user_get_for_login(email text, password text)
+RETURNS setof user_partial AS $$
+	DECLARE
+		user_match users%ROWTYPE;
+
+	BEGIN
+		SELECT * INTO user_match FROM users AS u WHERE u.email = sproc_read_user_get_for_login.email AND NOT u.is_deleted;
+		IF user_match IS NOT NULL AND constant_time_equals(encode(digest(sproc_read_user_get_for_login.password || user_match.salt, 'SHA256'), 'hex'), user_match.hash) THEN
+		-- IF user_match IS NOT NULL AND constant_time_equals('a', 'a') THEN
+			RETURN QUERY SELECT user_match.id, user_match.email, user_match.name, user_match.role_id;
+		ELSE
+			RETURN QUERY SELECT CAST(null AS integer), CAST(null AS text), CAST(null AS text), CAST(null AS integer);
+		END IF;
+	END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_user_get(id int)
+RETURNS TABLE(id integer, email text, name text, role json) AS $$
+	SELECT u.id, u.email, u.name, row_to_json(ROW(r.id, r.name)::key_value_pair) AS role FROM users AS u
+	JOIN roles AS r ON u.role_id = r.id
+	WHERE u.id = sproc_read_user_get.id AND NOT u.is_deleted;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_user_get_all()
+RETURNS TABLE(id integer, email text, name text, role json) AS $$
+	SELECT u.id, u.email, u.name, row_to_json(ROW(r.id, r.name)::key_value_pair) AS role FROM users AS u
+	JOIN roles AS r ON u.role_id = r.id
+	WHERE NOT u.is_deleted;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_write_user_update(id int, email text, name text, role int)
+RETURNS VOID AS $$
+	UPDATE users AS u
+		SET email =  sproc_write_user_update.email,
+			name = sproc_write_user_update.name,
+			role_id =  sproc_write_user_update.role
+	WHERE u.id = sproc_write_user_update.id AND NOT u.is_deleted;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+
+/*
+
+ALTER TABLE users ALTER hash TYPE text;
+
+creating user
+email
+name
+password
+
+submit
+make sure email is unique
+
+how to do password...
+salt once on server
+
+salt again on database
+must create the salt
+
+in stored procedure
+email
+name
+create salt -    gen_salt(type text [, iter_count integer ]) returns text
+	The type parameter specifies the hashing algorithm. The accepted types are: des, xdes, md5 and bf.
+use salt to hash password
+store hash
+role id...
+
+SHA256
+
+
+how should i generate the salt? just a random string... how long?
+"Use a strong random number generator to create a salt of 16 bytes or longer."
+
+*/
+
+CREATE OR REPLACE FUNCTION sproc_write_user_create(email text, name text, password text, role int)
+RETURNS TABLE(id int) AS $$
+	DECLARE
+		salt text;
+	BEGIN
+		salt = gen_salt('bf');
+	RETURN QUERY INSERT INTO users AS u (email, name, hash, salt, role_id) VALUES (sproc_write_user_create.email, sproc_write_user_create.name, encode(digest(sproc_write_user_create.password || salt, 'sha256'), 'hex'), salt, sproc_write_user_create.role) RETURNING u.id;
+	END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- i should also have one to check if an email is available
+
+CREATE OR REPLACE FUNCTION sproc_read_user_email_is_available(email text)
+RETURNS TABLE(is_available bool) AS $$
+BEGIN
+	RETURN QUERY SELECT NOT exists((SELECT u.email FROM users AS u WHERE u.email = sproc_read_user_email_is_available.email));
+END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_user_email_is_available(email text, id int)
+RETURNS TABLE(is_available bool) AS $$
+BEGIN
+	RETURN QUERY SELECT NOT exists((SELECT u.email FROM users AS u WHERE u.email = sproc_read_user_email_is_available.email AND u.id != sproc_read_user_email_is_available.id));
+END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- SELECT exists((SELECT u.email FROM users AS u WHERE u.email = 'test@test.test'));
+
+
+
+/*
+
+account creation
+
+must have unique email (check ajax? server side for sure)
+going to let just email be the unique one i think. display name doesn't need to be unique
+password/retype (check client side and server side)
+will be regular user role at first (should have role enum i think)
+
+need password change...
+
+same action for admin and no user?
+just change content and reaction?
+
+
+on log in, i should fill the classes that this user is enrolled in
+
+classes i'm taking/classes i'm teaching
+
+*/
+
+

@@ -2,10 +2,11 @@
 	require_once('models/model.php');
 	class Concept extends Model
 	{
-		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'section' => Type::SECTION, 'project' => Type::PROJECT, 'project_open_date' => Type::DATETIME, 'project_due_date' => Type::DATETIME, 'lessons' => Type::LIST_LESSON); //use the enum
+		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'section' => Type::SECTION, 'open_date' => Type::DATETIME, 'project' => Type::PROJECT, 'project_open_date' => Type::DATETIME, 'project_due_date' => Type::DATETIME, 'lessons' => Type::LIST_LESSON); //use the enum
 		protected $name;
 		protected $section;
 		protected $project;
+		protected $open_date;
 		protected $project_open_date;
 		protected $project_due_date;
 		protected $lessons;
@@ -46,7 +47,7 @@
 			$req = $db->prepare(static::build_query($function_name, array('id', 'user_id')));
 			$req->execute(array('id' => $id, 'user_id' => $user_id));
 
-			$req->setFetchMode(PDO::FETCH_CLASS,  $model_name);
+			$req->setFetchMode(PDO::FETCH_CLASS,  'concept');
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 

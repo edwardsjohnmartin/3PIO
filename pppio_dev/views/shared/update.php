@@ -13,6 +13,6 @@ okay, i should make the view a class, and pass in the model. where is it called 
 	//i can just use the types...
 	echo $this->model_name;
 	if(!isset($options)) $options = null;
-	echo HtmlHelper::form($model::get_types(), $model->get_properties(), null, $options);
+	echo HtmlHelper::form($types, $properties, null, $options);
 ?>
 

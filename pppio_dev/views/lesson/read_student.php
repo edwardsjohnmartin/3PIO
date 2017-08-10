@@ -61,16 +61,16 @@
 
 		if($exercise_obj->status == Completion_Status::COMPLETED)
 		{
-			echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '" class="tile btn btn-success"><span>' . $i . '</span></a>';
+			echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '" class="tile btn btn-success"><span class="tile-number">' . $i . '</span></a>';
 		}
 		elseif (!$found_current)
 		{
-			echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '" class="tile btn btn-default"><span>' . $i . '</span></a>';
+			echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '" class="tile btn btn-default"><span class="tile-number">' . $i . '</span></a>';
 			$found_current = true;
 		}
 		else
 		{
-			echo '<a class="tile btn btn-default disabled"><span>' . '<span class="glyphicon glyphicon-lock" aria-hidden="true"></span><span class="sr-only">Locked</span>' . '</span></a>';
+			echo '<a class="tile btn btn-default disabled"><span class="tile-number">' . '<span class="glyphicon glyphicon-lock" aria-hidden="true"></span><span class="sr-only">Locked</span>' . '</span></a>';
 		}
 		
 

@@ -124,6 +124,7 @@ CREATE TABLE concepts ( -- order by date? have an order?
 	id serial PRIMARY KEY,
 	name text NOT NULL,
 	section_id integer REFERENCES sections NOT NULL,
+	open_date timestamp NOT NULL,
 	project_id integer REFERENCES projects NOT NULL,
 	project_open_date timestamp NOT NULL,
 	project_due_date timestamp NOT NULL,

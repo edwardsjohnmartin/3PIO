@@ -36,6 +36,20 @@
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 
+		public static function get_all_for_concept_and_student($concept_id, $user_id) //the statuses will just be not completed if the user doesn't have permission to access
+		{
+			$db = Db::getReader();
+			$concept_id = intval($concept_id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_lesson_get_all_for_concept_and_student';
+			$req = $db->prepare(static::build_query($function_name, array('concept_id', 'user_id')));
+			$req->execute(array('concept_id' => $concept_id, 'user_id' => $user_id));
+
+			return $req->fetchAll(PDO::FETCH_CLASS, 'Lesson');
+
+		}
+
 		public static function can_access($id, $concept_id, $user_id)
 		{
 			$db = Db::getReader();
@@ -46,6 +60,19 @@
 			$function_name = 'sproc_read_lesson_can_access';
 			$req = $db->prepare(static::build_query($function_name, array('id', 'concept_id', 'user_id')));
 			$req->execute(array('id' => $id, 'concept_id' => $concept_id, 'user_id' => $user_id));
+
+			return $req->fetch(PDO::FETCH_COLUMN);
+		}
+
+		public static function can_access_for_concept($concept_id, $user_id)
+		{
+			$db = Db::getReader();
+			$concept_id = intval($concept_id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_lesson_can_access_for_concept';
+			$req = $db->prepare(static::build_query($function_name, array('concept_id', 'user_id')));
+			$req->execute(array('concept_id' => $concept_id, 'user_id' => $user_id));
 
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}

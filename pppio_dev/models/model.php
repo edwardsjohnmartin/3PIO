@@ -314,6 +314,7 @@
 						case (Type::CODE):
 						case (Type::PASSWORD):
 							if (!is_string($this->$key)) {
+								echo 'failed here ' . $key;
 								return false;
 							}
 							break;

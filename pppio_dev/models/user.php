@@ -20,12 +20,20 @@
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 
-		public function email_is_available($email)
+		public function email_is_available($email, $id = null)
 		{
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_email_is_available';
-			$req = $db->prepare(static::build_query($function_name, array('email')));
-			$req->execute(array('email' => $email));
+			$keys = array('email');
+			$params = array('email' => $email);
+			if($id != null)
+			{
+				$keys[] = 'id';
+				$params['id'] = $id;
+			}
+
+			$req = $db->prepare(static::build_query($function_name, $keys));
+			$req->execute($params);
 			
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}
@@ -44,5 +52,23 @@
 			$this->set_id($req->fetchColumn());
 			$this->password = null;
 		}
+
+		public function update() //sproc_write_user_create(email text, name text, password text, role_id int)
+		{
+			$model_name = static::class;
+			$db = Db::getWriter();
+			
+			$props = $this->get_db_properties();
+			$props['id'] = $this->id;
+			unset($props['password']);
+
+			$function_name = 'sproc_write_user_update';
+			$req = $db->prepare(static::build_query($function_name, array_keys($props)));
+			$req->execute($props);
+
+			$this->set_id($req->fetchColumn());
+			$this->password = null;
+		}
+
 	}
 ?>

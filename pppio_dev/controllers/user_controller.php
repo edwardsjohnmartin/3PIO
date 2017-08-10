@@ -2,7 +2,13 @@
 	require_once('controllers/base_controller.php');
 	class UserController extends BaseController
 	{
-		//now has the basic actions
+
+		public function index()
+		{
+			$models = ($this->model_name)::get_all();
+			$view_to_show = 'views/user/index.php';
+			require_once('views/shared/layout.php');
+		}
 
 		public function log_in()
 		{
@@ -74,7 +80,6 @@
 		public function create()
 		{
 			//user won't have any sections yet, so no need to fill.
-
 			//get from post.
 			//validate, fill.
 			//$model_name = $this->model_name; //not the best way to do this.
@@ -97,14 +102,13 @@
 					*/
 					$model = new $this->model_name();
 					$model->set_properties($_POST); //i need to add the server salt to the password!
-					$model->set_properties(array('role'=>1)); //HARD CODED ADMIN!!
+					$model->set_properties(array('role'=>3)); //HARD CODED STUDENT!!
 
 
 					$is_valid = true;
 					if(!isset($_POST['email']) || !isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['confirm_password']) || ($_POST['email'] == null) || ($_POST['name'] == null) || ($_POST['password'] == null) || ($_POST['confirm_password'] == null))
 					{
 						$is_valid = false;
-						//$_SESSION['alerts'][] = 'Please complete all fields.';
 						add_alert('Please complete all fields.', Alert_Type::DANGER);
 					}
 					else
@@ -112,34 +116,29 @@
 						if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) //i want to check here so i can give an error.
 						{
 							$is_valid = false;
-							//$_SESSION['alerts'][] = 'Please enter a valid email address.';
 							add_alert('Please enter a valid email address.', Alert_Type::DANGER);
 
 						}
 						if(!$model::email_is_available($_POST['email']))
 						{
 							$is_valid = false;
-							//$_SESSION['alerts'][] = 'An account is already associated with that email address.';
 							add_alert('An account is already associated with that email address.', Alert_Type::DANGER);
 						}
 						if($_POST['password'] != $_POST['confirm_password'])
 						{
 							$is_valid = false;
-							//$_SESSION['alerts'][] = 'The passwords entered do not match.';
 							add_alert('The passwords entered do not match.', Alert_Type::DANGER);
 						}
 						//password complexity
 						if(strlen($_POST['password']) < 8)
 						{
 							$is_valid = false;
-							//$_SESSION['alerts'][] = 'Please use at least 8 characters in your password.';
 							add_alert('Please use at least 8 characters in your password.', Alert_Type::DANGER);
 
 						}
 						if($is_valid && !$model->is_valid())
 						{
 							$is_valid = false;
-							//$_SESSION['alerts'][] = 'This user is not valid.';
 							add_alert('This user is not valid.', Alert_Type::DANGER);
 						}
 					}
@@ -148,21 +147,12 @@
 
 					if($is_valid)
 					{
-					
-
-						//add alerts to session or something
-						//http://getbootstrap.com/components/#alerts
-						//redirect header("Location: ...");
 						$model->create(); //this could fail on the email still...
 						//the password has already been cleared
-
 						$_SESSION['user'] = $model;
 						require_once('models/role.php');
 						$_SESSION['permissions'] = Role::get_permissions_for_role($model->get_properties()['role']);
-
-						//$_SESSION['alerts'][] = 'Welcome to 3PIO, ' . htmlspecialchars($model->get_properties()['name']) . '!';
-							add_alert('Welcome to 3PIO, ' . htmlspecialchars($model->get_properties()['name']) . '!', Alert_Type::DANGER);
-						//session_write_close();
+						add_alert('Welcome to 3PIO, ' . htmlspecialchars($model->get_properties()['name']) . '!', Alert_Type::DANGER);
 						redirect_to_index();
 					}
 				}
@@ -171,10 +161,103 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
 			$view_to_show = 'views/user/create.php';
+			$model_props = $model->get_properties();
+			$properties = array('email' => $model_props['email'], 'name' => $model_props['name'], 'password' => '', 'confirm_password' => '');
+			$types = array('email' => Type::EMAIL, 'name' => Type::STRING, 'password' => Type::PASSWORD, 'confirm_password' => Type::PASSWORD);
 			require_once('views/shared/layout.php');
 		}
+
+
+
+		public function update() {
+			//must set id and the rest too. id is separate.
+			//for users especially, i need to be more careful.
+			//this is a basic one without permissions.
+
+			if (!isset($_GET['id']))
+			{
+				return call('pages', 'error');
+			}
+
+			//if there is post data...
+			//todo: i need to check if the model actually exists on post, too!!!!
+			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+				$postedToken = filter_input(INPUT_POST, 'token');
+				if(!empty($postedToken) && isTokenValid($postedToken))
+				{
+					//probably i should do that isset stuff
+					$model = new $this->model_name();
+					$model->set_id($_GET['id']); //i should not trust that...
+					$model->set_properties($_POST);
+					$model->set_properties(array('password' => ''));
+					if($model->is_valid())
+					{
+						$is_valid = true;
+						if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) //i want to check here so i can give an error.
+						{
+							$is_valid = false;
+							add_alert('Please enter a valid email address.', Alert_Type::DANGER);
+
+						}
+						if(!$model::email_is_available($_POST['email'], $_GET['id']))
+						{
+							$is_valid = false;
+							add_alert('An account is already associated with that email address.', Alert_Type::DANGER);
+						}
+						if($is_valid)
+						{
+							$model->update(); //do i call validate here, or in the update function?
+							//layout has already been created. can't add the alerts now
+							//but redirecting anyway
+							//could use ajax instead
+							//for now, i'll stick to a redirect
+							//add alerts to session or something
+							//i want to redirect, but it doesn't seem like the php way...
+							//$_SESSION['alerts'][] = 'Successfully updated!';
+							add_alert('Successfully updated!', Alert_Type::SUCCESS);
+							//session_write_close();
+							return redirect($this->model_name, 'index');
+						}
+						//http://getbootstrap.com/components/#alerts
+						//exit properly first!
+						//redirect header("Location: ...");
+					}
+					else
+					{
+						add_alert('Please try again.', Alert_Type::DANGER);
+					}
+				}
+				else
+				{
+					add_alert('Please try again.', Alert_Type::DANGER);
+				}
+			}
+			
+			$model = ($this->model_name)::get($_GET['id']);
+			if($model == null)
+			{
+				return call('pages', 'error');
+			}
+			else
+			{
+				//require_once('views/shared/update.php');
+				$view_to_show = 'views/shared/update.php';
+				$types = $model::get_types();
+				$properties = $model->get_properties();
+				unset($properties['password']);
+				unset($types['password']);
+				require_once('views/shared/layout.php');
+			}
+			//i need to be better about the order of things.
+
+		}
+
+
+
+
+
+
 
 	}
 ?>

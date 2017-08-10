@@ -55,7 +55,6 @@
 				$view_to_show = 'views/shared/index.php';
 			}
 			require_once('views/shared/layout.php');
-
 		}
 
 		public function create()
@@ -101,6 +100,8 @@
 			{
 				$view_to_show = 'views/shared/create.php';
 			}
+			$properties = $this->model_name::get_available_properties();
+			$types = $this->model_name::get_types();
 			require_once('views/shared/layout.php');
 		}
 
@@ -130,6 +131,8 @@
 					{
 						$view_to_show = 'views/shared/read.php';
 					}
+					$types = $model::get_types();
+					$properties = $model->get_properties();
 					require_once('views/shared/layout.php');
 				}
 			}
@@ -201,6 +204,8 @@
 				{
 					$view_to_show = 'views/shared/update.php';
 				}
+				$types = $model::get_types();
+				$properties = $model->get_properties();
 				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.

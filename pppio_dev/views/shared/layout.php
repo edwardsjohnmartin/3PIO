@@ -82,6 +82,8 @@
 				</li>';
 			}
 
+			$can_read_user = has_permission(new Permission(Securable::USER, Permission_Type::READ));
+			$can_read_role = has_permission(new Permission(Securable::ROLE, Permission_Type::READ));
 			$can_read_course = has_permission(new Permission(Securable::COURSE, Permission_Type::READ));
 			$can_read_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::READ));
 
@@ -90,6 +92,8 @@
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
+					if ($can_read_user) echo '<li><a href="/?controller=user&action=index">Users</a></li>';
+					if ($can_read_role) echo '<li><a href="/?controller=role&action=index">Roles</a></li>';
 					if ($can_read_course) echo '<li><a href="/?controller=course&action=index">Courses</a></li>';
 					if ($can_read_language) echo '<li><a href="/?controller=language&action=index">Languages</a></li>';
 				  echo '</ul>

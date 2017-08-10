@@ -6,6 +6,8 @@
 	//i want to be able to get the properties something that's not already created...
 	//i can just use the types...
 	echo $this->model_name;
+	unset($properties['password']);
+	unset($types['password']);
 	echo HtmlHelper::view($types, $properties);
 
 if(has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::EDIT)))

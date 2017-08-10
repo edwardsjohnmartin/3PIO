@@ -69,6 +69,9 @@
 				{
 					$view_to_show = 'views/shared/create.php';
 				}
+
+				$types = $model::get_types();
+				$properties = $model->get_properties();
 				require_once('views/shared/layout.php');
 			}
 			else
@@ -141,6 +144,9 @@
 				{
 					$view_to_show = 'views/shared/update.php';
 				}
+
+				$types = $model::get_types();
+				$properties = $model->get_properties();
 				require_once('views/shared/layout.php');
 			}
 		}

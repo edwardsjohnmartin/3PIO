@@ -34,7 +34,7 @@ function run() {
 	});
 
 	myPromise.then(function(mod) {
-        var runMethod = mod.tp$getattr('TEST');
+        var runMethod = mod.tp$getattr('__TEST');
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
 		if(ret.v.length == 0 || ret.v[0].v == null)
@@ -137,14 +137,14 @@ function markError(errorMessage)
 
 function updateTiles()
 {
-			var current_tile = document.getElementById('exercise-' + exercise_id);
+			var current_tile = document.getElementById(current_tile_id);
 			current_tile.classList.remove('btn-default');
 			current_tile.classList.add('btn-success');
 
 			if(!trying_last)
 			{
-				var next_tile = document.getElementById('exercise-' + next_exercise_id);
-				next_tile.innerHTML = '<span>' + next_index + '</span>';
+				var next_tile = document.getElementById(next_tile_id);
+				next_tile.innerHTML = '<span class="tile-number">' + next_index + '</span>';
 				next_tile.classList.remove('disabled');
 				next_tile.href = link;
 			}
