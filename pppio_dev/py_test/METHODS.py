@@ -116,7 +116,7 @@ def __TEST(student_input, student_output):
             problems.append(thing)
 
     if (all(x in student_input for x in __in_strings) == False):
-        problems.append("You must include the following string(s) in your code: {0}.".format(str(in_strings)))
+        problems.append("You must include the following string(s) in your code: {0}.".format(str(__in_strings)))
 
     if __out_string != None:
         if student_output != __out_string:

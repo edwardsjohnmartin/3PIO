@@ -1,0 +1,21 @@
+on mine
+
+pg_dump -Fc -d pppio_dev -f /media/jac/DATA/Projects/pgdumps/pgdump08102017
+scp /media/jac/DATA/Projects/pgdumps/pgdump08102017 oryjacq@3pio.cose.isu.edu:~
+scp -r /var/www/pppio_dev oryjacq@3pio.cose.isu.edu:~
+---
+
+on server
+
+
+//pg_restore -c -C -d pppio_dev pgdump08102017
+dropdb pppio_dev
+createdb pppio_dev
+pg_restore -d pppio_dev pgdump08102017
+
+sudo rm -r ~/pppio_dev
+sudo rm -r /var/www/pppio_dev
+
+sudo cp -r ~/pppio_dev /var/www/pppio_dev
+
+

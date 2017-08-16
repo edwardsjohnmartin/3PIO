@@ -61,6 +61,10 @@
 						add_alert('Successfully created!', Alert_Type::SUCCESS);
 						return redirect('lesson', 'index');
 					}
+					else
+					{
+							add_alert('Please try again.', Alert_Type::DANGER);
+					}
 				}
 				else
 				{
@@ -172,7 +176,7 @@
 			//for users especially, i need to be more careful.
 			//this is a basic one without permissions.
 
-			if (!isset($_GET['id']))
+			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id()))
 			{
 				return call('pages', 'error');
 			}

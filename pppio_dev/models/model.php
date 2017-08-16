@@ -5,11 +5,11 @@
 		//hidden, db hidden, types. static.
 		//or rather, shown and db allowed
 		const MAX_BIGINT = 9223372036854775807; //this really should go somewhere else probably. should be global...
-		protected static $hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true);//protected?
-		protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true); //ooo... this will be a lot to copy if that stuff doesn't work out...
+		//if these are overridden in child classes, they need to include these values, too. must be copied (sadly).
+		protected static $hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true);
+		protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true);
 		protected static $types = array('id' => Type::INTEGER); //what will i do... the children need to set this one for sure. should this be static or constant? i'm just setting it over anyway in the class, for now.
 
-		//hm maybe i should force types in my get/set, idk
 		protected $id = null;
 
 		public function get_id()
@@ -19,7 +19,7 @@
 
 		public function set_id($id)
 		{
-			$this->id = intval($id); //intval?
+			$this->id = intval($id);
 		}
 		
 		public function __construct() //use optional parameters to allow to use constructor when getting from db
@@ -146,6 +146,7 @@
 		}
 
 		//maybe rename these
+		//i believe there is one case where this is used... in general, pairs should be used instead. some stored procedures may even be missing...
 		public static function get_all()
 		{
 			$model_name = static::class;
@@ -156,11 +157,6 @@
 			$req = $db->query(static::build_query($function_name));
 
 			return $req->fetchAll(PDO::FETCH_CLASS, $model_name);
-
-			//$result = $req->fetchAll(PDO::FETCH_CLASS, $model_name);
-			//print_r($result);
-			//return $result;
-
 		}
 
 		public static function get_pairs()
@@ -172,7 +168,7 @@
 			$function_name = 'sproc_read_' . $model_name . '_get_pairs';
 			$req = $db->query(static::build_query($function_name));
 
-			return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
+			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 		}
 
 		//should have pairs subset (too? only?)
@@ -224,10 +220,6 @@
 
 			$function_name = 'sproc_write_' . $model_name . '_create';
 			$req = $db->prepare(static::build_query($function_name, array_keys($props)));
-
-			//print_r($props);
-			//echo static::build_query($function_name, array_keys($props));
-
 
 			$req->execute($props);
 
@@ -342,10 +334,9 @@
 				}
 			}
 			return true;
-						
 		}
 
-		private static function php_array_to_pg_array($t)
+		protected static function php_array_to_pg_array($t)
 		{
 		  //$t is array to be escaped. $u will be string literal.
 		  $tv=array();

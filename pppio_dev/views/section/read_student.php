@@ -1,11 +1,8 @@
 <?php
-	//you'd better escape everything properly jac!
 	require_once('views/shared/html_helper.php');
 	require_once('enums/completion_status.php');
-	//print_r($section);
 	$section_props = $section->get_properties();
 
-	//print_r(count($concepts));
 	$completed_concept_count = 0;
 	$total_concept_count = count($concepts);
 	if($total_concept_count > 0)
@@ -29,10 +26,12 @@
 		  </div>
 		</div>';
 
+	//...this is a mess
+	//todo: if they skipped a project, it will still show up as the current one :/
 	echo '<div class="panel-group" id="accordion">';
-	//this is a mess
 	$is_current = $completed_concept_count == 0;
 	$found_current = false;
+	$lesson_complete = true;
 	foreach($concepts as $concept)
 	{
 	$concept_props = $concept->get_properties();
@@ -67,22 +66,40 @@
 
 
 		echo '<ul class="list-group concept-list-group">';
-			if(count($concept_props['lessons']) > 0)
+			if($lesson_complete) //previous lesson was complete
 			{
-				$lesson_complete = true;
-				foreach($concept_props['lessons'] as $lesson_key => $lesson_obj)
+				if(count($concept_props['lessons']) > 0)
 				{
-					$lesson_complete = ($lesson_obj->status == Completion_Status::COMPLETED);
-					if(!$lesson_complete) break;
-				}
+					foreach($concept_props['lessons'] as $lesson_key => $lesson_obj)
+					{
+						$lesson_complete = ($lesson_obj->status == Completion_Status::COMPLETED);
+						if(!$lesson_complete) break;
+					}
 
-				echo '<a href="\?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
-				if($lesson_complete) echo ' list-group-item-success';
-				echo '">Exercises</a>';
+
+					echo '<a href="\?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
+					if($lesson_complete) echo ' list-group-item-success';
+					echo '">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
+				}
 			}
-			echo '<a class="list-group-item'; ///?controller=project&action=read&id=' . $concept_props['project']->key .' //this should actually be the concept id
-					if($concept_props['project']->status == Completion_Status::COMPLETED) echo ' list-group-item-success';
-					echo '">' . 'Project' . '</a>';
+			else
+			{
+				echo '<a class="list-group-item disabled">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
+			}
+			
+
+			if($lesson_complete && new Datetime($concept_props['project_open_date']) < new Datetime()) //check open date
+			{
+			echo '<a href="?controller=project&action=try_it&concept_id=' . $concept->get_id() . '" class="list-group-item'; ///?controller=project&action=read&id=' . $concept_props['project']->key .' //this should actually be the concept id
+					if($concept_props['project']->status /*== Completion_Status::COMPLETED*/) echo ' list-group-item-success';
+					echo '">Project<span class="pull-right">' . $concept_props['project_open_date'] . ' to ' . $concept_props['project_due_date'] . '</span></a>';
+			}
+			else
+			{
+			echo '<a class="list-group-item disabled">Project<span class="pull-right">' . $concept_props['project_open_date'] . ' to ' . $concept_props['project_due_date'] . '</span></a>';
+			}
+			
+
 		echo '</ul>';
 	echo '</div>
       </div>

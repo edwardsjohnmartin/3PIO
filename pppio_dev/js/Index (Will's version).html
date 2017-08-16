@@ -1,0 +1,58 @@
+<!doctype html>
+<div>
+    Choose a test file:
+    <input type="file" id="fileInput">
+</div>
+
+<body oncopy="return false" oncut="return false" onpaste="return false">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>TEST 3 (Multiple Variables)</title>
+  <meta name="description" content="Code">
+  <meta name="author" content="ISU">
+
+  <link rel="stylesheet" href="css/Site.css">
+
+  <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
+  <link rel="stylesheet" href="CodeMirror/theme/solarized.css">
+  <script src="CodeMirror/lib/codemirror.js"></script>
+  <script src="CodeMirror/mode/python/python.js"></script>
+
+  <script src="skulpt/skulpt.min.js"></script>
+  <script src="skulpt/skulpt-stdlib.js"></script>
+
+</head>
+
+<body>
+  <!-- <script src="js/scripts.js"></script> -->
+  <div id="prompt" name="prompt">
+</div>
+<div class="editor">
+	<div class="left">
+		<textarea id="code" name="code">
+</textarea>
+<script type = "text/javascript">
+  document.getElementById("code").select() + document.getElementById("code").focus();
+  </script>
+
+	</div>
+	<div class="right">
+
+		<input type="button" id="runButton" value="Run">
+
+
+		<div id="mycanvas" class="graphicalOutput"></div>
+		<pre id="output" ></pre>
+
+
+	</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="js/main (Will's version).js"></script>
+
+
+</body>
+</html>

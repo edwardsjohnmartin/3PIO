@@ -7,9 +7,7 @@ $exercise_props = $exercise->get_properties();
 
 echo '<link rel="stylesheet" href="css/editor.css">';
 require_once('views/shared/CodeMirror.php');
-echo '<script src="js/skulpt/skulpt.min.js"></script>
-<script src="js/skulpt/skulpt-stdlib.js"></script>';
-
+require_once('views/shared/Skulpt.php');
 
 echo '<div class="row height-100 overflow-hidden">
 <div class="col-xs-3 height-100 overflow-auto right-pad-0">
@@ -32,10 +30,13 @@ either way, show the link for the next exercise, or the section if this one is t
 	$next_exercise_id = null;
 	$next_lesson_id = null;
 	$next_index = null;
+	$lesson_name = '';
 foreach($lessons as $lesson)
 {
 $lesson_props = $lesson->get_properties();
 $exercises = $lesson_props['exercises'];
+if ($lesson_id == $lesson->get_id()) $lesson_name = $lesson_props['name'];
+
 	foreach($exercises as $exercise_id => $exercise_obj)
 	{
 		echo '<div class="col-xs-4 text-center">';
@@ -99,7 +100,11 @@ echo '<div class="col-xs-9 height-100 flex-columns">';
 
 echo '<div class="row no-shrink">
 		<div class="col-xs-12">
-			<h3>' . htmlspecialchars($exercise_props['name']) . '</h3>
+			<h3>' . htmlspecialchars($lesson_name) . '</h3>'; //$exercise_props['lesson']->value); //bugs leftover from switching to only one lesson per project
+			//check if empty
+			if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
+
+			echo '</h3>
 			<p id="prompt">' . htmlspecialchars($exercise_props['description']) . '</p>
 		</div>
 	</div>';
@@ -121,8 +126,7 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 			</div>
 			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
 				<div class="col-xs-12 pad-0">
-					<div class="alert alert-default mar-0" role="alert" id="infoAlert">
-					</div>
+					<div id="codeAlerts"></div>
 				</div>
 			</div>';
 
@@ -162,6 +166,6 @@ require('py_test/METHODS.py');
 echo $exercise_props['test_code'];
 echo '</script>';
 
-echo '<script src="js/editor.js"></script>';
+echo '<script src="js/exercise_editor.js"></script>';
 
 ?>

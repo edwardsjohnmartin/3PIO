@@ -120,9 +120,26 @@
 			<?php
 			if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 			{
-				echo '<li><a href="#">Settings</a></li>
-				<li><a href="#">' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>
-		    	<li><a href="/?controller=user&action=log_out">Log out</a></li>';
+				//echo '<li><a href="#">Settings</a></li>
+				echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
+
+			echo '<li class="dropdown">
+		  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>
+		  <ul class="dropdown-menu">';
+			if(isset($_SESSION['partners']) && $_SESSION['partners'] != null && count($_SESSION['partners']) > 0)
+			{
+				foreach($_SESSION['partners'] as $partner)
+				{
+					echo '<li><a>' . $partner->get_properties()['name'] . '</a></li>';
+				}
+			echo '<li role="separator" class="divider"></li>';
+			}
+			echo '<li><a href="/?controller=user&action=log_in_partner">Add a partner</a></li>';
+		  echo '</ul>
+		</li>';			
+
+		    	echo '<li><a href="/?controller=user&action=log_out">Log out</a></li>';
+
 			}
 			else
 			{

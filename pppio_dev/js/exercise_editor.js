@@ -1,6 +1,6 @@
 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     mode: {name: "python",
-           version: 3,
+           version: 2,
            singleLineStringErrors: false},
     lineNumbers: true,
     indentUnit: 4,
@@ -8,7 +8,10 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 	theme: "solarized dark"
 });
 
-document.getElementById("runButton").onclick = run;
+document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
+editor.on('copy', function(a, e) {e.preventDefault();});
+editor.on('cut', function(a, e) {e.preventDefault();});
+editor.on('paste', function(a, e) {e.preventDefault();});
 
 function outf(text) { 
     var mypre = document.getElementById("output"); 
@@ -52,14 +55,11 @@ function run() {
 		else
 		{
 			//print errors
-			var errorMessage = '<ul>'
 			for(var i = 0, l = ret.v.length; i<l; i++)
 			{
-				errorMessage += '<li>' + ret.v[i].v + '</li>';
+				markError(ret.v[i].v);
 
 			}
-			errorMessage += '</ul>';
-			markError(errorMessage);
 		}
     },
         function(err) {
@@ -104,37 +104,52 @@ function markAsComplete(exercise_id, lesson_id, concept_id) //i should only do t
 			{
 				markError('Something went wrong.');
 			}
-		}
+		},
+		error: function() { markError('Something went wrong.');　}
 	});
 }
 
 function completeExercise()
 {
-	infoAlert.classList.remove('alert-danger');
-	infoAlert.classList.add('alert-success');
-	infoAlert.innerHTML = 'Good job! ';
+	var successMessage = 'Good job! ';
 	if(trying_last)
 	{
-		infoAlert.innerHTML += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Continue</span></a>';
+		successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Continue</span></a>';
 	}
 	else
 	{
-		infoAlert.innerHTML += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
+		successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
 
 	}
+	markSuccess(successMessage);
 	if(trying_latest)
 	{
 		updateTiles();
 	}
 }
 
-function markError(errorMessage)
+var codeAlerts = document.getElementById('codeAlerts');
+
+function clearAlerts()
 {
-	infoAlert.classList.remove('alert-success');
-	infoAlert.classList.add('alert-danger');
-	infoAlert.innerHTML = errorMessage;
+	codeAlerts.innerHTML = '';
 }
 
+function markError(errorMessage)
+{
+	//infoAlert.classList.remove('alert-success');
+	//infoAlert.classList.add('alert-danger');
+	//infoAlert.innerHTML = errorMessage;
+	codeAlerts.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" role="alert" id="infoAlert">' + errorMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+}
+
+function markSuccess(successMessage)
+{
+	//infoAlert.classList.remove('alert-danger');
+	//infoAlert.classList.add('alert-success');
+	//infoAlert.innerHTML = successMessage;
+	codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+}
 function updateTiles()
 {
 			var current_tile = document.getElementById(current_tile_id);

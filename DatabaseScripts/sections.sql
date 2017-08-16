@@ -24,13 +24,14 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 --i don't think i will ever want to use this! i probably shouldn't allow it.
 --.......... these need to indicate grader/student... for now, i'll assume student
 CREATE OR REPLACE FUNCTION sproc_read_section_get_all()
-RETURNS TABLE(id int, name text, course json, teacher json, start_date timestamp, end_date timestamp, users json) AS $$
-	SELECT s.id, s.name, row_to_json(ROW(c.id, c.name)::key_value_pair) AS course, row_to_json(ROW(t.id, t.name)::key_value_pair) AS teacher, s.start_date, s.end_date, array_to_json(array_agg(ROW(u.id, u.name)::key_value_pair ORDER BY u.name)) AS users
+RETURNS TABLE(id int, name text, course json, teacher json, start_date timestamp, end_date timestamp, users json, concepts json) AS $$
+	SELECT s.id, s.name, row_to_json(ROW(c.id, c.name)::key_value_pair) AS course, row_to_json(ROW(t.id, t.name)::key_value_pair) AS teacher, s.start_date, s.end_date, array_to_json(array_agg(ROW(u.id, u.name)::key_value_pair ORDER BY u.name)) AS users, array_to_json(array_agg(ROW(con.id, con.name)::key_value_pair ORDER BY con.open_date, con.project_open_date)) AS concepts
 	FROM sections s
 	INNER JOIN courses c ON (s.course_id = c.id)
 	INNER JOIN users t ON (s.teacher_id = t.id)
 	LEFT JOIN users_to_sections AS uts ON s.id = uts.section_id
 	LEFT JOIN users AS u on uts.user_id = u.id
+	LEFT JOIN concepts AS con ON con.section_id = s.id
 	WHERE NOT s.is_deleted
 	GROUP BY s.id, c.id, t.id
 	ORDER BY s.start_date;
@@ -52,18 +53,19 @@ CREATE OR REPLACE FUNCTION sproc_read_section_get_pairs_for_student(user_id int)
 RETURNS SETOF key_value_pair AS $$
 	SELECT s.id, s.name FROM users_to_sections AS uts
 	JOIN sections AS s ON uts.section_id = s.id
-	WHERE uts.user_id = sproc_read_section_get_pairs_for_student.user_id AND NOT s.is_deleted
+	WHERE uts.user_id = sproc_read_section_get_pairs_for_student.user_id AND s.start_date < current_timestamp AND s.end_date > current_timestamp AND NOT s.is_deleted
 	ORDER BY s.id;
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_section_get(id int)
-RETURNS TABLE(id int, name text, course json, teacher json, start_date timestamp, end_date timestamp, users json) AS $$
-	SELECT s.id, s.name, row_to_json(ROW(c.id, c.name)::key_value_pair) AS course, row_to_json(ROW(t.id, t.name)::key_value_pair) AS teacher, s.start_date, s.end_date, array_to_json(array_agg(ROW(u.id, u.name)::key_value_pair ORDER BY u.name)) AS users
+RETURNS TABLE(id int, name text, course json, teacher json, start_date timestamp, end_date timestamp, users json, concepts json) AS $$
+	SELECT s.id, s.name, row_to_json(ROW(c.id, c.name)::key_value_pair) AS course, row_to_json(ROW(t.id, t.name)::key_value_pair) AS teacher, s.start_date, s.end_date, array_to_json(array_agg(ROW(u.id, u.name)::key_value_pair ORDER BY u.name)) AS users, array_to_json(array_agg(ROW(con.id, con.name)::key_value_pair ORDER BY con.open_date, con.project_open_date)) AS concepts
 	FROM sections s
 	INNER JOIN courses c ON (s.course_id = c.id)
 	INNER JOIN users t ON (s.teacher_id = t.id)
 	LEFT JOIN users_to_sections AS uts ON s.id = uts.section_id
 	LEFT JOIN users AS u on uts.user_id = u.id
+	LEFT JOIN concepts AS con ON con.section_id = s.id
 	WHERE s.id = sproc_read_section_get.id AND NOT s.is_deleted
 	GROUP BY s.id, c.id, t.id;
 $$ LANGUAGE SQL SECURITY DEFINER;

@@ -1,0 +1,51 @@
+3PIO Known Issues
+
+Exercises are in the lesson in the order that they are added. If edited, the exercise gets pushed to the back. Originally, the exercises were added to lessons in bulk through the lesson create/edit, and it was possible to add them in the desired order and easily move them. This is no longer available because the add was moved to the exercise by request so that an exercise could only belong to one lesson (zero not allowed). A hybrid of the two would probably be nice. Note that the exercise's owner is the owner of the lesson that it belongs to.
+	Expected difficulty: Difficult
+
+There is currently no delete feature. The stored procedures are there for the simple cases. The lesson case is more difficult because it should also delete associated lessons. It would be fine just to mark the lesson and the associated exercises as deleted, and keep the links in the exercises to lessons table.
+	Expected difficulty: Medium
+
+There is no reset password feature. This requires being able to send emails from PHP.
+	Expected default: Difficult
+
+If someone is not allowed to access the project, they can still submit code by becoming someone else's partner. Should the save code function in the project controller only save the code for users who pass the can_access function?
+	Expected difficulty: Very easy
+
+TAs not built in completely. Cannot add TA to a class currently.
+	Expected difficulty: Medium
+
+Currently no pagination. Should use a mix of "get_pairs" and "subset" in the model. Database call should get a subset of pairs.
+	Expected difficulty: Easy
+
+Need better validation by default. The model checks types. There are many cases where I send an ID, but I don't check if that ID meets the restraints in the database (corresponding row exists). Something in the controller that the base could call to validate?
+	Expected difficulty: Difficult
+
+Better errors in general would be nice. Which property failed. Also, on fail, keep the old properties that were good.
+	Expected difficult: Difficult
+
+Enums that require corresponding tables in the database:
+	Securable
+	Permission_Type
+	Completion_Status
+
+Need HTTPS.
+	Expected difficulty: Medium
+
+If a student skips a project, it will still appear as the current one that is open by default, even if the due date has passed.
+	Expected difficulty: Medium
+
+The model possibly should have had get edit properties/get display properties for better automatic views. Well, some things (for example, owner ID from session) need to be changed manually anyway.
+	Expected difficulty: Difficult
+
+... I should use try/catches in my database calls (in the models).
+	Expected difficulty: Easy
+
+Right now, the project student code is saved on each run. Probably should also be a save button. Should also mark when something has changed so that if users try to leave the page it will pop up and ask if they're sure they want to leave.
+	Expected difficulty: Easy
+
+Currently, in order to log partners out, the main user must log out. There should be a page that allows the main user to remove partners. Would be quite simple. Could probably do really quickly...
+	Expected difficulty: Easy
+
+Home page should show class by default for student if there is one class only. Should show list if there are multiple.
+	Expected difficulty: Easy

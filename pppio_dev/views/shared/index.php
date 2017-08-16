@@ -3,6 +3,7 @@ if(has_permission(new Permission(constant('Securable::' . strtoupper($this->mode
 {
 	echo '<a href="/?controller=' . $this->model_name . '&action=create" class="btn btn-primary">Create</a><br>';
 }
+	echo '<h2>' . $this->model_name . ' List</h2>';
 ?>
 
 <table class="table table-striped table-bordered">

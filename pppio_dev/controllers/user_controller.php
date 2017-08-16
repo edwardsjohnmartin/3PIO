@@ -46,27 +46,63 @@
 					$_SESSION['sections'] = Section::get_pairs_for_student($model->get_id()); //right now, since this only happens on login, the user will have to log in and log out to see new sections. maybe i should refill when going to the section list for user page
 					require_once('models/role.php');
 					$_SESSION['permissions'] = Role::get_permissions_for_role($model->get_properties()['role']);
-					add_alert('Logged in!', Alert_Type::SUCCESS);
-					//session_write_close();
+					add_alert('Logged in! Welcome back, ' . htmlspecialchars($model->get_properties()['name']) . '.', Alert_Type::SUCCESS);
+					session_write_close();
 					redirect_to_index();
 				}
 				else
 				{
 					add_alert('Email and password do not match.', Alert_Type::DANGER);
-					//session_write_close(); //this causes problems
 				}
 			}
-			//require_once('views/user/log_in.php');
 
 			$view_to_show = 'views/user/log_in.php';
 			require_once('views/shared/layout.php');
+		}
 
+		public function log_in_partner()
+		{
+
+			//restrictions - can't be the user that's already logged in
+			//can't already be logged in as a partner
+			if ($_SERVER['REQUEST_METHOD'] === 'POST')
+			{
+ 				//should make sure email and password aren't null...
+
+				$model = User::get_for_login($_POST['email'], $_POST['password']);
+
+				if ($model->get_id() == null)
+				{
+					add_alert('Email and password do not match.', Alert_Type::DANGER);
+				}
+				else if($model->get_id() == $_SESSION['user']->get_id())
+				{
+					add_alert('You can\'t be your own partner.', Alert_Type::DANGER);
+				}
+				else if(isset($_SESSION['partners']) && $_SESSION['partners'] != null && array_key_exists($model->get_id(), $_SESSION['partners']))
+				{
+					add_alert(htmlspecialchars($model->get_properties()['name']) . ' is already your partner.', Alert_Type::DANGER);
+				}
+				else
+				{
+					$_SESSION['partners'][$model->get_id()] = $model; // ???
+					add_alert(htmlspecialchars($model->get_properties()['name']) . ' is now logged in as a partner.', Alert_Type::SUCCESS);
+					session_write_close();
+					redirect_to_index();
+				}
+			}
+
+
+
+			$view_to_show = 'views/user/log_in.php';
+			require_once('views/shared/layout.php');
 		}
 
 		public function log_out()
 		{
 			//clear the session and stuff
 			$_SESSION['user'] = null;
+			$_SESSION['partners'] = null;
 			$_SESSION['sections'] = null;
 			$_SESSION['permissions'] = null;
 

@@ -178,7 +178,10 @@
 										'index'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::READ)]),
 										'read'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::READ)]),
 										'create'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::EDIT)])
+										'update'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::EDIT)]),
+										'try_it'=>new Authorization_Requirements(true, []),
+										'save_code'=>new Authorization_Requirements(true, []),
+										'check'=>new Authorization_Requirements(true, [new Permission(Securable::PROJECT, Permission_Type::READ)])
 									],
 						'lesson' =>  [
 										'index'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::READ)]),
@@ -208,6 +211,7 @@
 										'read'=>new Authorization_Requirements(null, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'update'=>new Authorization_Requirements(null, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'log_in'=>new Authorization_Requirements(false, []),
+										'log_in_partner'=>new Authorization_Requirements(true, []),
 										'log_out'=>new Authorization_Requirements(true, []),
 										'create'=>new Authorization_Requirements(false, [])
 									], //['index', 'read', 'create', 'update'],
@@ -235,7 +239,7 @@
 			}
 			else if($controllers[$controller][$action]->login_state === false)
 			{
-				if(isset($_SESSION['user']) || $_SESSION['user'] != null)
+				if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 				{
 					$can_access = false;
 					add_alert("Please log out and try again.", Alert_Type::DANGER);

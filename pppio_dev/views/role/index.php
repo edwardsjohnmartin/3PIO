@@ -1,5 +1,6 @@
 <table class="table table-striped table-bordered">
 <?php
+	echo '<h2>' . $this->model_name . ' List</h2>';
 foreach($models as $k => $v)
 {
 ?>

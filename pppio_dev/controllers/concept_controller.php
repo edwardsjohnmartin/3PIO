@@ -85,13 +85,13 @@
 		public function update() { //only differences: validation + get lessons
 			require_once('models/section.php');
 			require_once('models/lesson.php');
-			$sections = section::get_pairs_for_owner($_SESSION['user']->get_id());
-			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());
-			$options = array('section' => $sections, 'lessons' => $lessons);
-			if (!isset($_GET['id']))
+			if (!isset($_GET['id']) || !concept::is_owner($_GET['id'], $_SESSION['user']->get_id()))
 			{
 				return call('pages', 'error');
 			}
+			$sections = section::get_pairs_for_owner($_SESSION['user']->get_id());
+			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());
+			$options = array('section' => $sections, 'lessons' => $lessons);
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$postedToken = filter_input(INPUT_POST, 'token');
 				if(!empty($postedToken) && isTokenValid($postedToken))

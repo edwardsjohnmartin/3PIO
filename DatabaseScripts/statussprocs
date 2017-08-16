@@ -202,6 +202,48 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 */
 
 --this is the latest
+-- project status is now true/false!
+CREATE OR REPLACE FUNCTION sproc_read_concept_get_all_for_section_and_student(section_id int, user_id int)
+RETURNS TABLE(id int, name text, section json, open_date timestamp, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
+	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, c.open_date, row_to_json(ROW(p.id, p.name, EXISTS(SELECT * FROM project_code_files_for_users AS pcffu WHERE pcffu.concept_id = c.id AND pcffu.user_id = sproc_read_concept_get_all_for_section_and_student.user_id))::key_value_status) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name, COALESCE(cs.id, (SELECT cs3.id FROM completion_status AS cs3 WHERE cs3.importance = (SELECT min(cs2.importance) FROM completion_status AS cs2))))::key_value_status ORDER BY ltc.lesson_number)) AS lessons
+	FROM concepts c
+	INNER JOIN sections s ON (c.section_id = s.id)
+	INNER JOIN projects p ON (c.project_id = p.id)
+	LEFT JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
+	LEFT JOIN lessons AS l on ltc.lesson_id = l.id
+
+	LEFT JOIN (SELECT c.id AS concept_id, l.id AS lesson_id, MAX(COALESCE(cs.importance, (SELECT MAX(importance) FROM completion_status))) AS importance FROM concepts AS c
+		JOIN lessons_to_concepts AS ltc on ltc.concept_id = c.id
+		JOIN lessons AS l ON l.id = ltc.lesson_id
+		JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+		JOIN exercises AS e ON etl.exercise_id = e.id
+		LEFT JOIN completion_status_to_exercise AS cste ON cste.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_exercise WHERE exercise_id = e.id AND user_id = sproc_read_concept_get_all_for_section_and_student.user_id AND concept_id = c.id AND lesson_id = l.id) AND cste.exercise_id = e.id AND cste.user_id = sproc_read_concept_get_all_for_section_and_student.user_id AND cste.concept_id = c.id AND cste.lesson_id = l.id
+		LEFT JOIN completion_status AS cs ON cs.id = cste.completion_status_id
+		GROUP BY c.id, l.id, ltc.lesson_number) AS inner_query ON l.id = inner_query.lesson_id AND c.id = inner_query.concept_id
+	LEFT JOIN completion_status AS cs ON cs.importance = inner_query.importance
+
+/*
+	LEFT JOIN project_teams AS pt ON pt.concept_id = c.id
+	LEFT JOIN users_to_project_teams AS utpt ON pt.id = utpt.project_team_id AND utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
+	LEFT JOIN completion_status_to_project AS cstp ON (cstp.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_project AS cstp_inner WHERE cstp_inner.project_team_id = utpt.project_team_id) AND cstp.project_team_id = utpt.project_team_id)
+*/
+	-- LEFT JOIN project_code_files_for_users AS pcffu ON pcffu.concept_id = c.id AND pcffu.user_id = sproc_read_concept_get_all_for_section_and_student.user_id -- ?
+
+	WHERE c.section_id = sproc_read_concept_get_all_for_section_and_student.section_id AND NOT c.is_deleted -- AND utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
+	GROUP BY c.id, s.id, p.id
+	ORDER BY c.project_open_date;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+
+
+
+
+
+--old
+
+/*
+--this is the latest
 CREATE OR REPLACE FUNCTION sproc_read_concept_get_all_for_section_and_student(section_id int, user_id int)
 RETURNS TABLE(id int, name text, section json, open_date timestamp, project json, project_open_date timestamp, project_due_date timestamp, lessons json) AS $$
 	SELECT c.id, c.name, row_to_json(ROW(s.id, s.name)::key_value_pair) AS section, c.open_date, row_to_json(ROW(p.id, p.name,  COALESCE(cstp.completion_status_id, (SELECT id FROM completion_status WHERE importance = (SELECT max(importance) FROM completion_status))))::key_value_status) AS project, c.project_open_date, c.project_due_date, array_to_json(array_agg(ROW(l.id, l.name, cs.id)::key_value_status ORDER BY ltc.lesson_number)) AS lessons
@@ -221,21 +263,26 @@ RETURNS TABLE(id int, name text, section json, open_date timestamp, project json
 		GROUP BY c.id, l.id, ltc.lesson_number) AS inner_query ON l.id = inner_query.lesson_id AND c.id = inner_query.concept_id
 	LEFT JOIN completion_status AS cs ON cs.importance = inner_query.importance
 
-	--LEFT JOIN project_teams AS pt ON pt.concept_id = c.id
-	--LEFT JOIN users_to_project_teams AS utpt ON pt.id = utpt.project_team_id
 	LEFT JOIN project_teams AS pt ON pt.concept_id = c.id
 	LEFT JOIN users_to_project_teams AS utpt ON pt.id = utpt.project_team_id AND utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
 	LEFT JOIN completion_status_to_project AS cstp ON (cstp.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_project AS cstp_inner WHERE cstp_inner.project_team_id = utpt.project_team_id) AND cstp.project_team_id = utpt.project_team_id)
-
---	LEFT JOIN users_to_project_teams AS utpt ON utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
---	LEFT JOIN project_teams AS pt ON pt.concept_id = c.id AND pt.id = utpt.project_team_id
---	LEFT JOIN completion_status_to_project AS cstp ON (cstp.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_project AS cstp_inner WHERE cstp_inner.project_team_id = pt.id) AND cstp.project_team_id = pt.id)
 
 	WHERE c.section_id = sproc_read_concept_get_all_for_section_and_student.section_id AND NOT c.is_deleted -- AND utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
 	GROUP BY c.id, s.id, p.id, cstp.completion_status_id
 	ORDER BY c.project_open_date;
 $$ LANGUAGE SQL SECURITY DEFINER;
+*/
 
+/*
+
+--LEFT JOIN project_teams AS pt ON pt.concept_id = c.id
+--LEFT JOIN users_to_project_teams AS utpt ON pt.id = utpt.project_team_id
+
+--	LEFT JOIN users_to_project_teams AS utpt ON utpt.user_id = sproc_read_concept_get_all_for_section_and_student.user_id
+--	LEFT JOIN project_teams AS pt ON pt.concept_id = c.id AND pt.id = utpt.project_team_id
+--	LEFT JOIN completion_status_to_project AS cstp ON (cstp.date_updated = (SELECT MAX(date_updated) FROM completion_status_to_project AS cstp_inner WHERE cstp_inner.project_team_id = pt.id) AND cstp.project_team_id = pt.id)
+
+*/
 
 
 /*
@@ -363,7 +410,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 
 
-
+-- this gets the PREVIOUS THAT HAS EXERCISES
 CREATE OR REPLACE FUNCTION sproc_read_lesson_get_previous(id int, concept_id int)
 RETURNS TABLE(previous_lesson_id int, previous_concept_id int) AS $$
 DECLARE
@@ -377,7 +424,11 @@ WHERE iq.concept_id = sproc_read_lesson_get_previous.concept_id AND iq.lesson_id
 RETURN QUERY SELECT iq2.lesson_id, iq2.concept_id FROM (SELECT ltc.lesson_id AS lesson_id, c.id AS concept_id, row_number() OVER (ORDER BY c.project_open_date, ltc.lesson_number) AS row_num FROM concepts AS c
 JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
 ORDER BY c.project_open_date DESC, ltc.lesson_number DESC) AS iq2
-WHERE iq2.row_num = (current_row_num-1)
+JOIN exercises_to_lessons AS etl ON etl.lesson_id = iq2.lesson_id
+WHERE iq2.row_num < (current_row_num)
+GROUP BY iq2.lesson_id, iq2.concept_id, iq2.row_num
+ORDER BY iq2.row_num desc
+LIMIT 1
 ;
 END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -389,16 +440,16 @@ CREATE OR REPLACE FUNCTION sproc_read_lesson_can_access(id int, concept_id int, 
 RETURNS TABLE(can_access bool) AS $$
 DECLARE
 	completed int;
-	previous_lesson RECORD;
+	previous_lesson RECORD; -- no... this needs to check all previous lessons in case the previous lesson doesn't have any exercises...
 BEGIN
 	completed = (SELECT cs.id FROM completion_status AS cs WHERE cs.importance = (SELECT min(cs2.importance) FROM completion_status AS cs2));
 	SELECT * FROM sproc_read_lesson_get_previous(sproc_read_lesson_can_access.id, sproc_read_lesson_can_access.concept_id) INTO previous_lesson;
 	RETURN QUERY SELECT (
 	-- make sure within time limit
-	(localtimestamp < s.end_date) AND (localtimestamp >= s.start_date)
+	(current_timestamp < s.end_date) AND (current_timestamp >= s.start_date)
 	AND
 	-- make sure concept is open
-	(localtimestamp >= c.open_date)
+	(current_timestamp >= c.open_date)
 	AND
 	-- make sure user is in this section
 	(EXISTS (SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_lesson_can_access.user_id))
@@ -406,19 +457,17 @@ BEGIN
 	-- make sure lesson is in concept
 	(EXISTS(SELECT lesson_number FROM lessons_to_concepts AS ltc_check WHERE ltc_check.lesson_id = sproc_read_lesson_can_access.id AND ltc_check.concept_id = sproc_read_lesson_can_access.concept_id))
 	AND
-	-- make sure previous lesson is completed (true if first lesson in section)
+	-- make sure previous lesson THAT HAS EXERCISES is completed (true if first lesson in section)
 	(SELECT sproc_read_lesson_get_status.id AS completion_status_id FROM sproc_read_lesson_get_status(previous_lesson.previous_lesson_id, previous_lesson.previous_concept_id, sproc_read_lesson_can_access.user_id)
 	UNION ALL
 	SELECT completed
 	LIMIT 1) = completed
-	) AS can_access
+	) AS can_access */
 	FROM concepts AS c
 	JOIN sections AS s ON c.section_id = s.id
 	WHERE c.id = sproc_read_lesson_can_access.concept_id;
 END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-
 
 
 CREATE OR REPLACE FUNCTION sproc_read_lesson_can_access_for_concept(concept_id int, user_id int)
@@ -449,13 +498,16 @@ BEGIN
 	completed = (SELECT cs.id FROM completion_status AS cs WHERE cs.importance = (SELECT min(cs2.importance) FROM completion_status AS cs2));	
 	RETURN QUERY SELECT (
 	-- make sure within time limit
-	(localtimestamp < s.end_date) AND (localtimestamp >= s.start_date)
+	(current_timestamp < s.end_date) AND (current_timestamp >= s.start_date)
 	AND
 	--make sure project is open
-	(localtimestamp >= c.project_open_date)
+	(current_timestamp >= c.project_open_date)
+	AND
+	--make sure user is in section
+	(EXISTS(SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_project_can_access.user_id))
 	AND
 	--make sure all lessons in this concept are complete
-	(SELECT bool_and(completed = iq.status) AS completed_all FROM
+	(SELECT COALESCE(bool_and(completed = iq.status), true) AS completed_all FROM
 	(SELECT sproc_read_lesson_get_status(ltc.lesson_id, c2.id, sproc_read_project_can_access.user_id) AS status FROM concepts AS c2
 	JOIN lessons_to_concepts AS ltc ON ltc.concept_id = c2.id
 	WHERE c2.id = c.id) AS iq)
@@ -541,7 +593,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 
-
+/*
 
 
 
@@ -576,6 +628,8 @@ BEGIN
 	RETURN QUERY SELECT not_completed AS result;
 END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+*/
 
 /*
 problem...
@@ -618,4 +672,98 @@ CREATE OR REPLACE FUNCTION sproc_write_completion_status_to_project_create(proje
 RETURNS VOID AS $$
 	INSERT INTO completion_status_to_exercise AS cste (project_id, concept_id, date_updated, completion_status_id, team_id) VALUES (sproc_write_completion_status_to_exercise_create.project_id, sproc_write_completion_status_to_exercise_create.concept_id, current_timestamp, sproc_write_completion_status_to_exercise_create.completion_status_id, sproc_write_completion_status_to_exercise_create.user_id);
 $$ LANGUAGE SQL SECURITY DEFINER;
+
+
+
+
+
+/*
+SELECT c.id AS concept_id, c.name AS concept_name, u.id AS user_id, u.name AS user_name, u.email AS user_email, l.id AS lesson_id, l.name AS lesson_name,
+(SELECT COUNT(e.id) FROM lessons AS l2
+JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+JOIN exercises AS e ON e.id = etl.exercise_id
+LEFT JOIN completion_status_to_exercise AS cste ON e.id = cste.exercise_id
+WHERE l2.id = l.id AND cste.user_id = u.id AND cste.date_updated = (SELECT max(date_updated) FROM completion_status_to_exercise WHERE user_id = cste.user_id AND lesson_id = l.id AND exercise_id = e.id) AND cste.completion_status_id = (SELECT id FROM completion_status WHERE importance = (SELECT min(importance) FROM completion_status)))
+/
+CAST((SELECT COUNT(e.id) FROM lessons AS l2
+JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+JOIN exercises AS e ON e.id = etl.exercise_id
+WHERE l2.id = l.id) AS FLOAT) AS completion
+FROM concepts AS c
+JOIN lessons_to_concepts AS ltc ON ltc.concept_id = c.id
+JOIN lessons AS l ON l.id = ltc.lesson_id
+JOIN users_to_sections AS uts ON c.section_id = uts.section_id
+JOIN users AS u ON uts.user_id = u.id
+WHERE c.id = 5
+ORDER BY ltc.lesson_number;
+*/
+
+
+
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_get_progress(id int)
+RETURNS TABLE(user_id int, user_name text, lesson_completion json, project_completed bool) AS $$
+SELECT u.id AS user_id, u.name AS user_name, array_to_json(array_agg(ROW(l.id,
+(
+	COALESCE((
+	SELECT COUNT(e.id) FROM lessons AS l2
+	JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+	JOIN exercises AS e ON e.id = etl.exercise_id
+	LEFT JOIN completion_status_to_exercise AS cste ON e.id = cste.exercise_id
+	WHERE l2.id = l.id AND cste.user_id = u.id AND cste.date_updated = (SELECT max(date_updated) FROM completion_status_to_exercise WHERE user_id = cste.user_id AND lesson_id = l.id AND exercise_id = e.id) AND 	cste.completion_status_id = (SELECT id FROM completion_status WHERE importance = (SELECT min(importance) FROM completion_status)))
+/
+	nullif(CAST((SELECT COUNT(e.id) FROM lessons AS l2
+		JOIN exercises_to_lessons AS etl ON l.id = etl.lesson_id
+		JOIN exercises AS e ON e.id = etl.exercise_id
+		WHERE l2.id = l.id) AS float), 0), 1))
+)::key_value_pair ORDER BY ltc.lesson_number)) AS lesson_completion,
+(SELECT EXISTS(SELECT * FROM project_code_files_for_users AS pcffu WHERE pcffu.user_id = u.id AND pcffu.concept_id = c.id)) AS project_completed
+FROM concepts AS c
+JOIN lessons_to_concepts AS ltc ON ltc.concept_id = c.id
+JOIN lessons AS l ON l.id = ltc.lesson_id
+JOIN users_to_sections AS uts ON c.section_id = uts.section_id
+JOIN users AS u ON uts.user_id = u.id
+WHERE c.id = sproc_read_concept_get_progress.id
+GROUP BY c.id, u.id
+ORDER BY u.name;
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_is_owner(id int, user_id int)
+RETURNS TABLE(is_owner bool) AS $$
+SELECT EXISTS (SELECT * FROM concepts AS c JOIN sections AS s ON s.id = c.section_id WHERE c.id = sproc_read_concept_is_owner.id AND sproc_read_concept_is_owner.user_id = s.teacher_id AND NOT c.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_section_is_owner(id int, user_id int)
+RETURNS TABLE(is_owner bool) AS $$
+SELECT EXISTS (SELECT * FROM sections AS s WHERE s.id = sproc_read_section_is_owner.id AND sproc_read_section_is_owner.user_id = s.teacher_id AND NOT s.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION sproc_read_lesson_is_owner(id int, user_id int)
+RETURNS TABLE(is_owner bool) AS $$
+SELECT EXISTS (SELECT * FROM lessons AS l WHERE l.id = sproc_read_lesson_is_owner.id AND sproc_read_lesson_is_owner.user_id = l.owner_id AND NOT l.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_project_is_owner(id int, user_id int)
+RETURNS TABLE(is_owner bool) AS $$
+SELECT EXISTS (SELECT * FROM projects AS p WHERE p.id = sproc_read_project_is_owner.id AND sproc_read_project_is_owner.user_id = p.owner_id AND NOT p.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+-- exercise one is in the exercise file
+
+
+
+
+
+
+
+
+
+
+
+
+
 

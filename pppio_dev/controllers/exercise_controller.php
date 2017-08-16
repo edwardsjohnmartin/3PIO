@@ -26,13 +26,8 @@
 						$model->set_properties($_POST);
 						if($model->is_valid() && array_key_exists($model->get_properties()['lesson'], $lessons)) //must make sure the lesson selected belongs to this user.
 						{
-							//add alerts to session or something
-							//http://getbootstrap.com/components/#alerts
-							//redirect header("Location: ...");
 							$model->create();
-							//$_SESSION['alerts'][] = 'Successfully created!';
 							add_alert('Successfully created!', Alert_Type::SUCCESS);
-							//session_write_close();
 							return redirect($this->model_name, 'index');
 						}
 						else
@@ -45,7 +40,6 @@
 						add_alert('Please try again.', Alert_Type::DANGER);
 					}
 				}
-				//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
 				$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
 				if(!file_exists($view_to_show))
 				{
@@ -67,7 +61,7 @@
 			require_once('models/lesson.php');
 			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());
 			$options = array('lesson' => $lessons);
-			if (!isset($_GET['id']))
+			if (!isset($_GET['id']) || !exercise::is_owner($_GET['id'], $_SESSION['user']->get_id()))
 			{
 				return call('pages', 'error');
 			}

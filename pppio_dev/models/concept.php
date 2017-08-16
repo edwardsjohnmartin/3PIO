@@ -63,6 +63,37 @@
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 		}
 
+		public static function get_progress($id)
+		{
+			$db = Db::getReader(); 
+			$id = intval($id);
+
+			$function_name = 'sproc_read_concept_get_progress';
+			$req = $db->prepare(static::build_query($function_name, array('id')));
+			$req->execute(array('id' => $id));
+
+			$ret = $req->fetchAll(PDO::FETCH_ASSOC); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
+			//print_r($ret);
+			foreach($ret as $key => $val)
+			{
+				$ret[$key]['lesson_completion'] = json_decode($val['lesson_completion']);
+
+			}
+			return $ret;
+		}
+
+		public static function is_owner($id, $user_id)
+		{
+			$db = Db::getReader();
+			$id = intval($id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_concept_is_owner';
+			$req = $db->prepare(static::build_query($function_name, array('id', 'user_id')));
+			$req->execute(array('id' => $id, 'user_id' => $user_id));
+
+			return $req->fetch(PDO::FETCH_COLUMN);
+		}
 
 	}
 ?>

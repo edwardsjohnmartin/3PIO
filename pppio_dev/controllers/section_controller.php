@@ -46,6 +46,8 @@
 			$types = $this->model_name::get_types();
 			unset($properties['teacher']);
 			unset($types['teacher']);
+			unset($properties['concepts']);
+			unset($types['concepts']);
 			require_once('views/shared/layout.php');
 		}
 		
@@ -57,7 +59,7 @@
 			//for users especially, i need to be more careful.
 			//this is a basic one without permissions.
 
-			if (!isset($_GET['id']))
+			if (!isset($_GET['id']) || !section::is_owner($_GET['id'], $_SESSION['user']->get_id()))
 			{
 				return call('pages', 'error');
 			}
@@ -101,6 +103,8 @@
 				$types = $model::get_types();
 				unset($properties['teacher']);
 				unset($types['teacher']);
+				unset($properties['concepts']);
+				unset($types['concepts']);
 				require_once('views/shared/layout.php');
 			}
 			//i need to be better about the order of things.

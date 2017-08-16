@@ -52,13 +52,13 @@ RETURNS SETOF key_value_pair AS $$
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 -- this works because only one lesson
-CREATE OR REPLACE FUNCTION sproc_read_exercise_is_owner(id int, owner int)
+CREATE OR REPLACE FUNCTION sproc_read_exercise_is_owner(id int, user_id int)
 RETURNS TABLE(is_owner bool) AS $$
 	SELECT EXISTS((
 		SELECT e.id FROM exercises AS e 
 		JOIN exercises_to_lessons AS etl ON e.id = etl.exercise_id
 		JOIN lessons AS l ON l.id = etl.lesson_id
-		WHERE NOT e.is_deleted AND l.owner_id = sproc_read_exercise_is_owner.owner AND e.id = sproc_read_exercise_is_owner.id
+		WHERE NOT e.is_deleted AND l.owner_id = sproc_read_exercise_is_owner.user_id AND e.id = sproc_read_exercise_is_owner.id
 		GROUP BY e.id
 		));
 $$ LANGUAGE SQL SECURITY DEFINER;

@@ -77,6 +77,7 @@ CREATE TABLE projects (
 	language_id integer REFERENCES languages NOT NULL,
 	make_file text,
 	max_grade double precision NOT NULL,
+	owner_id integer REFERENCES users NOT NULL,
 	is_deleted boolean DEFAULT false NOT NULL
 );
 
@@ -160,12 +161,25 @@ CREATE TABLE users_to_project_teams (
 );
 
 -- where to put the code?
+/*
 CREATE TABLE project_code_files ( -- i need multiple files
 	id serial PRIMARY KEY,
 	team_id integer REFERENCES project_teams NOT NULL,
 	name text,
 	contents text,
 	is_deleted boolean DEFAULT false NOT NULL
+);
+*/
+
+-- right now i'm assuming one file. need to think about updating files for multiple users with multiple files...
+CREATE TABLE project_code_files_for_users (
+	id serial PRIMARY KEY, -- currently not necessary
+	user_id integer REFERENCES users NOT NULL,
+	concept_id integer REFERENCES concepts NOT NULL,
+	name text,
+	contents text,
+	is_deleted boolean DEFAULT false NOT NULL,
+	UNIQUE(user_id, concept_id) -- i've added a constraint to make sure only one file. can be removed later.
 );
 
 CREATE TABLE completion_status_to_exercise (
@@ -177,6 +191,7 @@ CREATE TABLE completion_status_to_exercise (
 	user_id integer REFERENCES users NOT NULL
 );
 
+--this needs to be changed, too?
 CREATE TABLE completion_status_to_project ( 
 	date_updated timestamp NOT NULL,
 	completion_status_id integer REFERENCES completion_status NOT NULL,

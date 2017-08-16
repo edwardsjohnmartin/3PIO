@@ -39,6 +39,11 @@
 {
 	margin-bottom: 0;
 }
+
+.force-x-scroll
+{
+	width: 100%; overflow-x: auto;
+}
 /*
 	background-color: #000;
 	display: inline-block;
