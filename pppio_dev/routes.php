@@ -150,74 +150,76 @@
 	$controllers = [ //having all the permissions here is not optimal. also all but the page/index and page/error and importer/index should require login.
 						'pages' => ['index'=>new Authorization_Requirements(null, []), 'error'=>new Authorization_Requirements(null, [])],
 						'language' => [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::LANGUAGE, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::LANGUAGE, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::LANGUAGE, Permission_Type::CREATE)]),
-										'update'=>[new Permission(Securable::LANGUAGE, Permission_Type::EDIT)]
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::LANGUAGE, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::LANGUAGE, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::LANGUAGE, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::LANGUAGE, Permission_Type::EDIT)])
 									],
 						'section' => [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::SECTION, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::SECTION, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::SECTION, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::SECTION, Permission_Type::EDIT)]),
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::SECTION, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::EDIT)]),
 										'read_student'=>new Authorization_Requirements(true, [])
 									],
 						'course' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::COURSE, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::COURSE, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::COURSE, Permission_Type::CREATE)]),
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::COURSE, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::COURSE, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::COURSE, Permission_Type::CREATE)]),
 										'update'=>[new Permission(Securable::COURSE, Permission_Type::EDIT)]
 									],
 						'concept' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)])
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)])
 									],
 						'project' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::EDIT)]),
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::PROJECT, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::PROJECT, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::PROJECT, Permission_Type::EDIT)]),
 										'try_it'=>new Authorization_Requirements(true, []),
 										'save_code'=>new Authorization_Requirements(true, []),
 										'check'=>new Authorization_Requirements(true, [new Permission(Securable::PROJECT, Permission_Type::READ)])
 									],
 						'lesson' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::EDIT)]),
-										'create_file'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::CREATE)]),
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::LESSON, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::EDIT)]),
+										'create_file'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)]),
 										//'read_student'=>new Authorization_Requirements(true, []),
 										'read_for_concept_for_student'=>new Authorization_Requirements(true, [])
 									],
 						'tag' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::EDIT)])
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::TAG, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::TAG, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::TAG, Permission_Type::EDIT)])
 									],
 						'exercise' =>  [
-										'index'=>new Authorization_Requirements(null, [new Permission(Securable::EXERCISE, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::EXERCISE, Permission_Type::READ)]),
-										'create'=>new Authorization_Requirements(null, [new Permission(Securable::EXERCISE, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::EXERCISE, Permission_Type::EDIT)]),
+										'index'=>new Authorization_Requirements(null, [new Permission(Securable::EXERCISE, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXERCISE, Permission_Type::READ)]),
+										'create'=>new Authorization_Requirements(true, [new Permission(Securable::EXERCISE, Permission_Type::CREATE)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::EXERCISE, Permission_Type::EDIT)]),
 										'try_it'=>new Authorization_Requirements(true, []),
 										'mark_as_completed'=>new Authorization_Requirements(true, [])//,
 									],
 						'user' => [
-										'index' => new Authorization_Requirements(null, [new Permission(Securable::USER, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::USER, Permission_Type::READ)]),
-										'update'=>new Authorization_Requirements(null, [new Permission(Securable::USER, Permission_Type::READ)]),
+										'index' => new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'log_in'=>new Authorization_Requirements(false, []),
 										'log_in_partner'=>new Authorization_Requirements(true, []),
 										'log_out'=>new Authorization_Requirements(true, []),
+										'log_out_partner'=>new Authorization_Requirements(true, []),
+										'manage_partners'=>new Authorization_Requirements(true, []),
 										'create'=>new Authorization_Requirements(false, [])
 									], //['index', 'read', 'create', 'update'],
 						'role' => [
-										'index' =>new Authorization_Requirements(null, [new Permission(Securable::ROLE, Permission_Type::READ)]),
-										'read'=>new Authorization_Requirements(null, [new Permission(Securable::ROLE, Permission_Type::READ)])
+										'index' =>new Authorization_Requirements(null, [new Permission(Securable::ROLE, Permission_Type::LIST)]),
+										'read'=>new Authorization_Requirements(true, [new Permission(Securable::ROLE, Permission_Type::READ)])
 								],
 						'importer' => ['index' =>new Authorization_Requirements(null, [])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],

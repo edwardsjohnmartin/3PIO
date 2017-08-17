@@ -12,6 +12,7 @@ echo '<a href="/?controller=' . $this->model_name . '&action=create_file" class=
 //i am expecting $models to be defined!!!!!
 //where do i store things like how many pages there should be?
 //
+$can_read = has_permission(new Permission(Securable::LESSON, Permission_Type::READ));
 $can_edit = has_permission(new Permission(Securable::LESSON, Permission_Type::EDIT));
 foreach($models as $k => $v)
 {
@@ -20,9 +21,13 @@ foreach($models as $k => $v)
 	<td>
 		<?php echo htmlspecialchars($v); ?>
 	</td>
+<?php
+	if($can_read)
+	{ ?>
 	<td>
 		<a href="<?php echo '/?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a><br>
 	</td>
+	<?php } ?>
 <?php
 	if($can_edit)
 	{ ?>

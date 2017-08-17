@@ -45,8 +45,9 @@
 				{
 					$view_to_show = 'views/shared/create.php';
 				}
-				$types = $model::get_types();
-				$properties = $model->get_properties();
+
+			$properties = $this->model_name::get_available_properties();
+			$types = $this->model_name::get_types();
 				require_once('views/shared/layout.php');
 			}
 			else

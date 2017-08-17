@@ -8,7 +8,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 	theme: "solarized dark"
 });
 
-document.getElementById("runButton").onclick = run;
+document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
 
 function outf(text) { 
     var mypre = document.getElementById("output"); 
@@ -34,7 +34,7 @@ function run() {
 	});
 
 	myPromise.then(function(mod) {
-        var runMethod = mod.tp$getattr('TEST');
+        var runMethod = mod.tp$getattr('__TEST');
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
 		if(ret.v.length == 0 || ret.v[0].v == null)
@@ -45,14 +45,11 @@ function run() {
 		else
 		{
 			//print errors
-			var errorMessage = '<ul>'
 			for(var i = 0, l = ret.v.length; i<l; i++)
 			{
-				errorMessage += '<li>' + ret.v[i].v + '</li>';
+				markError(ret.v[i].v);
 
 			}
-			errorMessage += '</ul>';
-			markError(errorMessage);
 		}
     },
         function(err) {
@@ -71,16 +68,22 @@ function run() {
     });
   }
 
-function markSuccess(successMessage)
+function clearAlerts()
 {
-	infoAlert.classList.remove('alert-danger');
-	infoAlert.classList.add('alert-success');
-	infoAlert.innerHTML = successMessage;
+	codeAlerts.innerHTML = '';
 }
-
 function markError(errorMessage)
 {
-	infoAlert.classList.remove('alert-success');
-	infoAlert.classList.add('alert-danger');
-	infoAlert.innerHTML = errorMessage;
+	//infoAlert.classList.remove('alert-success');
+	//infoAlert.classList.add('alert-danger');
+	//infoAlert.innerHTML = errorMessage;
+	codeAlerts.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" role="alert" id="infoAlert">' + errorMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+}
+
+function markSuccess(successMessage)
+{
+	//infoAlert.classList.remove('alert-danger');
+	//infoAlert.classList.add('alert-success');
+	//infoAlert.innerHTML = successMessage;
+	codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }

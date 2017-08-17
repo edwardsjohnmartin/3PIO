@@ -9,7 +9,6 @@
 			require_once('views/shared/layout.php');
 		}
 
-
 		public function create()
 		{
 			//get from post.
@@ -119,6 +118,11 @@
 
 			if (!isset($_GET['id']))
 			{
+				return call('pages', 'error');
+			}
+			else if (!section::is_student($_GET['id'], $_SESSION['user']->get_id()))
+			{
+				add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 			else

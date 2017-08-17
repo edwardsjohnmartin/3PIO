@@ -415,14 +415,18 @@ CREATE OR REPLACE FUNCTION sproc_read_lesson_get_previous(id int, concept_id int
 RETURNS TABLE(previous_lesson_id int, previous_concept_id int) AS $$
 DECLARE
 current_row_num int;
+concept_section_id int;
 BEGIN
+SELECT c.section_id FROM concepts AS c WHERE c.id = sproc_read_lesson_get_previous.concept_id INTO concept_section_id;
 SELECT iq.row_num FROM (SELECT c.id AS concept_id, ltc.lesson_id, row_number() OVER (ORDER BY c.project_open_date, ltc.lesson_number) AS row_num FROM concepts AS c
 JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
+WHERE c.section_id = concept_section_id
 ORDER BY c.project_open_date DESC, ltc.lesson_number DESC
 ) AS iq
 WHERE iq.concept_id = sproc_read_lesson_get_previous.concept_id AND iq.lesson_id = sproc_read_lesson_get_previous.id into current_row_num;
 RETURN QUERY SELECT iq2.lesson_id, iq2.concept_id FROM (SELECT ltc.lesson_id AS lesson_id, c.id AS concept_id, row_number() OVER (ORDER BY c.project_open_date, ltc.lesson_number) AS row_num FROM concepts AS c
 JOIN lessons_to_concepts AS ltc ON c.id = ltc.concept_id
+WHERE c.section_id = concept_section_id
 ORDER BY c.project_open_date DESC, ltc.lesson_number DESC) AS iq2
 JOIN exercises_to_lessons AS etl ON etl.lesson_id = iq2.lesson_id
 WHERE iq2.row_num < (current_row_num)
@@ -452,7 +456,7 @@ BEGIN
 	(current_timestamp >= c.open_date)
 	AND
 	-- make sure user is in this section
-	(EXISTS (SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_lesson_can_access.user_id))
+	(EXISTS (SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_lesson_can_access.user_id AND uts.participation_type_id = 1))
 	AND
 	-- make sure lesson is in concept
 	(EXISTS(SELECT lesson_number FROM lessons_to_concepts AS ltc_check WHERE ltc_check.lesson_id = sproc_read_lesson_can_access.id AND ltc_check.concept_id = sproc_read_lesson_can_access.concept_id))
@@ -462,7 +466,7 @@ BEGIN
 	UNION ALL
 	SELECT completed
 	LIMIT 1) = completed
-	) AS can_access */
+	) AS can_access
 	FROM concepts AS c
 	JOIN sections AS s ON c.section_id = s.id
 	WHERE c.id = sproc_read_lesson_can_access.concept_id;
@@ -504,7 +508,7 @@ BEGIN
 	(current_timestamp >= c.project_open_date)
 	AND
 	--make sure user is in section
-	(EXISTS(SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_project_can_access.user_id))
+	(EXISTS(SELECT * FROM users_to_sections AS uts WHERE uts.section_id = s.id AND uts.user_id = sproc_read_project_can_access.user_id AND uts.participation_type_id = 1)) -- hard coded student
 	AND
 	--make sure all lessons in this concept are complete
 	(SELECT COALESCE(bool_and(completed = iq.status), true) AS completed_all FROM
@@ -517,6 +521,15 @@ BEGIN
 	WHERE c.id = sproc_read_project_can_access.concept_id;
 END
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_project_can_access_for_multiple_users(concept_id int, user_id int[])
+RETURNS TABLE(id int, can_access bool) AS $$
+BEGIN
+	RETURN QUERY SELECT uids.*, can_access.* FROM unnest(sproc_read_project_can_access_for_multiple_users.user_id) AS uids
+	JOIN sproc_read_project_can_access(sproc_read_project_can_access_for_multiple_users.concept_id, uids.*) AS can_access ON true;
+END
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 
 
 /*
@@ -723,7 +736,7 @@ JOIN lessons_to_concepts AS ltc ON ltc.concept_id = c.id
 JOIN lessons AS l ON l.id = ltc.lesson_id
 JOIN users_to_sections AS uts ON c.section_id = uts.section_id
 JOIN users AS u ON uts.user_id = u.id
-WHERE c.id = sproc_read_concept_get_progress.id
+WHERE c.id = sproc_read_concept_get_progress.id AND uts.participation_type_id = 1
 GROUP BY c.id, u.id
 ORDER BY u.name;
 $$ LANGUAGE SQL SECURITY DEFINER;
@@ -750,6 +763,23 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION sproc_read_project_is_owner(id int, user_id int)
 RETURNS TABLE(is_owner bool) AS $$
 SELECT EXISTS (SELECT * FROM projects AS p WHERE p.id = sproc_read_project_is_owner.id AND sproc_read_project_is_owner.user_id = p.owner_id AND NOT p.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION sproc_read_concept_is_teaching_assistant(id int, user_id int)
+RETURNS TABLE(is_teaching_assistant bool) AS $$
+SELECT EXISTS (SELECT * FROM concepts AS c JOIN sections AS s ON s.id = c.section_id JOIN users_to_sections AS uts ON uts.section_id = s.id WHERE c.id = sproc_read_concept_is_teaching_assistant.id AND sproc_read_concept_is_teaching_assistant.user_id = uts.user_id AND NOT c.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION sproc_read_section_is_teaching_assistant(id int, user_id int)
+RETURNS TABLE(is_teaching_assistant bool) AS $$
+SELECT EXISTS (SELECT * FROM sections AS s JOIN users_to_sections AS uts ON uts.section_id = s.id WHERE s.id = sproc_read_section_is_teaching_assistant.id AND sproc_read_section_is_teaching_assistant.user_id = uts.user_id AND uts.participation_type_id = 2 AND NOT s.is_deleted)
+$$ LANGUAGE SQL SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION sproc_read_section_is_student(id int, user_id int)
+RETURNS TABLE(is_teaching_assistant bool) AS $$
+SELECT EXISTS (SELECT * FROM sections AS s JOIN users_to_sections AS uts ON uts.section_id = s.id WHERE s.id = sproc_read_section_is_student.id AND sproc_read_section_is_student.user_id = uts.user_id AND uts.participation_type_id = 1 AND NOT s.is_deleted)
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 -- exercise one is in the exercise file

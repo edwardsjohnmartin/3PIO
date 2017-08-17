@@ -9,12 +9,6 @@ There is currently no delete feature. The stored procedures are there for the si
 There is no reset password feature. This requires being able to send emails from PHP.
 	Expected default: Difficult
 
-If someone is not allowed to access the project, they can still submit code by becoming someone else's partner. Should the save code function in the project controller only save the code for users who pass the can_access function?
-	Expected difficulty: Very easy
-
-TAs not built in completely. Cannot add TA to a class currently.
-	Expected difficulty: Medium
-
 Currently no pagination. Should use a mix of "get_pairs" and "subset" in the model. Database call should get a subset of pairs.
 	Expected difficulty: Easy
 
@@ -23,11 +17,6 @@ Need better validation by default. The model checks types. There are many cases 
 
 Better errors in general would be nice. Which property failed. Also, on fail, keep the old properties that were good.
 	Expected difficult: Difficult
-
-Enums that require corresponding tables in the database:
-	Securable
-	Permission_Type
-	Completion_Status
 
 Need HTTPS.
 	Expected difficulty: Medium
@@ -44,8 +33,18 @@ The model possibly should have had get edit properties/get display properties fo
 Right now, the project student code is saved on each run. Probably should also be a save button. Should also mark when something has changed so that if users try to leave the page it will pop up and ask if they're sure they want to leave.
 	Expected difficulty: Easy
 
-Currently, in order to log partners out, the main user must log out. There should be a page that allows the main user to remove partners. Would be quite simple. Could probably do really quickly...
-	Expected difficulty: Easy
-
 Home page should show class by default for student if there is one class only. Should show list if there are multiple.
 	Expected difficulty: Easy
+
+Info
+
+Enums that require corresponding tables in the database:
+	Securable
+	Permission_Type
+	Completion_Status
+	Participation_Type
+
+Student role is hard coded, expected to be 3, in the user controller.
+In database, participation types are expected to be there.
+More participation types could be added later.
+

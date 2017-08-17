@@ -50,52 +50,62 @@
 		if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 		{
 
-			if(isset($_SESSION['sections']) && $_SESSION['sections'] != null && count($_SESSION['sections']) >0)
+			if(isset($_SESSION['sections_student']) && $_SESSION['sections_student'] != null && count($_SESSION['sections_student']) >0)
 			{
 			
-				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes <span class="caret"></span></a><ul class="dropdown-menu">';
-				foreach($_SESSION['sections'] as $kvp)
+				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (Student) <span class="caret"></span></a><ul class="dropdown-menu">';
+				foreach($_SESSION['sections_student'] as $kvp)
 				{
 					echo '<li><a href="/?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
 				}
 				echo '</ul></li>';
 			}
 
+			if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0)
+			{
+			
+				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (TA) <span class="caret"></span></a><ul class="dropdown-menu">';
+				foreach($_SESSION['sections_ta'] as $kvp)
+				{
+					echo '<li><a href="/?controller=Section&action=read&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
+				}
+				echo '</ul></li>';
+			}
 
-				$can_read_section = has_permission(new Permission(Securable::SECTION, Permission_Type::READ));
-				$can_read_project = has_permission(new Permission(Securable::PROJECT, Permission_Type::READ));
-				$can_read_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::READ));
-				$can_read_exercise = has_permission(new Permission(Securable::EXERCISE, Permission_Type::READ));
-				$can_read_concept = has_permission(new Permission(Securable::CONCEPT, Permission_Type::READ));
+				$can_list_section = has_permission(new Permission(Securable::SECTION, Permission_Type::LIST));
+				$can_list_project = has_permission(new Permission(Securable::PROJECT, Permission_Type::LIST));
+				$can_list_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::LIST));
+				$can_list_exercise = has_permission(new Permission(Securable::EXERCISE, Permission_Type::LIST));
+				$can_list_concept = has_permission(new Permission(Securable::CONCEPT, Permission_Type::LIST));
 
-			if ($can_read_section || $can_read_project || $can_read_lesson || $can_read_exercise)
+			if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
-					if ($can_read_section) echo '<li><a href="/?controller=section&action=index">Sections</a></li>';
-					if ($can_read_concept) echo '<li><a href="/?controller=concept&action=index">Concepts</a></li>';
-					if ($can_read_project) echo '<li><a href="/?controller=project&action=index">Projects</a></li>';
-					if ($can_read_lesson) echo '<li><a href="/?controller=lesson&action=index">Lessons</a></li>';
-					if ($can_read_exercise) echo '<li><a href="/?controller=exercise&action=index">Exercises</a></li>';
+					if ($can_list_section) echo '<li><a href="/?controller=section&action=index">Sections</a></li>';
+					if ($can_list_concept) echo '<li><a href="/?controller=concept&action=index">Concepts</a></li>';
+					if ($can_list_project) echo '<li><a href="/?controller=project&action=index">Projects</a></li>';
+					if ($can_list_lesson) echo '<li><a href="/?controller=lesson&action=index">Lessons</a></li>';
+					if ($can_list_exercise) echo '<li><a href="/?controller=exercise&action=index">Exercises</a></li>';
 				  echo '</ul>
 				</li>';
 			}
 
-			$can_read_user = has_permission(new Permission(Securable::USER, Permission_Type::READ));
-			$can_read_role = has_permission(new Permission(Securable::ROLE, Permission_Type::READ));
-			$can_read_course = has_permission(new Permission(Securable::COURSE, Permission_Type::READ));
-			$can_read_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::READ));
+			$can_list_user = has_permission(new Permission(Securable::USER, Permission_Type::LIST));
+			$can_list_role = has_permission(new Permission(Securable::ROLE, Permission_Type::LIST));
+			$can_list_course = has_permission(new Permission(Securable::COURSE, Permission_Type::LIST));
+			$can_list_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::LIST));
 
-			if($can_read_course || $can_read_language)
+			if($can_list_course || $can_list_language)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
-					if ($can_read_user) echo '<li><a href="/?controller=user&action=index">Users</a></li>';
-					if ($can_read_role) echo '<li><a href="/?controller=role&action=index">Roles</a></li>';
-					if ($can_read_course) echo '<li><a href="/?controller=course&action=index">Courses</a></li>';
-					if ($can_read_language) echo '<li><a href="/?controller=language&action=index">Languages</a></li>';
+					if ($can_list_user) echo '<li><a href="/?controller=user&action=index">Users</a></li>';
+					if ($can_list_role) echo '<li><a href="/?controller=role&action=index">Roles</a></li>';
+					if ($can_list_course) echo '<li><a href="/?controller=course&action=index">Courses</a></li>';
+					if ($can_list_language) echo '<li><a href="/?controller=language&action=index">Languages</a></li>';
 				  echo '</ul>
 				</li>';
 			}
@@ -135,6 +145,7 @@
 			echo '<li role="separator" class="divider"></li>';
 			}
 			echo '<li><a href="/?controller=user&action=log_in_partner">Add a partner</a></li>';
+			echo '<li><a href="/?controller=user&action=manage_partners">Manage partners</a></li>';
 		  echo '</ul>
 		</li>';			
 

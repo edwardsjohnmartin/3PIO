@@ -104,6 +104,7 @@
 			{
 				return call('pages', 'error');
 			}
+
 			require_once('models/concept.php');
 			$concept = concept::get($_GET['concept_id']); //what if it's null? don't want that.. need to be careful of that in base, too
 			if($concept == null)
@@ -125,6 +126,41 @@
 			else
 			{
 				$readonly = false;
+
+
+				if(isset($_SESSION['partners']) && $_SESSION['partners'] != null)
+				{
+					$partners_can_access = project::can_access($_GET['concept_id'], array_keys($_SESSION['partners']));
+
+					$partners_who_cannot_access = array_keys($partners_can_access, false);
+					if (count($partners_who_cannot_access) > 0)
+					{
+						$warning_text = 'The following partners currently do not have permission to access this project. Code will not be saved to their accounts unless they gain permission.';
+						$warning_text .= '<ul>';
+						foreach($partners_who_cannot_access as $partner_id)
+						{
+							$warning_text .= '<li>' . $_SESSION['partners'][$partner_id]->get_properties()['name'] . '</li>';
+						}
+						$warning_text .= '</ul>';
+
+						add_alert($warning_text, Alert_Type::WARNING);
+					}
+				
+					$partners_who_can_access = array_keys($partners_can_access, true);
+					if (count($partners_who_can_access) > 0)
+					{
+						$info_text = 'The following partners currently have permission to access this project. Code will be saved to their accounts.';
+						$info_text .= '<ul>';
+						foreach($partners_who_can_access as $partner_id)
+						{
+							$info_text .= '<li>' . $_SESSION['partners'][$partner_id]->get_properties()['name'] . '</li>';
+						}
+						$info_text .= '</ul>';
+
+						add_alert($info_text, Alert_Type::INFO);
+					}
+
+				}
 			}
 			//get user's code, too
 			//if user doesn't have code, use the project starter code
@@ -140,8 +176,14 @@
 			//pass in concept and user
 
 			require_once('models/concept.php');
-			if(!isset($_GET['concept_id']) || !isset($_GET['user_id']) || !concept::is_owner($_GET['concept_id'], $_SESSION['user']->get_id())) //i need to check for tas
+			if(!isset($_GET['concept_id']) || !isset($_GET['user_id'])) //i need to check for tas
 			{
+				return call('pages', 'error');
+			}
+
+			if (!(concept::is_owner($_GET['concept_id'], $_SESSION['user']->get_id()) || concept::is_teaching_assistant($_GET['concept_id'], $_SESSION['user']->get_id())))
+			{
+				add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -183,7 +225,8 @@
 				{
 					if(isset($_SESSION['partners']) && $_SESSION['partners'] != null)
 					{
-						$user_ids = array_keys($_SESSION['partners']);
+						$partners_can_access = project::can_access($_POST['concept_id'], array_keys($_SESSION['partners']));
+						$user_ids = array_keys($partners_can_access, true);
 					}
 					$user_ids[] = $_SESSION['user']->get_id();
 					project::update_code_file($_POST['concept_id'], $user_ids, $_POST['contents']);
@@ -191,7 +234,7 @@
 				}
 			}
 			
-			$json_data = array('success' => $success);
+			$json_data = array('success' => $success); //todo: it may be nice to send back who it was saved for
 			require_once('views/shared/json_wrapper.php');
 
 			//should i check the referrer? $_SERVER['HTTP_REFERER'];

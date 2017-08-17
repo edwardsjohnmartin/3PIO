@@ -5,10 +5,7 @@ use MyCLabs\Enum\Enum;
 
 class Permission_Type extends Enum
 {
-    const READ =		1;
-	const CREATE = 		2;
-    const EDIT =		3;
-    const DELETE =		4;
-	const LIST = 5;
+    const STUDENT =		1;
+	const TEACHING_ASSISTANT = 		2;
 }
 ?>

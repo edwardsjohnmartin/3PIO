@@ -43,7 +43,8 @@
 					//if it's not null/the id isn't null, store the user
 					$_SESSION['user'] = $model; // ???
 					require_once('models/section.php');
-					$_SESSION['sections'] = Section::get_pairs_for_student($model->get_id()); //right now, since this only happens on login, the user will have to log in and log out to see new sections. maybe i should refill when going to the section list for user page
+					$_SESSION['sections_student'] = Section::get_pairs_for_student($model->get_id());
+					$_SESSION['sections_ta'] = Section::get_pairs_for_teaching_assistant($model->get_id()); //right now, since this only happens on login, the user will have to log in and log out to see new sections. maybe i should refill when going to the section list for user page
 					require_once('models/role.php');
 					$_SESSION['permissions'] = Role::get_permissions_for_role($model->get_properties()['role']);
 					add_alert('Logged in! Welcome back, ' . htmlspecialchars($model->get_properties()['name']) . '.', Alert_Type::SUCCESS);
@@ -88,14 +89,41 @@
 					$_SESSION['partners'][$model->get_id()] = $model; // ???
 					add_alert(htmlspecialchars($model->get_properties()['name']) . ' is now logged in as a partner.', Alert_Type::SUCCESS);
 					session_write_close();
-					redirect_to_index();
+					redirect('user', 'manage_partners');
 				}
 			}
-
-
-
 			$view_to_show = 'views/user/log_in.php';
 			require_once('views/shared/layout.php');
+		}
+
+		public function manage_partners()
+		{
+			$view_to_show = 'views/user/manage_partners.php';
+			require_once('views/shared/layout.php');
+		}
+
+
+		public function log_out_partner()
+		{
+			if (!isset($_GET['id']))
+			{
+					redirect('user', 'manage_partners');
+			}
+			else if(!isset($_SESSION['partners']) || $_SESSION['partners'] == null || count($_SESSION['partners']) == 0 || !array_key_exists($_GET['id'], $_SESSION['partners']))
+			{
+					add_alert('This user is not a partner.', Alert_Type::DANGER);
+					session_write_close();
+					redirect('user', 'manage_partners');
+			}
+			else
+			{
+					$name = $_SESSION['partners'][$_GET['id']]->get_properties()['name'];
+					unset($_SESSION['partners'][$_GET['id']]);
+					add_alert('Successfully logged out ' . htmlspecialchars($name) . '.', Alert_Type::SUCCESS);
+					session_write_close();
+					redirect('user', 'manage_partners');
+			}
+
 		}
 
 		public function log_out()
@@ -103,7 +131,8 @@
 			//clear the session and stuff
 			$_SESSION['user'] = null;
 			$_SESSION['partners'] = null;
-			$_SESSION['sections'] = null;
+			$_SESSION['sections_student'] = null;
+			$_SESSION['sections_ta'] = null;
 			$_SESSION['permissions'] = null;
 
 			add_alert('Logged out!', Alert_Type::SUCCESS);
@@ -127,8 +156,6 @@
 				$postedToken = filter_input(INPUT_POST, 'token');
 				if(!empty($postedToken) && isTokenValid($postedToken))
 				{
-					//probably i should do that isset stuff
-
 					/*
 					things to check
 					-user not logged in
@@ -139,7 +166,6 @@
 					$model = new $this->model_name();
 					$model->set_properties($_POST); //i need to add the server salt to the password!
 					$model->set_properties(array('role'=>3)); //HARD CODED STUDENT!!
-
 
 					$is_valid = true;
 					if(!isset($_POST['email']) || !isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['confirm_password']) || ($_POST['email'] == null) || ($_POST['name'] == null) || ($_POST['password'] == null) || ($_POST['confirm_password'] == null))

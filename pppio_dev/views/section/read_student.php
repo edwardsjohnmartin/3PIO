@@ -66,7 +66,7 @@
 
 
 		echo '<ul class="list-group concept-list-group">';
-			if($lesson_complete) //previous lesson was complete
+			if($lesson_complete && new Datetime($concept_props['open_date']) < new Datetime()) //previous lesson was complete
 			{
 				if(count($concept_props['lessons']) > 0)
 				{
@@ -76,7 +76,6 @@
 						if(!$lesson_complete) break;
 					}
 
-
 					echo '<a href="\?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
 					if($lesson_complete) echo ' list-group-item-success';
 					echo '">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
@@ -84,6 +83,7 @@
 			}
 			else
 			{
+				$lesson_complete = false;
 				echo '<a class="list-group-item disabled">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
 			}
 			

@@ -95,5 +95,18 @@
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}
 
+		public static function is_teaching_assistant($id, $user_id)
+		{
+			$db = Db::getReader();
+			$id = intval($id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_concept_is_teaching_assistant';
+			$req = $db->prepare(static::build_query($function_name, array('id', 'user_id')));
+			$req->execute(array('id' => $id, 'user_id' => $user_id));
+
+			return $req->fetch(PDO::FETCH_COLUMN);
+		}
+
 	}
 ?>

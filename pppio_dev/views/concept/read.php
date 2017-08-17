@@ -9,7 +9,9 @@
 	echo HtmlHelper::view($types, $properties);
 
 //this check and get should go in the controller...
-if(concept::is_owner($model->get_id(), $_SESSION['user']->get_id()))
+$is_owner = concept::is_owner($model->get_id(), $_SESSION['user']->get_id());
+$is_ta = concept::is_teaching_assistant($model->get_id(), $_SESSION['user']->get_id());
+if($is_owner || $is_ta)
 {
 	$progress = concept::get_progress($model->get_id());
 	if(count($progress) > 0)
@@ -18,6 +20,7 @@ if(concept::is_owner($model->get_id(), $_SESSION['user']->get_id()))
 		$project_due_date = new DateTime($properties['project_due_date']);
 		$project_open_date = new DateTime($properties['project_open_date']);
 		echo '<label>Progress</label>';
+		echo '<div class="force-x-scroll">';
 		echo '<table class="table table-striped table-bordered">';
 		echo '<thead>';
 		echo '<tr>';
@@ -56,10 +59,11 @@ if(concept::is_owner($model->get_id(), $_SESSION['user']->get_id()))
 		}
 		echo '</tbody>';
 		echo '</table>';
+		echo '</div>';
 
 	}
 
-	if(has_permission(new Permission(Securable::CONCEPT, Permission_Type::EDIT)))
+	if($is_owner && has_permission(new Permission(Securable::CONCEPT, Permission_Type::EDIT)))
 	{
 		echo '<a href="/?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
 	}

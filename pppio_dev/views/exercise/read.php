@@ -12,7 +12,8 @@
 	echo '<h2>' . $this->model_name . '</h2>';
 	$props = $model->get_properties();
 	echo HtmlHelper::view($model::get_types(), $props);
-	echo 'Test this exercise';
+	echo '<h3>Test this exercise</h3>';
+	echo '<div>Declare a list named my_list and assign it a value of [1, 2, 3].</div>';
 
 echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 					<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>';
@@ -31,8 +32,7 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 			</div>
 			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
 				<div class="col-xs-12 pad-0">
-					<div class="alert alert-default mar-0" role="alert" id="infoAlert">
-					</div>
+					<div id="codeAlerts"></div>
 				</div>
 			</div>';
 
