@@ -2,7 +2,7 @@ on mine
 
 pg_dump -Fc -d pppio_dev -f /media/jac/DATA/Projects/pgdumps/pgdump08162017
 scp /media/jac/DATA/Projects/pgdumps/pgdump08162017 oryjacq@3pio.cose.isu.edu:~
-scp -r /var/www/pppio_dev oryjacq@3pio.cose.isu.edu:~
+scp -r /media/jac/DATA/Projects/LIVE/pppio oryjacq@3pio.cose.isu.edu:~
 ---
 
 on server
@@ -18,4 +18,23 @@ sudo rm -r /var/www/pppio_dev
 
 sudo cp -r ~/pppio_dev /var/www/pppio_dev
 
+
+
+
+sudo rm -r ~/pppio
+sudo rm -r /var/www/pppio
+sudo cp -r ~/pppio /var/www/pppio
+
+
+----
+
+schema only
+
+pg_dump -Fc -s -d pppio_dev -f /media/jac/DATA/Projects/pgdumps/pppio_schemaonly
+
+scp /media/jac/DATA/Projects/pgdumps/pppio_schemaonly oryjacq@3pio.cose.isu.edu:~
+
+dropdb pppio
+createdb pppio
+pg_restore -d pppio pppio_schemaonly
 

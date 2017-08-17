@@ -5,7 +5,7 @@
 #these are the global variables that will be evaluated in the test function.
 __returns = []
 __in_strings = []
-__out_string = None
+__out_string = [None] #this was overwriting teacher's value, so I changed it to use an array. Don't know why this works.
 
 
 #this is what all the functions used to validate a variable or a function eventually call.
@@ -101,7 +101,7 @@ def test_in(string):
     __in_strings.append(string)
 
 def test_out(string):
-    __out_string = string + "\n"
+    __out_string[0] = string + "\n"
 
 # --------------------------------------------------------------------
 
@@ -118,8 +118,8 @@ def __TEST(student_input, student_output):
     if (all(x in student_input for x in __in_strings) == False):
         problems.append("You must include the following string(s) in your code: {0}.".format(str(__in_strings)))
 
-    if __out_string != None:
-        if student_output != __out_string:
+    if __out_string[0] != None:
+        if student_output != __out_string[0]:
             problems.append("Your output is incorrect.")
 
     return problems

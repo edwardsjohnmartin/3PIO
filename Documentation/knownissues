@@ -48,3 +48,18 @@ Student role is hard coded, expected to be 3, in the user controller.
 In database, participation types are expected to be there.
 More participation types could be added later.
 
+----
+
+Pairs for sections should get course name as part of name.
+
+Error if no project on concept!
+
+Test projects
+
+----
+
+Move run alert to top
+
+Exercise list on left needs to scroll with current exercise
+
+

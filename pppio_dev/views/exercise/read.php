@@ -13,7 +13,7 @@
 	$props = $model->get_properties();
 	echo HtmlHelper::view($model::get_types(), $props);
 	echo '<h3>Test this exercise</h3>';
-	echo '<div>Declare a list named my_list and assign it a value of [1, 2, 3].</div>';
+	echo '<div>' . $props['starter_code'] . '</div>';
 
 echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 					<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>';
