@@ -11,7 +11,7 @@
 	require_once('models/key_value_pair.php');
 
 	session_name('pppio_dev'); 
-	session_set_cookie_params(0, '/dev/'); //currently not necessary..
+	//session_set_cookie_params(0, '/dev/'); //not yet
 	//start the session here?
 	session_start();
 
