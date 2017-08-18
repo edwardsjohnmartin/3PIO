@@ -23,4 +23,6 @@ controllers/user_controller.php has and uses a server side salt for passwords (d
 
 index.php sets the session name so that the session variables are different between the dev site and live site.
 	Live on server is main URL.
-	Dev on server is /dev, so I've changed the local version to be on that as well. Session variables will only work here unless you change in index.php, but it shouldn't be changed on the server version. Best to be consistent with the server, I think. (I don't know how to force alias to make it so that /dev is always used in my local environment... but please use /dev.)
+	Dev on server is /dev.
+
+layout.php - Title and upper left name "3PIO"/"3PIO Dev"

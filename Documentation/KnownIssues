@@ -63,3 +63,5 @@ Better errors in general would be nice. Which property failed. Also, on fail, ke
 
 The model possibly should have had get edit properties/get display properties for better automatic views. Well, some things (for example, owner ID from session) need to be changed manually anyway.
 	Expected difficulty: Difficult
+
+The session on /dev is not working on the server! Sessions on the main version work fine.
