@@ -10,6 +10,8 @@
 	require_once('models/user.php');
 	require_once('models/key_value_pair.php');
 
+	session_name('pppio_dev'); 
+	session_set_cookie_params(0, '/dev/');
 	//start the session here?
 	session_start();
 

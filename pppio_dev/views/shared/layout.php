@@ -37,7 +37,7 @@
 		    <span class="icon-bar"></span>
 		    <span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="/">3PIO</a>
+		  <a class="navbar-brand" href="?">3PIO Dev</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -56,7 +56,7 @@
 				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (Student) <span class="caret"></span></a><ul class="dropdown-menu">';
 				foreach($_SESSION['sections_student'] as $kvp)
 				{
-					echo '<li><a href="/?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
+					echo '<li><a href="?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
 				}
 				echo '</ul></li>';
 			}
@@ -67,7 +67,7 @@
 				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (TA) <span class="caret"></span></a><ul class="dropdown-menu">';
 				foreach($_SESSION['sections_ta'] as $kvp)
 				{
-					echo '<li><a href="/?controller=Section&action=read&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
+					echo '<li><a href="?controller=Section&action=read&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
 				}
 				echo '</ul></li>';
 			}
@@ -83,11 +83,11 @@
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
-					if ($can_list_section) echo '<li><a href="/?controller=section&action=index">Sections</a></li>';
-					if ($can_list_concept) echo '<li><a href="/?controller=concept&action=index">Concepts</a></li>';
-					if ($can_list_project) echo '<li><a href="/?controller=project&action=index">Projects</a></li>';
-					if ($can_list_lesson) echo '<li><a href="/?controller=lesson&action=index">Lessons</a></li>';
-					if ($can_list_exercise) echo '<li><a href="/?controller=exercise&action=index">Exercises</a></li>';
+					if ($can_list_section) echo '<li><a href="?controller=section&action=index">Sections</a></li>';
+					if ($can_list_concept) echo '<li><a href="?controller=concept&action=index">Concepts</a></li>';
+					if ($can_list_project) echo '<li><a href="?controller=project&action=index">Projects</a></li>';
+					if ($can_list_lesson) echo '<li><a href="?controller=lesson&action=index">Lessons</a></li>';
+					if ($can_list_exercise) echo '<li><a href="?controller=exercise&action=index">Exercises</a></li>';
 				  echo '</ul>
 				</li>';
 			}
@@ -102,10 +102,10 @@
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
-					if ($can_list_user) echo '<li><a href="/?controller=user&action=index">Users</a></li>';
-					if ($can_list_role) echo '<li><a href="/?controller=role&action=index">Roles</a></li>';
-					if ($can_list_course) echo '<li><a href="/?controller=course&action=index">Courses</a></li>';
-					if ($can_list_language) echo '<li><a href="/?controller=language&action=index">Languages</a></li>';
+					if ($can_list_user) echo '<li><a href="?controller=user&action=index">Users</a></li>';
+					if ($can_list_role) echo '<li><a href="?controller=role&action=index">Roles</a></li>';
+					if ($can_list_course) echo '<li><a href="?controller=course&action=index">Courses</a></li>';
+					if ($can_list_language) echo '<li><a href="?controller=language&action=index">Languages</a></li>';
 				  echo '</ul>
 				</li>';
 			}
@@ -114,7 +114,7 @@
 			?>
 
 
-			<li><a href="/?controller=Importer&action=index">Importer</a></li>
+			<li><a href="?controller=Importer&action=index">Importer</a></li>
 		    <!-- <li><a href="#">Users</a></li>
 
 			<li class="dropdown">
@@ -144,18 +144,18 @@
 				}
 			echo '<li role="separator" class="divider"></li>';
 			}
-			echo '<li><a href="/?controller=user&action=log_in_partner">Add a partner</a></li>';
-			echo '<li><a href="/?controller=user&action=manage_partners">Manage partners</a></li>';
+			echo '<li><a href="?controller=user&action=log_in_partner">Add a partner</a></li>';
+			echo '<li><a href="?controller=user&action=manage_partners">Manage partners</a></li>';
 		  echo '</ul>
 		</li>';			
 
-		    	echo '<li><a href="/?controller=user&action=log_out">Log out</a></li>';
+		    	echo '<li><a href="?controller=user&action=log_out">Log out</a></li>';
 
 			}
 			else
 			{
-				echo '<li><a href="/?controller=user&action=create">Create account</a></li>
-					<li><a href="/?controller=user&action=log_in">Log in</a></li>';
+				echo '<li><a href="?controller=user&action=create">Create account</a></li>
+					<li><a href="?controller=user&action=log_in">Log in</a></li>';
 			}
 
 			 ?>

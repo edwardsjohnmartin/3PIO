@@ -1,0 +1,26 @@
+The files needed to recreate the database are in DatabaseScripts/CleanDatabase
+
+Delete the database if it exists:
+dropdb pppio
+
+Recreate the database:
+createdb pppio
+
+Create tables and functions from the file DatabaseScripts/CleanDatabase/pppio_schemaonly:
+pg_restore -d pppio pppio_schemaonly
+
+Paste in the data from the file DatabseScripts/CleanDatabase/data
+
+The data in the file is the minimum for the site to work properly.
+
+Some info on the required data:
+
+Enums that require corresponding tables in the database:
+	Securable
+	Permission_Type
+	Completion_Status
+	Participation_Type
+
+Student role is hard coded, expected to be 3, in the user controller.
+In database, participation types are expected exist.
+More participation types could be added later.

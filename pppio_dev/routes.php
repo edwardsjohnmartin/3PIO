@@ -57,12 +57,12 @@
 
 	function redirect($controller, $action) //i'm using 'return' when calling to be consistent with call but it's not necessary
 	{
-		header('Location: ' . '/?controller=' . $controller . '&action=' . $action);
+		header('Location: ' . '?controller=' . $controller . '&action=' . $action);
 	}
 
 	function redirect_to_index() //i'm using 'return' when calling to be consistent with call but it's not necessary
 	{
-		header('Location: ' . '/');
+		header('Location: ' . '?');
 	}
 
 	function call($controller, $action)
