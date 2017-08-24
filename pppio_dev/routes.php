@@ -141,6 +141,9 @@
 				require_once('importer.php');
 				$controller = new ImporterController;
 				break;
+			case 'sandbox':
+				$controller = new SandboxController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -190,7 +193,8 @@
 										'update'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::EDIT)]),
 										'create_file'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)]),
 										//'read_student'=>new Authorization_Requirements(true, []),
-										'read_for_concept_for_student'=>new Authorization_Requirements(true, [])
+										'read_for_concept_for_student'=>new Authorization_Requirements(true, []),
+										'delete'=>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::EDIT)])
 									],
 						'tag' =>  [
 										'index'=>new Authorization_Requirements(null, [new Permission(Securable::TAG, Permission_Type::LIST)]),
@@ -221,7 +225,8 @@
 										'index' =>new Authorization_Requirements(null, [new Permission(Securable::ROLE, Permission_Type::LIST)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::ROLE, Permission_Type::READ)])
 								],
-						'importer' => ['index' =>new Authorization_Requirements(null, [])]
+						'importer' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)])],
+						'sandbox' => ['index' =>new Authorization_Requirements(null, [])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

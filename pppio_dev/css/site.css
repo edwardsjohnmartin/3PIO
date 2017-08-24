@@ -44,6 +44,11 @@
 {
 	width: 100%; overflow-x: auto;
 }
+
+.CodeMirror
+{
+	border: 1px solid #AAA;
+}
 /*
 	background-color: #000;
 	display: inline-block;

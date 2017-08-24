@@ -57,7 +57,7 @@ if ($lesson_id == $lesson->get_id()) $lesson_name = $lesson_props['name'];
 		}
 
 
-		if($exercise_obj->status == Completion_Status::COMPLETED)
+		if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview)
 		{
 			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
 			{
@@ -113,6 +113,11 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 					<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>';
 			//<span>Choose a test file:</span><input type="file"  class="form-control" id="fileInput">
 			echo '</div>
+			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
+			<div class="col-xs-12 pad-0">
+				<div id="codeAlerts"></div>
+			</div>
+		</div>
 			<div class="row overflow-hidden height-100">
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
 					<textarea id="code" name="code">' . $exercise_props['starter_code'] . '</textarea>
@@ -124,11 +129,7 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 
 				</div>
 			</div>
-			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
-				<div class="col-xs-12 pad-0">
-					<div id="codeAlerts"></div>
-				</div>
-			</div>';
+			';
 
 echo '</div></div>';
 
@@ -143,12 +144,18 @@ echo	'var exercise_id = ' . $exercise->get_id() . ';'; //use to mark as complete
 echo	'var lesson_id = ' . $lesson_id . ';'; //use to mark as complete
 echo	'var concept_id = ' . $concept->get_id() . ';'; //use to mark as complete
 echo	'var current_tile_id = "exercise-' . $exercise->get_id() . '-lesson-' . $lesson_id . '";'; //use to color tile
-
+echo 'var can_preview = ' . ($can_preview ? 'true' : 'false') . ';';
 echo	'var trying_latest = ' . ($trying_latest ? 'true' : 'false') . ';';
 echo	'var trying_last = ' . ($trying_last ? 'true' : 'false') . ';';
 	if($trying_last)
 	{
-echo	'var link = "' . '/?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '";';
+		if($can_preview){
+echo	'var link = "' . '?controller=Concept&action=read&id=' . $concept->get_id().'";';
+		}
+		else {
+echo	'var link = "' . '?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '";';
+
+		}
 	}
 	else
 	{
@@ -156,9 +163,10 @@ echo	'var link = "' . '/?controller=section&action=read_student&id=' . $concept-
 //echo	'var next_exercise_id = ' . $next_lesson_id . ';';
 echo	'var next_tile_id = "exercise-' . $next_exercise_id . '-lesson-' . $next_lesson_id . '";'; //use to color tile
 echo	'var next_index = ' . $next_index . ';';
-echo	'var link = "' . '/?controller=exercise&action=try_it&id=' . $next_exercise_id . '&lesson_id=' . $next_lesson_id . '&concept_id=' . $concept->get_id() . '";';
+echo	'var link = "' . '?controller=exercise&action=try_it&id=' . $next_exercise_id . '&lesson_id=' . $next_lesson_id . '&concept_id=' . $concept->get_id() . '";';
 	}
 //echo	'var completion_link = "' . '/?controller=exercise&action=mark_as_completed&id=' . $exercise->get_id() . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '";';
+echo 'document.getElementById("exercise-' . $exercise->get_id() . '-lesson-' . $lesson_id . '").scrollIntoView();';
 echo	'</script>';
 //If the MIME type specified is not a JavaScript type the content embedded within its tags is treated as a data block which won't be processed by the browser.
 echo '<script type="text/x-python" id="test_code_to_run">';

@@ -108,14 +108,24 @@
 			}
 		}
 
+		// This is where the student completes the exercise
 		public function try_it() //check if can access!!
 		{
 			//requires exercise id, lesson id, concept id in query sting
 			//at this point, i don't need to pass in the lesson id because it's on the exercise, but it will be needed if we decide to go back to having a pool of exercises, so i'm keeping it here
-			if (!isset($_GET['id']) || !isset($_GET['lesson_id']) || !isset($_GET['concept_id']) || !exercise::can_access($_GET['id'], $_GET['lesson_id'], $_GET['concept_id'], $_SESSION['user']->get_id()))
+			if (!isset($_GET['id']) || !isset($_GET['lesson_id']) || !isset($_GET['concept_id']))
 			{
 				return call('pages', 'error'); //or even call a blank editor for playing around in
 			}
+			
+			require_once('models/concept.php');
+			$can_preview = concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id());
+
+			if(!(exercise::can_access($_GET['id'], $_GET['lesson_id'], $_GET['concept_id'], $_SESSION['user']->get_id())
+			|| $can_preview)){
+				return call('pages', 'error'); //or even call a blank editor for playing around in
+			}
+
 			$exercise = exercise::get($_GET['id']); //what if it's null? don't want that.. need to be careful of that in base, too
 			$lesson_id = $_GET['lesson_id'];
 
@@ -123,7 +133,6 @@
 			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
 
 
-			require_once('models/concept.php');
 			$concept = concept::get($_GET['concept_id']); //all i really want is the section id for links...
 
 			//require_once('views/shared/editor.php');

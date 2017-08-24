@@ -9,7 +9,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 	theme: "default"
 });
 
-document.getElementById("runButton").onclick = function() { clearAlerts(); if(!readonly) { save(concept_id, editor.getValue()); } run(); };
+document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
 
 /*
 uncomment to disable copy/paste for projects
@@ -43,28 +43,6 @@ function run() {
        markError(err.toString());
    });
 }
-
-function save(concept_id, contents)
-{
-	$.ajax({
-		method: "POST",
-		url: "/?controller=project&action=save_code",
-		data: { concept_id: concept_id, contents: contents },
-		success: function(data) {
-			if(data.success)
-			{
-				markSuccess('Code saved.');
-			}
-			else
-			{
-				markError('Unable to save code.');
-			}
-		},
-		error: function() { markError('Unable to save code.');　}
-	});
-
-}
-
 var codeAlerts = document.getElementById('codeAlerts');
 
 function clearAlerts()
@@ -81,3 +59,4 @@ function markSuccess(successMessage)
 {
 	codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
+

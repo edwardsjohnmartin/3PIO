@@ -24,15 +24,15 @@ foreach($models as $k => $v)
 <?php
 	if($can_read)
 	{ ?>
-	<td>
-		<a href="<?php echo '/?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a><br>
-	</td>
-	<?php } ?>
-<?php
+	<td><ul class="actions">
+		<li><a href="<?php echo '/?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a></li>
+	<?php } 
 	if($can_edit)
 	{ ?>
-	<td>
-		<a href="<?php echo '/?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a><br>
+		<li><a href="<?php echo '/?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a></li>
+	
+		<li><a href="<?php echo '/?controller=' . $this->model_name . '&action=delete&id=' . $k;?>">Delete</a></li>
+		</ul>
 	</td>
 	<?php } ?>
 </tr>

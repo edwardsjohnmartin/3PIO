@@ -13,12 +13,14 @@ $is_owner = concept::is_owner($model->get_id(), $_SESSION['user']->get_id());
 $is_ta = concept::is_teaching_assistant($model->get_id(), $_SESSION['user']->get_id());
 if($is_owner || $is_ta)
 {
+	echo '<div><a class="btn btn-primary" href="?controller=lesson&action=read_for_concept_for_student&concept_id='.$model->get_id().'">Preview</a></div>';
 	$progress = concept::get_progress($model->get_id());
 	if(count($progress) > 0)
 	{
 		$current_date = new DateTime();
 		$project_due_date = new DateTime($properties['project_due_date']);
 		$project_open_date = new DateTime($properties['project_open_date']);
+		
 		echo '<label>Progress</label>';
 		echo '<div class="force-x-scroll">';
 		echo '<table class="table table-striped table-bordered">';

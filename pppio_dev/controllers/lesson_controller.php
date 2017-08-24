@@ -26,7 +26,13 @@
 		{
 			require_once('models/concept.php');
 
-			if (!isset($_GET['concept_id']) || !lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id()))
+			if (!isset($_GET['concept_id'])) {
+				return call('pages', 'error');				
+			} 
+			$can_preview = concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id());
+			
+			if(!(lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id())
+			|| $can_preview))
 			{
 				return call('pages', 'error');
 			}
@@ -215,6 +221,7 @@
 			}
 			else
 			{
+				// Figure out what is happening here
 				$properties = $model->get_properties();
 				$types = $model::get_types();
 				unset($properties['exercises']);
@@ -228,6 +235,60 @@
 
 		}
 
+		public function delete() {
+			//check if this lesson belongs to me
+			//check the owner!!!!!!!
 
+			//must set id and the rest too. id is separate.
+			//for users especially, i need to be more careful.
+			//this is a basic one without permissions.
+
+			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id()))
+			{
+				$_SESSION['errorMessage'] = "Not Owner?";
+				return call('pages', 'error');
+			}
+
+			//if there is post data...
+			//todo: i need to check if the model actually exists on post, too!!!!
+			// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+				// $postedToken = filter_input(INPUT_POST, 'token');
+				// if(!empty($postedToken) && isTokenValid($postedToken)){
+					// //probably i should do that isset stuff
+					// $model = new $this->model_name();
+						// $model->set_id($_GET['id']); //i should not trust that...
+						// $model->set_properties($_POST);
+						// $model->set_properties(array('owner' => $_SESSION['user']->get_id()));
+						// if($model->is_valid())
+						// {
+							// $model->update();
+							// add_alert('Successfully updated!', Alert_Type::SUCCESS);
+							// return redirect('lesson', 'index');
+						// }
+						// else
+						// {
+							// add_alert('Please try again.', Alert_Type::DANGER);
+						// }
+				// }
+				// else
+				// {
+					// add_alert('Please try again.', Alert_Type::DANGER);
+				// }
+			// }
+			
+			$model = ($this->model_name)::get($_GET['id']);
+			if($model == null)
+			{
+				$_SESSION['errorMessage'] = "Lesson could not be found";
+				// Lesson was not returned from the db
+				return call('pages', 'error');
+			}
+			else
+			{
+				$model->delete($this->model_name)::get($_GET['id']);
+				$view_to_show = 'views/lesson/index.php';
+				require_once('views/shared/layout.php');
+			}
+		}
 	}
 ?>

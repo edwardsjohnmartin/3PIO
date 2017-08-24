@@ -136,6 +136,10 @@
 .cm-invalidchar {color: #f00;}
 
 .CodeMirror-composing { border-bottom: 2px solid; }
+.cm-s-default {
+	border-style:solid;
+	border-width:1px;
+}
 
 /* Default styles for common addons */
 

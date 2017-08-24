@@ -108,5 +108,9 @@
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}
 
+		public static function can_preview($id, $user_id)
+		{
+			return static::is_teaching_assistant($id, $user_id) || static::is_owner($id, $user_id);
+		}
 	}
 ?>

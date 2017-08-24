@@ -49,6 +49,7 @@
 <?php
 		if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 		{
+			
 
 			if(isset($_SESSION['sections_student']) && $_SESSION['sections_student'] != null && count($_SESSION['sections_student']) >0)
 			{
@@ -109,12 +110,15 @@
 				  echo '</ul>
 				</li>';
 			}
-
+			$can_create_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::CREATE));
+			if($can_create_lesson){
+				echo '<li><a href="?controller=importer&action=index">Importer</a></li>';
+			}
 		}
+		echo '<li><a href="?controller=sandbox&action=index">Sandbox</a></li>';
 			?>
 
-
-			<li><a href="?controller=Importer&action=index">Importer</a></li>
+			
 		    <!-- <li><a href="#">Users</a></li>
 
 			<li class="dropdown">

@@ -5,7 +5,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     lineNumbers: true,
     indentUnit: 4,
     matchBrackets: true,
-	theme: "solarized dark"
+	//theme: "solarized dark"
+	theme: "default"
 });
 
 document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };

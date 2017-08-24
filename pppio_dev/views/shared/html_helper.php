@@ -141,7 +141,7 @@
 						indentUnit: 4,
 						matchBrackets: true,
 						readOnly: true,
-						theme: "solarized dark"
+						theme: "default"
     				});</script>';
 		return $input . $js;
 		}
@@ -254,7 +254,7 @@
 						lineNumbers: true,
 						indentUnit: 4,
 						matchBrackets: true,
-						theme: "solarized dark"
+						theme: "default"
     				});</script>';
 		return $input . $js;
 		}

@@ -9,7 +9,6 @@
 	echo '<h1>' . htmlspecialchars($concept->get_properties()['name']) . '</h1>';
 	//echo '<p>' . htmlspecialchars($lesson_props['description']) . '</p>';
 
-
 	$total_exercise_count = 0;
 	$completed_exercise_count = 0;
 	$current_exercise_id;
@@ -24,7 +23,7 @@
 		$total_exercise_count += count($exercises);
 		foreach($exercises as $exercise_id => $exercise_obj)
 		{
-			if($exercise_obj->status == Completion_Status::COMPLETED)
+			if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview)
 			{
 				$completed_exercise_count++;
 			}
@@ -69,7 +68,7 @@
 		{
 			echo '<div class="col-md-2 col-xs-4 text-center">';
 
-			if($exercise_obj->status == Completion_Status::COMPLETED)
+			if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview)
 			{
 				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success"><span class="tile-number">' . $i . '</span><span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span></a>';
 			}

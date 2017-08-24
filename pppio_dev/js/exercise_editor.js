@@ -5,7 +5,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     lineNumbers: true,
     indentUnit: 4,
     matchBrackets: true,
-	theme: "solarized dark"
+	//theme: "solarized dark"
+	theme: "default"
 });
 
 document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
@@ -43,7 +44,7 @@ function run() {
 		if(ret.v.length == 0 || ret.v[0].v == null)
 		{
 		//success
-			if(trying_latest)
+			if(trying_latest && !can_preview)
 			{
 				markAsComplete(exercise_id, lesson_id, concept_id);
 			}

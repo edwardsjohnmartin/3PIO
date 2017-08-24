@@ -13,8 +13,7 @@ echo '<div class="row no-shrink">
 			//check if empty
 			//if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
 
-			echo '</h3>
-			<p id="prompt">' . $project_props['description'] . '</p>
+			echo '<p id="prompt">' . $project_props['description'] . '</p>
 		</div>
 	</div>';
 
@@ -22,6 +21,11 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 					<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>';
 			//<span>Choose a test file:</span><input type="file"  class="form-control" id="fileInput">
 			echo '</div>
+			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
+			<div class="col-xs-12 pad-0">
+				<div id="codeAlerts"></div>
+			</div>
+		</div>
 			<div class="row overflow-hidden height-100">
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
 					<textarea id="code" name="code">';
@@ -42,11 +46,7 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 
 				</div>
 			</div>
-			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
-				<div class="col-xs-12 pad-0">
-					<div id="codeAlerts"></div>
-				</div>
-			</div>';
+			';
 
 echo '</div></div>';
 
