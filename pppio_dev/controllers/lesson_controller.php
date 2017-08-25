@@ -136,7 +136,7 @@
 							$finfo = new finfo(FILEINFO_MIME_TYPE);
 							if (false === $ext = array_search(
 								$finfo->file($_FILES['file']['tmp_name']),
-								array('text/plain'),
+								array('text/plain', 'text/x-fortran'),
 								true
 							)) {
 								add_alert('Invalid file format.', Alert_Type::DANGER);

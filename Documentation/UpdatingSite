@@ -5,8 +5,10 @@ I remove the files from the server and replace them.
 On server:
 sudo rm -r ~/pppio
 
-On mine:
-scp -r /media/jac/DATA/Projects/LIVE/pppio oryjacq@3pio.cose.isu.edu:~
+Jac:
+  scp -r /media/jac/DATA/Projects/LIVE/pppio oryjacq@3pio.cose.isu.edu:~/pppio
+John:
+  scp -r ~/projects/3PIO/pppio_dev 3pio.cose.isu.edu:~/pppio
 
 On server:
 sudo rm -r /var/www/pppio
@@ -15,14 +17,14 @@ sudo cp -r ~/pppio /var/www/pppio
 Can't scp directly to /var/www because permissions.
 
 Important notes:
-There are three files that are different in the live version than the version on Github.
+There are four files that are different in the live version than the version on Github.
 
-connection.php contains the logins for the main database, which are different from the logins for the dev database.
+1. connection.php -- connection.php contains the logins for the main database, which are different from the logins for the dev database.
 
-controllers/user_controller.php has and uses a server side salt for passwords (didn't want real salt on Github + added later).
+2. user_controller.php -- controllers/user_controller.php has and uses a server side salt for passwords (didn't want real salt on Github + added later).
 
-index.php sets the session name so that the session variables are different between the dev site and live site.
+3. index.php -- index.php sets the session name so that the session variables are different between the dev site and live site.
 	Live on server is main URL.
 	Dev on server is /dev.
 
-layout.php - Title and upper left name "3PIO"/"3PIO Dev"
+4. layout.php -- Title and upper left name should be changed from "3PIO Dev" to "3PIO"
