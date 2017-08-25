@@ -1,30 +1,33 @@
-Updating the site
-
-I remove the files from the server and replace them.
+Updating the website on the server
 
 On server:
-sudo rm -r ~/pppio
+  ~edwajohn/pppio-prep
 
-Jac:
-  scp -r /media/jac/DATA/Projects/LIVE/pppio oryjacq@3pio.cose.isu.edu:~/pppio
-John:
-  scp -r ~/projects/3PIO/pppio_dev 3pio.cose.isu.edu:~/pppio
+On local computer:
+  Jac:
+    scp -r /media/jac/DATA/Projects/LIVE/pppio oryjacq@3pio.cose.isu.edu:~/pppio
+  John:
+    scp -r ~/projects/3PIO/pppio_dev 3pio.cose.isu.edu:~/pppio
 
 On server:
-sudo rm -r /var/www/pppio
-sudo cp -r ~/pppio /var/www/pppio
-
-Can't scp directly to /var/www because permissions.
+  ~edwajohn/pppio-finish
 
 Important notes:
-There are four files that are different in the live version than the version on Github.
+There are four files that are different in the live version than the version
+on Github. These are stored in /var/www/pppio-stash and are copied into the
+version in the scripts.
 
-1. connection.php -- connection.php contains the logins for the main database, which are different from the logins for the dev database.
+1. connection.php -- contains the logins for the main database,
+     which are different from the logins for the dev database.
 
-2. user_controller.php -- controllers/user_controller.php has and uses a server side salt for passwords (didn't want real salt on Github + added later).
+2. controllers/user_controller.php -- has and uses a server side salt for
+     passwords (didn't want real salt on Github + added later).
 
-3. index.php -- index.php sets the session name so that the session variables are different between the dev site and live site.
+3. index.php -- sets the session name so that the session variables are
+     different between the dev site and live site.
 	Live on server is main URL.
 	Dev on server is /dev.
 
-4. layout.php -- Title and upper left name should be changed from "3PIO Dev" to "3PIO"
+4. layout.php -- Title and upper left name should be changed from
+    "3PIO Dev" to "3PIO". This file is not managed automatically. The strings
+    should be changed prior to uploading the file to the server.
