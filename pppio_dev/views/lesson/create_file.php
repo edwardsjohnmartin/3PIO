@@ -14,15 +14,15 @@
 		{
 			$lesson_props = $lesson->get_properties();
 			echo '<div class="panel panel-default">';
-			echo '<div class="panel-heading"><a href="/?controller=lesson&action=read&id=' . $lesson->get_id() .'" target="_blank">' . htmlspecialchars($lesson_props['name']) . '</a></div>';
+			echo '<div class="panel-heading"><a href="?controller=lesson&action=read&id=' . $lesson->get_id() .'" target="_blank">' . htmlspecialchars($lesson_props['name']) . '</a></div>';
 			//validate...
 			foreach($lesson_props['exercises'] as $exercise) //the getter is bad... :/
 			{
-				echo '<a href="/?controller=exercise&action=read&id=' . $exercise->get_id() .'" class="list-group-item" target="_blank">' . htmlspecialchars($exercise->get_properties()['description']) . '</a>';
+				echo '<a href="?controller=exercise&action=read&id=' . $exercise->get_id() .'" class="list-group-item" target="_blank">' . htmlspecialchars($exercise->get_properties()['description']) . '</a>';
 			}
 			echo '</div>';
 		}
-		echo '<a href="/?controller=' . $this->model_name . '&action=index" class="btn btn-primary">Return to index</a>';
+		echo '<a href="?controller=' . $this->model_name . '&action=index" class="btn btn-primary">Return to index</a>';
 	}
 	else
 	{

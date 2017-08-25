@@ -1,15 +1,22 @@
 The files needed to recreate the database are in DatabaseScripts/CleanDatabase
 
 Delete the database if it exists:
-dropdb pppio
+    dropdb pppio
 
 Recreate the database:
-createdb pppio
+    createdb pppio
 
 Create tables and functions from the file DatabaseScripts/CleanDatabase/pppio_schemaonly:
-pg_restore -d pppio pppio_schemaonly
+    pg_restore -d pppio pppio_schemaonly
 
-Paste in the data from the file DatabseScripts/CleanDatabase/data
+Command-line:
+  Open the database using
+    psql pppio
+  and paste in the data from the file DatabaseScripts/CleanDatabase/data
+   then \q to quit.
+GUI:
+  Paste in the data from the file DatabaseScripts/CleanDatabase/data into
+  the pppio GUI.
 
 The data in the file is the minimum for the site to work properly.
 
@@ -24,3 +31,8 @@ Enums that require corresponding tables in the database:
 Student role is hard coded, expected to be 3, in the user controller.
 In database, participation types are expected exist.
 More participation types could be added later.
+
+After creating a user in the 3PIO GUI, do the following in the database
+(using "psql pppio_dev" at the command-line):
+    select * from users;
+    update users set role_id=1 where id=1;
