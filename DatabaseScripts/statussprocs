@@ -768,7 +768,7 @@ $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_concept_is_teaching_assistant(id int, user_id int)
 RETURNS TABLE(is_teaching_assistant bool) AS $$
-SELECT EXISTS (SELECT * FROM concepts AS c JOIN sections AS s ON s.id = c.section_id JOIN users_to_sections AS uts ON uts.section_id = s.id WHERE c.id = sproc_read_concept_is_teaching_assistant.id AND sproc_read_concept_is_teaching_assistant.user_id = uts.user_id AND NOT c.is_deleted)
+SELECT EXISTS (SELECT * FROM concepts AS c JOIN sections AS s ON s.id = c.section_id JOIN users_to_sections AS uts ON uts.section_id = s.id WHERE c.id = sproc_read_concept_is_teaching_assistant.id AND sproc_read_concept_is_teaching_assistant.user_id = uts.user_id AND uts.participation_type_id = 2 AND NOT c.is_deleted)
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION sproc_read_section_is_teaching_assistant(id int, user_id int)
