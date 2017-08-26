@@ -31,7 +31,9 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 				<div class="col-xs-6 height-100">
 
 					<div id="mycanvas" class="graphicalOutput"></div>
-					<pre id="output" ></pre>
+                    <div class="textOutput">
+      				  <pre id="output"></pre>
+                    </div>
 
 				</div>
 			</div>
@@ -46,7 +48,7 @@ echo '<script src="js/editor_test.js"></script>';
 
 if(has_permission(new Permission(Securable::EXERCISE, Permission_Type::EDIT)))
 {
-	echo '<a href="/?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
+	echo '<a href="?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
 }
 ?>
 

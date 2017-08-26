@@ -9,7 +9,7 @@ echo '<div class="col-xs-12 height-100 flex-columns">';
 
 echo '<div class="row no-shrink">
 		<div class="col-xs-12">
-			<h3><a href="\?controller=user&action=read&id=' . $user->get_id() . '">' . $user->get_properties()['name'] . '\'s</a> ' . $project_props['name']  . '</h3>'; //$exercise_props['lesson']->value); //bugs leftover from switching to only one lesson per project
+			<h3><a href="?controller=user&action=read&id=' . $user->get_id() . '">' . $user->get_properties()['name'] . '\'s</a> ' . $project_props['name']  . '</h3>'; //$exercise_props['lesson']->value); //bugs leftover from switching to only one lesson per project
 			//check if empty
 			//if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
 
@@ -35,7 +35,9 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 				<div class="col-xs-6 height-100">
 
 					<div id="mycanvas" class="graphicalOutput"></div>
-					<pre id="output" ></pre>
+                    <div class="textOutput">
+      				  <pre id="output"></pre>
+                    </div>
 
 				</div>
 			</div>

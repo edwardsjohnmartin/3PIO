@@ -52,7 +52,7 @@
 			}
 			else
 			{
-					add_alert('Oops, you don\'t have any lessons. Exercises must be added to lessons. Please <a href="/?controller=lesson&action=create">create a lesson</a> before creating an exercise!', Alert_Type::DANGER);
+					add_alert('Oops, you don\'t have any lessons. Exercises must be added to lessons. Please <a href="?controller=lesson&action=create">create a lesson</a> before creating an exercise!', Alert_Type::DANGER);
 					redirect('exercise', 'index');
 			}
 		}

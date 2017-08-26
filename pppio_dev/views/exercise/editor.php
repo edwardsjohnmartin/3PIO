@@ -61,22 +61,22 @@ if ($lesson_id == $lesson->get_id()) $lesson_name = $lesson_props['name'];
 		{
 			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 			else
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 		}
 		elseif (!$found_latest)
 		{
 			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 			else
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-default" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-default" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 			$found_latest = true;
 			if($exercise_id == $exercise->get_id())
@@ -125,7 +125,9 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 				<div class="col-xs-6 height-100">
 
 					<div id="mycanvas" class="graphicalOutput"></div>
-					<pre id="output" ></pre>
+                    <div class="textOutput">
+      				  <pre id="output"></pre>
+                    </div>
 
 				</div>
 			</div>
@@ -165,7 +167,7 @@ echo	'var next_tile_id = "exercise-' . $next_exercise_id . '-lesson-' . $next_le
 echo	'var next_index = ' . $next_index . ';';
 echo	'var link = "' . '?controller=exercise&action=try_it&id=' . $next_exercise_id . '&lesson_id=' . $next_lesson_id . '&concept_id=' . $concept->get_id() . '";';
 	}
-//echo	'var completion_link = "' . '/?controller=exercise&action=mark_as_completed&id=' . $exercise->get_id() . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '";';
+//echo	'var completion_link = "' . '?controller=exercise&action=mark_as_completed&id=' . $exercise->get_id() . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '";';
 echo 'document.getElementById("exercise-' . $exercise->get_id() . '-lesson-' . $lesson_id . '").scrollIntoView();';
 echo	'</script>';
 //If the MIME type specified is not a JavaScript type the content embedded within its tags is treated as a data block which won't be processed by the browser.

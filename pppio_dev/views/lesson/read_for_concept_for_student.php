@@ -52,7 +52,7 @@
 
 	if(isset($current_exercise_id))
 	{
-		echo '<p><a href="/?controller=exercise&action=try_it&id=' . $current_exercise_id . '&lesson_id=' . $current_lesson_id . '&concept_id=' . $concept->get_id()  . '" class="btn btn-default btn-lg">Continue</a></p>';
+		echo '<p><a href="?controller=exercise&action=try_it&id=' . $current_exercise_id . '&lesson_id=' . $current_lesson_id . '&concept_id=' . $concept->get_id()  . '" class="btn btn-default btn-lg">Continue</a></p>';
 	}
 	//print_r($current_exercise_id);
 	
@@ -70,11 +70,11 @@
 
 			if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview)
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success"><span class="tile-number">' . $i . '</span><span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success"><span class="tile-number">' . $i . '</span><span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span></a>';
 			}
 			elseif (!$found_current)
 			{
-				echo '<a href="/?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-default"><span class="tile-number">' . $i . '</span><span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span></a>';
+				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-default"><span class="tile-number">' . $i . '</span><span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span></a>';
 				$found_current = true;
 			}
 			else

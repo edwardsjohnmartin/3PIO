@@ -76,7 +76,7 @@
 						if(!$lesson_complete) break;
 					}
 
-					echo '<a href="\?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
+					echo '<a href="?controller=lesson&action=read_for_concept_for_student&concept_id=' . $concept->get_id() . '" class="list-group-item';
 					if($lesson_complete) echo ' list-group-item-success';
 					echo '">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
 				}
@@ -90,7 +90,7 @@
 
 			if($lesson_complete && new Datetime($concept_props['project_open_date']) < new Datetime()) //check open date
 			{
-			echo '<a href="?controller=project&action=try_it&concept_id=' . $concept->get_id() . '" class="list-group-item'; ///?controller=project&action=read&id=' . $concept_props['project']->key .' //this should actually be the concept id
+			echo '<a href="?controller=project&action=try_it&concept_id=' . $concept->get_id() . '" class="list-group-item'; //?controller=project&action=read&id=' . $concept_props['project']->key .' //this should actually be the concept id
 					if($concept_props['project']->status /*== Completion_Status::COMPLETED*/) echo ' list-group-item-success';
 					echo '">Project<span class="pull-right">' . $concept_props['project_open_date'] . ' to ' . $concept_props['project_due_date'] . '</span></a>';
 			}

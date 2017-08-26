@@ -132,4 +132,11 @@ overflow: auto;
 {
 	background-color: #fff;
 	border: 1px solid #000;
+	height: 75%;
+}
+
+.textOutput
+{
+  overflow:scroll;
+	height: 25%;
 }

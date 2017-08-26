@@ -29,9 +29,9 @@ if($is_owner || $is_ta)
 		echo '<th>Student</th>';
 		foreach($progress[0]['lesson_completion'] as $lesson_completion)
 		{
-			echo '<th><a href="/?controller=lesson&action=read&id=' . $lesson_completion->key. '">' . htmlspecialchars($properties['lessons'][$lesson_completion->key]->value) . '</a></th>';
+			echo '<th><a href="?controller=lesson&action=read&id=' . $lesson_completion->key. '">' . htmlspecialchars($properties['lessons'][$lesson_completion->key]->value) . '</a></th>';
 		}
-		echo '<th><a href="/?controller=project&action=read&id=' . $properties['project']->key . '">Project</a></th>';
+		echo '<th><a href="?controller=project&action=read&id=' . $properties['project']->key . '">Project</a></th>';
 		echo '</tr>';
 
 		echo '</thead>';
@@ -40,7 +40,7 @@ if($is_owner || $is_ta)
 		foreach($progress as $student_progress)
 		{
 			echo '<tr>';
-			echo '<th><a href="/?controller=user&action=read&id=' . $student_progress['user_id'] . '">' . htmlspecialchars($student_progress['user_name']) . '</a></th>';
+			echo '<th><a href="?controller=user&action=read&id=' . $student_progress['user_id'] . '">' . htmlspecialchars($student_progress['user_name']) . '</a></th>';
 			foreach($student_progress['lesson_completion'] as $lesson_completion)
 			{
 				echo '<td';
@@ -50,7 +50,7 @@ if($is_owner || $is_ta)
 			}
 			if($student_progress['project_completed'])
 			{
-				echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <a href="/?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $student_progress['user_id'] . '">View code</a></td>';
+				echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <a href="?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $student_progress['user_id'] . '">View code</a></td>';
 			}
 			else
 			{
@@ -67,7 +67,7 @@ if($is_owner || $is_ta)
 
 	if($is_owner && has_permission(new Permission(Securable::CONCEPT, Permission_Type::EDIT)))
 	{
-		echo '<a href="/?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
+		echo '<a href="?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
 	}
 }
 ?>

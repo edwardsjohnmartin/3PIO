@@ -54,7 +54,7 @@ function save(concept_id, contents)
 {
 	$.ajax({
 		method: "POST",
-		url: "/?controller=project&action=save_code",
+		url: "?controller=project&action=save_code",
 		data: { concept_id: concept_id, contents: contents },
 		success: function(data) {
 			if(data.success)

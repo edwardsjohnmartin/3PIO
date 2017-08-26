@@ -13,7 +13,7 @@ foreach($models as $k => $v)
 	if($can_read)
 	{ ?>
 	<td>
-		<a href="<?php echo '/?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a><br>
+		<a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a><br>
 	</td>
 	<?php } ?>
 </tr>

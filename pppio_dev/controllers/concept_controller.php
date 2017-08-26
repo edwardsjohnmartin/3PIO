@@ -76,7 +76,7 @@
 			}
 			else
 			{
-					add_alert('Oops, you don\'t have any sections. Concepts must be added to section. Please <a href="/?controller=section&action=create">create a section</a> before creating an exercise!', Alert_Type::DANGER);
+					add_alert('Oops, you don\'t have any sections. Concepts must be added to section. Please <a href="?controller=section&action=create">create a section</a> before creating an exercise!', Alert_Type::DANGER);
 					redirect('concept', 'index');
 			}
 		}

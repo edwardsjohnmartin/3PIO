@@ -1,4 +1,6 @@
+------------------------------------------------------------
 Updating the website on the server
+------------------------------------------------------------
 
 On server:
   ~edwajohn/pppio-prep
@@ -12,7 +14,10 @@ On local computer:
 On server:
   ~edwajohn/pppio-finish
 
+------------------------------------------------------------
 Important notes:
+------------------------------------------------------------
+
 There are four files that are different in the live version than the version
 on Github. These are stored in /var/www/pppio-stash and are copied into the
 version in the scripts.

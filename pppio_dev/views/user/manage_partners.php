@@ -14,7 +14,7 @@
 		{
 			echo '<tr>';
 			echo '<td>' . $partner->get_properties()['name'] . '</td>';
-			echo '<td><a href="\?controller=user&action=log_out_partner&id=' . $id . '">Log partner out</a></td>';
+			echo '<td><a href="?controller=user&action=log_out_partner&id=' . $id . '">Log partner out</a></td>';
 			echo '</tr>';
 		}
 		echo '</table>';

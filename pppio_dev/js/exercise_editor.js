@@ -99,7 +99,7 @@ function markAsComplete(exercise_id, lesson_id, concept_id) //i should only do t
 {
 	$.ajax({
 		method: "POST",
-		url: "/?controller=exercise&action=mark_as_completed",
+		url: "?controller=exercise&action=mark_as_completed",
 		data: { id: exercise_id, lesson_id: lesson_id, concept_id: concept_id },
 		success: function(data) {
 			if(data.success)
