@@ -22,6 +22,12 @@ function outf(text) {
     var mypre = document.getElementById("output"); 
     mypre.innerHTML = mypre.innerHTML + text; 
 } 
+function inf(prompt) {
+	// Must copy the prompt string for some reason
+  return window.prompt(String(prompt));
+  // var mypre = document.getElementById("output"); 
+  // mypre.innerHTML = mypre.innerHTML + String(prompt); 
+}
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
             throw "File not found: '" + x + "'";
@@ -33,15 +39,36 @@ function run() {
 	var outputArea = document.getElementById("output");
 	outputArea.innerHTML = '';
 	Sk.pre = "output";
-    Sk.configure({output:outf, read:builtinRead});
+  //Sk.configure({output:outf, read:builtinRead});
+	Sk.configure({
+		output:outf, read:builtinRead,
+		inputfun:inf,
+    // inputfun: function (prompt) {
+    //   return window.prompt(prompt);
+    // },
+    inputfunTakesPrompt:true,
+    // output: function(str) {
+    //   //strip out line-feeds
+    //   if (str.replace(/\n/g, "") !== "") {
+    //     repl.print(str);
+    //   }
+    // },
+    // read: function (x) {
+    //   if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+    //     throw "File not found: '" + x + "'";
+    //   }
+    //   return Sk.builtinFiles["files"][x];
+    // },
+		// retainglobals: true
+	});
 	(Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
-   var myPromise = Sk.misceval.asyncToPromise(function() {
-       return Sk.importMainWithBody("<stdin>", false, program, true);
-   });
-   myPromise.then(function(mod) {},
-       function(err) {
-       markError(err.toString());
-   });
+  var myPromise = Sk.misceval.asyncToPromise(function() {
+    return Sk.importMainWithBody("<stdin>", false, program, true);
+  });
+  myPromise.then(function(mod) {},
+								 function(err) {
+									 markError(err.toString());
+								 });
 }
 var codeAlerts = document.getElementById('codeAlerts');
 

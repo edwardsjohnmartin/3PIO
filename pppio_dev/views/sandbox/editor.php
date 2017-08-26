@@ -29,7 +29,7 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 				<div class="col-xs-6 height-100">
 
 					<div id="mycanvas" class="graphicalOutput"></div>
-					<pre id="output" ></pre>
+    				<pre id="output" ></pre>
 
 				</div>
 			</div>
