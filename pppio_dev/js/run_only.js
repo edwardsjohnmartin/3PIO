@@ -25,8 +25,6 @@ function outf(text) {
 function inf(prompt) {
 	// Must copy the prompt string for some reason
   return window.prompt(String(prompt));
-  // var mypre = document.getElementById("output"); 
-  // mypre.innerHTML = mypre.innerHTML + String(prompt); 
 }
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
