@@ -1,12 +1,23 @@
+function betterTab(cm) {
+  if (cm.somethingSelected()) {
+    cm.indentSelection("add");
+  } else {
+    cm.replaceSelection(cm.getOption("indentWithTabs")? "\t":
+												Array(cm.getOption("indentUnit") + 1).join(" "),
+												"end", "+input");
+  }
+}
+
 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-    mode: {name: "python",
-           version: 3,
-           singleLineStringErrors: false},
-    lineNumbers: true,
-    indentUnit: 4,
-    matchBrackets: true,
+  mode: {name: "python",
+         version: 3,
+         singleLineStringErrors: false},
+  lineNumbers: true,
+  indentUnit: 4,
+  matchBrackets: true,
 	//theme: "solarized dark"
-	theme: "default"
+	theme: "default",
+	extraKeys: { Tab: betterTab }
 });
 
 document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };

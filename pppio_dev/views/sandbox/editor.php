@@ -1,6 +1,6 @@
 <?php
 
-echo '<link rel="stylesheet" href="css/editor.css">';
+echo '<link rel="stylesheet" href="css/editor.css?v=1.5">';
 require_once('views/shared/CodeMirror.php');
 require_once('views/shared/Skulpt.php');
 
@@ -40,5 +40,5 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 echo '</div></div>';
 
 echo '<script src="js/run_only.js"></script>';
-echo '<script src="js/key-handler.js"></script>';
+echo '<script src="js/key_handler.js"></script>';
 ?>
