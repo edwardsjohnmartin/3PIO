@@ -29,14 +29,14 @@ editor.on('cut', function(a, e) {e.preventDefault();});
 editor.on('paste', function(a, e) {e.preventDefault();});
 */
 
-function outf(text) { 
-    var mypre = document.getElementById("output"); 
-    mypre.innerHTML = mypre.innerHTML + text; 
-} 
-function inf(prompt) {
-	// Must copy the prompt string for some reason
-  return window.prompt(String(prompt));
-}
+// function outf(text) { 
+//     var mypre = document.getElementById("output"); 
+//     mypre.innerHTML = mypre.innerHTML + text; 
+// } 
+// function inf(prompt) {
+// 	// Must copy the prompt string for some reason
+//   return window.prompt(String(prompt));
+// }
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
             throw "File not found: '" + x + "'";

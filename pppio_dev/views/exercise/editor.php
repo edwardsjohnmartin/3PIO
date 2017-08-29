@@ -176,5 +176,6 @@ require('py_test/METHODS.py');
 echo $exercise_props['test_code'];
 echo '</script>';
 
+echo '<script src="js/python_ide_util.js"></script>';
 echo '<script src="js/exercise_editor.js"></script>';
 ?>

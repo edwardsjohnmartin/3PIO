@@ -44,6 +44,7 @@ require('py_test/METHODS.py');
 echo $props['test_code'];
 echo '</script>';
 
+echo '<script src="js/python_ide_util.js"></script>';
 echo '<script src="js/editor_test.js"></script>';
 
 if(has_permission(new Permission(Securable::EXERCISE, Permission_Type::EDIT)))

@@ -115,12 +115,12 @@ def __TEST(student_input, student_output):
         if thing != True:
             problems.append(thing)
 
-    if (all(x in student_input for x in __in_strings) == False):
+    if (len(problems) == 0 and all(x in student_input for x in __in_strings) == False):
         #problems.append("You must include the following string(s) in your code: {0}.".format(str(__in_strings)))
         #problems.append("The code is incorrect.")
         problems.append("Incorrect.")
 
-    if __out_string[0] != None:
+    if len(problems) == 0 and __out_string[0] != None:
         if student_output != __out_string[0]:
             #problems.append("The output is incorrect.")
             problems.append("Incorrect.")
