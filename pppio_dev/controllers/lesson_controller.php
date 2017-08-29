@@ -285,9 +285,8 @@
 			}
 			else
 			{
-				$model->delete($this->model_name)::get($_GET['id']);
-				$view_to_show = 'views/lesson/index.php';
-				require_once('views/shared/layout.php');
+				$model->delete($_GET['id']);
+				return redirect($this->model_name, 'index');
 			}
 		}
 	}

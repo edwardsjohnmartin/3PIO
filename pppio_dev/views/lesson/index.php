@@ -14,6 +14,7 @@ echo '<a href="?controller=' . $this->model_name . '&action=create_file" class="
 //
 $can_read = has_permission(new Permission(Securable::LESSON, Permission_Type::READ));
 $can_edit = has_permission(new Permission(Securable::LESSON, Permission_Type::EDIT));
+
 foreach($models as $k => $v)
 {
 ?>
@@ -31,7 +32,7 @@ foreach($models as $k => $v)
 	{ ?>
 		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a></li>
 	
-		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>">Delete</a></li>
+		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this lesson?')">Delete</a></li>
 		</ul>
 	</td>
 	<?php } ?>
