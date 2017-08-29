@@ -39,6 +39,5 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 
 echo '</div></div>';
 
-echo '<script src="js/python_ide_util.js"></script>';
 echo '<script src="js/run_only.js"></script>';
 ?>

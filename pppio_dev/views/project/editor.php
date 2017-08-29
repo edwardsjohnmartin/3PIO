@@ -53,7 +53,6 @@ echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
 echo '</div></div>';
 
 echo '<script>var concept_id = ' . $concept->get_id() . '; var readonly = ' . ($readonly ? 'true' : 'false') . ';</script>';
-echo '<script src="js/python_ide_util.js"></script>';
 echo '<script src="js/project_editor.js"></script>';
 
 ?>

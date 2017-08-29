@@ -3,3 +3,4 @@
 <script src="js/CodeMirror/lib/codemirror.js"></script>
 <script src="js/CodeMirror/mode/python/python.js"></script>
 <script src="js/key_handler.js"></script>
+<script src="js/python_ide_util.js"></script>
