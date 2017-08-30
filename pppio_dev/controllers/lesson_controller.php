@@ -245,7 +245,7 @@
 
 			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id()))
 			{
-				$_SESSION['errorMessage'] = "Not Owner?";
+				add_alert("You are not the owner to this lesson.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -279,8 +279,7 @@
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
-				$_SESSION['errorMessage'] = "Lesson could not be found";
-				// Lesson was not returned from the db
+				add_alert("The lesson you are trying to access does not exist.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 			else
