@@ -45,6 +45,7 @@
 					require_once('models/section.php');
 					$_SESSION['sections_student'] = Section::get_pairs_for_student($model->get_id());
 					$_SESSION['sections_ta'] = Section::get_pairs_for_teaching_assistant($model->get_id()); //right now, since this only happens on login, the user will have to log in and log out to see new sections. maybe i should refill when going to the section list for user page
+					$_SESSION['sections_owner'] = Section::get_pairs_for_owner($model->get_id());
 					require_once('models/role.php');
 					$_SESSION['permissions'] = Role::get_permissions_for_role($model->get_properties()['role']);
 					add_alert('Logged in! Welcome back, ' . htmlspecialchars($model->get_properties()['name']) . '.', Alert_Type::SUCCESS);
