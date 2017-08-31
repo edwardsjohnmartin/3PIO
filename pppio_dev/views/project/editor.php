@@ -13,7 +13,7 @@ echo '<div class="row no-shrink">
 			//check if empty
 			//if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
 
-			echo '<p id="prompt">' . $project_props['description'] . '</p>
+			echo '<h4 class="panel-title"><a data-toggle="collapse" data-target="#description" href="#prompt">Description</a></h4><div id="description" class="collapse in"><p id="prompt">' . $project_props['description'] . '</p></div>
 		</div>
 	</div>';
 

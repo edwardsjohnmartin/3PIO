@@ -118,6 +118,9 @@
 				}
 				$value = $str;
 			}
+            else if (substr($value, 0, 5 ) === "<div>")
+            {
+            }
 			else
 			{
 				$value = htmlspecialchars($value);
@@ -231,7 +234,8 @@
 
 		static function input_string($property, $value = null)
 		{
-			return '<input type="text" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
+            return '<input type="text" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
+			//return '<textarea class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '"></textarea>';
 		}
 
 		static function input_password($property, $value = null)

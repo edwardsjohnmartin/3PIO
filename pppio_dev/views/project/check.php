@@ -14,7 +14,7 @@ echo '<div class="row no-shrink">
 			//if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
 
 			echo '</h3>
-			<p id="prompt">' . $project_props['description'] . '</p>
+			<div class="panel-group" id="accordion"><p id="prompt">' . $project_props['description'] . '</p></div>
 		</div>
 	</div>';
 

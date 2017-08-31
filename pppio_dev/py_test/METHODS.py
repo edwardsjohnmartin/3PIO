@@ -124,6 +124,7 @@ def __TEST(student_input, student_output):
         if student_output != __out_string[0]:
             #problems.append("The output is incorrect.")
             problems.append("Incorrect.")
+            #problems.append(__out_string[0])
 
     return problems
 
