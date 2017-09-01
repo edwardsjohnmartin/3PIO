@@ -6,16 +6,15 @@
 	
 	class Importer
 	{
-		//$regex_string is used for verifying that the file is in the correct format and retrieving the names of the lessons.
-		static private $regex_string = '/Lesson: ([^\n]+)((?:\r\n|\n)*Ex:(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\})+/';
-		
-		//$exercise_regex is used for retrieving the specific attributes (prompt, starter code, test code) of each exercise.
-		private static $exercise_regex = '/(Ex:(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\}(?:\r\n|\n)(?:[^{]*)\{([^}]*)\})+/';
-		
 		public static function get_lessons($file_string)
 		{
+            $content_regex = '((?:.|\n)*)';
+            $exercise_regex = 'Ex:\s*<desc>'.$content_regex.'<\/desc>\s*<starter>'.$content_regex.'<\/starter>\s*<test>'.$content_regex.'<\/test>';
+            $regex_string = '/Lesson: ([^\n]+)(\s*' . $exercise_regex . ')+/';
+
 			$lessons = [];
-			if (preg_match_all(static::$regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
+			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
+			//if (preg_match_all(static::$regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
 			{
 				
 				for ($i=0; $i < count($matches[0]); $i++)
@@ -23,7 +22,8 @@
 					$lesson_name = $matches[1][$i][0];	//name of the current lesson
 					$lesson = new Lesson(); 	//current lesson
 				
-					preg_match_all(static::$exercise_regex, $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
+					preg_match_all('/('.$exercise_regex.')+/', $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
+					//preg_match_all(static::$exercise_regex, $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
 					
 					$exercises = [];	//Holds the exercises for the current lesson
 					
