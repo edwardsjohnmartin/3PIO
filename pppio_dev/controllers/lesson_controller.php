@@ -147,6 +147,7 @@
 						if(!$failed)
 						{
 							require_once('importer.php');
+                            //header('Content-Type: text/plain; charset=utf-8');
 							$lessons = Importer::get_lessons(file_get_contents($_FILES['file']['tmp_name']));
 
 							foreach($lessons as $lesson)

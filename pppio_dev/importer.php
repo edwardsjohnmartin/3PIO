@@ -1,4 +1,6 @@
 <?php
+//ini_set('pcre.jit', false);
+//print_r(ini_get_all('pcre'));
 	require_once('models/model.php');
 	require_once('models/lesson.php');
 	require_once('models/exercise.php');
@@ -8,21 +10,31 @@
 	{
 		public static function get_lessons($file_string)
 		{
-            $content_regex = '((?:.|\n)*)';
-            $exercise_regex = 'Ex:\s*<desc>'.$content_regex.'<\/desc>\s*<starter>'.$content_regex.'<\/starter>\s*<test>'.$content_regex.'<\/test>';
-            $regex_string = '/Lesson: ([^\n]+)(\s*' . $exercise_regex . ')+/';
+          //print_r($file_string);
+
+            //$content_regex = '((?:.|\n)*)';
+            $content_regex = '(.*?)';
+            $exercise_regex = 'Ex:\s*<d>\s*'.$content_regex.'<\/d>\s*<s>\s*'.$content_regex.'<\/s>\s*<t>\s*'.$content_regex.'<\/t>';
+            //$exercise_regex = 'Ex:\s*<desc>\s*'.$content_regex.'<\/desc>\s*<starter>\s*'.$content_regex.'<\/starter>\s*<test>\s*'.$content_regex.'<\/test>';
+            $regex_string = '/Lesson: ([^\n]+)(\s*' . $exercise_regex . ')+/s';
 
 			$lessons = [];
+            //pcre.jit = false;
+            //ini_set("pcre.jit", 0);
+            //ini_set('pcre.jit', false);
+
+            //print_r($exercise_regex);
 			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
 			//if (preg_match_all(static::$regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)) 
 			{
 				
+              //print_r(count($matches[0]));
 				for ($i=0; $i < count($matches[0]); $i++)
 				{
 					$lesson_name = $matches[1][$i][0];	//name of the current lesson
 					$lesson = new Lesson(); 	//current lesson
 				
-					preg_match_all('/('.$exercise_regex.')+/', $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
+					preg_match_all('/('.$exercise_regex.')+/s', $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
 					//preg_match_all(static::$exercise_regex, $matches[0][$i][0], $exercise_matches, PREG_OFFSET_CAPTURE);
 					
 					$exercises = [];	//Holds the exercises for the current lesson
@@ -52,6 +64,29 @@
 				}
 				
 			}
+            else
+            {
+              print_r($file_string);
+              $err = preg_last_error();
+              if ($err == PREG_BACKTRACK_LIMIT_ERROR) {
+                print_r('Backtrack limit was exhausted!');
+              } else if ($err == PREG_NO_ERROR) {
+                print_r('PREG_NO_ERROR');
+              } else if ($err == PREG_INTERNAL_ERROR) {
+                print_r('PREG_INTERNAL_ERROR');
+              } else if ($err == PREG_BACKTRACK_LIMIT_ERROR) {
+                print_r('PREG_BACKTRACK_LIMIT_ERROR');
+              } else if ($err == PREG_RECURSION_LIMIT_ERROR) {
+                print_r('PREG_RECURSION_LIMIT_ERROR');
+              } else if ($err == PREG_BAD_UTF8_ERROR) {
+                print_r('PREG_BAD_UTF8_ERROR');
+              } else if ($err == PREG_BAD_UTF8_OFFSET_ERROR) {
+                print_r('PREG_BAD_UTF8_OFFSET_ERROR');
+              } else if ($err == PREG_JIT_STACKLIMIT_ERROR) {
+                print_r('PREG_JIT_STACKLIMIT_ERROR');
+              }
+              print_r('Failed to parse');
+            }
 			return $lessons;
 		} 
 	}
