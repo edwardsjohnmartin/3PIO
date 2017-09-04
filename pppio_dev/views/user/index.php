@@ -36,6 +36,9 @@ $props = $model->get_properties();
 	<td>
 		<a href="<?php echo '?controller=user&action=update&id=' . $model->get_id(); ?>">Update</a><br>
 	</td>
+	<td>
+		<a href="<?php echo '?controller=user&action=delete&id=' . $model->get_id(); ?>" onclick="return confirm('Do you want to delete this user?')">Delete</a><br>
+	</td>
 	<?php } ?>
 </tr>
 <?php

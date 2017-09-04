@@ -214,6 +214,7 @@
 										'index' => new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::LIST)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'update'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
+										'delete'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::EDIT)]),
 										'log_in'=>new Authorization_Requirements(false, []),
 										'log_in_partner'=>new Authorization_Requirements(true, []),
 										'log_out'=>new Authorization_Requirements(true, []),

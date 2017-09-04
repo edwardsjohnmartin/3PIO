@@ -135,8 +135,8 @@
 			if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 			{
 				//echo '<li><a href="#">Settings</a></li>
+				echo '<li><a href="mailto:edwajohn@isu.edu,valejose@isu.edu?Subject=3PIO Website Bug" target="_top">Report a Bug</a></li>';
 				echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
-
 			echo '<li class="dropdown">
 		  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>
 		  <ul class="dropdown-menu">';

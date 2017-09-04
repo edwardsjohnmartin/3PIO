@@ -316,11 +316,36 @@
 
 		}
 
+		public function delete() {
+			if (!isset($_GET['id']))
+			{
+				add_alert("No user defined to delete.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			if ($_SESSION['user']->get_id() == $_GET['id'])
+			{
+				add_alert("You cannot delete youself.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			$model = ($this->model_name)::get($_GET['id']);
+			if ($model == null)
+			{
+				add_alert("User does not exist.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			//Hard coded this in so only students can be deleted
+			//Not sure what kind of issues could arise from deleting teachers and admins
+			$userProps = $model->get_properties();
+			if(!($userProps['role']->key === 3)) {
+				add_alert("Only students can be deleted.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
-
-
+			$model->delete($_GET['id']);
+			return redirect($this->model_name, 'index');
+		}
 	}
 ?>
