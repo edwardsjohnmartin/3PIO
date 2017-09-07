@@ -45,6 +45,7 @@
 					require_once('models/section.php');
 					$_SESSION['sections_student'] = Section::get_pairs_for_student($model->get_id());
 					$_SESSION['sections_ta'] = Section::get_pairs_for_teaching_assistant($model->get_id()); //right now, since this only happens on login, the user will have to log in and log out to see new sections. maybe i should refill when going to the section list for user page
+					$_SESSION['sections_owner'] = Section::get_pairs_for_owner($model->get_id());
 					require_once('models/role.php');
 					$_SESSION['permissions'] = Role::get_permissions_for_role($model->get_properties()['role']);
 					add_alert('Logged in! Welcome back, ' . htmlspecialchars($model->get_properties()['name']) . '.', Alert_Type::SUCCESS);
@@ -315,11 +316,36 @@
 
 		}
 
+		public function delete() {
+			if (!isset($_GET['id']))
+			{
+				add_alert("No user defined to delete.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			if ($_SESSION['user']->get_id() == $_GET['id'])
+			{
+				add_alert("You cannot delete youself.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			$model = ($this->model_name)::get($_GET['id']);
+			if ($model == null)
+			{
+				add_alert("User does not exist.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
+			//Hard coded this in so only students can be deleted
+			//Not sure what kind of issues could arise from deleting teachers and admins
+			$userProps = $model->get_properties();
+			if(!($userProps['role']->key === 3)) {
+				add_alert("Only students can be deleted.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
-
-
+			$model->delete($_GET['id']);
+			return redirect($this->model_name, 'index');
+		}
 	}
 ?>

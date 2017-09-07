@@ -100,21 +100,32 @@
 		{
 			//requires exercise id, lesson id, concept id in query sting
 			//at this point, i don't need to pass in the lesson id because it's on the exercise, but it will be needed if we decide to go back to having a pool of exercises, so i'm keeping it here
+			if (!isset($_GET['concept_id'])){
+				add_alert("Error concept id not set.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+
+			require_once('models/concept.php');
 			if (!isset($_GET['concept_id']) || !project::can_access($_GET['concept_id'], $_SESSION['user']->get_id()))
 			{
-				return call('pages', 'error');
+				if(!concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id())){
+					add_alert("User does not have access to this concept.", Alert_Type::DANGER);
+					return call('pages', 'error');
+				}
 			}
 
 			require_once('models/concept.php');
 			$concept = concept::get($_GET['concept_id']); //what if it's null? don't want that.. need to be careful of that in base, too
 			if($concept == null)
 			{
+				add_alert("Error 2.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 			$concept_props = $concept->get_properties();
 			$project = project::get($concept_props['project']->key);
 			if($project == null)
 			{
+				add_alert("Error 3.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -178,6 +189,7 @@
 			require_once('models/concept.php');
 			if(!isset($_GET['concept_id']) || !isset($_GET['user_id'])) //i need to check for tas
 			{
+				add_alert("The concept is is not set or the user id is not set.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -190,18 +202,21 @@
 			$concept = concept::get($_GET['concept_id']);
 			if($concept == null)
 			{
+				add_alert("Error 5.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
 			$project = project::get($concept->get_properties()['project']->key);
 			if($project == null)
 			{
+				add_alert("Error 6.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
 			$user = user::get($_GET['user_id']);
 			if($user == null)
 			{
+				add_alert("Error 7.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 

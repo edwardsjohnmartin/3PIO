@@ -14,6 +14,7 @@
 	//may also need to check if the concept has a project at all
 		public static function can_access($concept_id, $user_id)
 		{
+			//If multiple users are logged in
 			if(is_array($user_id))
 			{
 				$db = Db::getReader();
@@ -26,6 +27,7 @@
 
 				return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 			}
+			//If only a single user is logged in
 			else
 			{
 				$db = Db::getReader();
