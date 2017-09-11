@@ -57,8 +57,19 @@ function run() {
    });
    myPromise.then(function(mod) {},
        function(err) {
-       markError(err.toString());
+	   markError(err.toString());
    });
+   
+   //Delays the function that creates the drawing area by 750ms to allow the other elements to be created by the time this code runs
+   //This will get the calculate the size the text output area needs to be by getting the total height of the right column and subtracting
+   //the size of the drawing area
+   setTimeout(function(){
+	var canvas = document.getElementById("mycanvas");
+	var canHeight = canvas.offsetHeight;
+	var canParHeight = canvas.parentNode.clientHeight;
+	outputArea.style.height = (canParHeight - canHeight) + "px";
+},750);
+  
 }
 
 function save(concept_id, contents)

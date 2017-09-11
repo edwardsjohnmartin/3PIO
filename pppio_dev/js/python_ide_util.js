@@ -46,7 +46,10 @@ function idleTimerIncrement() {
 	var codeAlertsCopy = codeAlerts;
 	if (idleTime == (expireTime - 1)) {
 		$(".alert").alert('close')
-		codeAlertsCopy.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" role="alert" id="inactiveAlert">You will be logged out for inactivity in 1 minute. Please save your code to avoid losing progress.<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+		codeAlertsCopy.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" '
+		+'role="alert" id="inactiveAlert">You will be logged out for inactivity in 1 minute. '
+		+'Please save your code to avoid losing progress.<button type="button" class="close" '
+		+'data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 	}
 
 	if (idleTime >= expireTime) {
