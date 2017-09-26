@@ -144,6 +144,14 @@
 			case 'sandbox':
 				$controller = new SandboxController;
 				break;
+			case 'exam':
+				require_once('models/exam.php');
+				$controller = new ExamController;
+				break;
+			case 'question':
+				require_once('models/question.php');
+				$controller = new QuestionController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -227,7 +235,14 @@
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::ROLE, Permission_Type::READ)])
 								],
 						'importer' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)])],
-						'sandbox' => ['index' =>new Authorization_Requirements(null, [])]
+						'sandbox' => ['index' =>new Authorization_Requirements(null, [])],
+						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
+								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)]),
+								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
+						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
+								       'read'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
+								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

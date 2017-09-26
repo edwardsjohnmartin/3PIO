@@ -25,15 +25,17 @@ foreach($models as $k => $v)
 <?php
 	if($can_read)
 	{ ?>
-	<td><ul class="actions">
-		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a></li>
-	<?php } 
+	<td>
+		<a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a>
+	</td>
+<?php } 
 	if($can_edit)
 	{ ?>
-		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a></li>
-	
-		<li><a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this lesson?')">Delete</a></li>
-		</ul>
+	<td>
+		<a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
+	</td>
+	<td>
+		<a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this lesson?');">Delete</a>
 	</td>
 	<?php } ?>
 </tr>

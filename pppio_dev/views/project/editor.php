@@ -24,14 +24,14 @@ echo '<div class="col-xs-12 height-100 flex-columns">;
 	<div class="row overflow-hidden height-100">
 		<div class="col-xs-6 height-100 overflow-hidden pad-0">
 			<textarea id="code" name="code">';
-				if($code != null)
-				{
-					echo $code;
-				}
-				else
-				{
-					echo $project_props['starter_code'];
-				}
+			if($code != null)
+			{
+				echo $code;
+			}
+			else
+			{
+				echo $project_props['starter_code'];
+			}
 			echo '</textarea>
 		</div>
 		<div class="col-xs-6 height-100">

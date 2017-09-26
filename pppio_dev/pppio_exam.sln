@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "pppio_exam", "pppio_exam.phpproj", "{A96A1579-CADA-48A4-AD8F-AD62F8869931}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A96A1579-CADA-48A4-AD8F-AD62F8869931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A96A1579-CADA-48A4-AD8F-AD62F8869931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F66D259B-8ABC-4F84-B993-9C3AF2CBF760}
+	EndGlobalSection
+EndGlobal

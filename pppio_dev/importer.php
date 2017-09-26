@@ -89,6 +89,10 @@
             }
 			return $lessons;
 		} 
+
+		public static function get_exams($file_string){
+
+		}
 	}
 	
 ?>

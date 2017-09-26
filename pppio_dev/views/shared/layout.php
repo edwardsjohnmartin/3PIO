@@ -46,14 +46,14 @@
 		    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
 		    
 
-<?php
+	  	<?php
 		if(isset($_SESSION['user']) && $_SESSION['user'] != null)
 		{
-			
+
 
 			if(isset($_SESSION['sections_student']) && $_SESSION['sections_student'] != null && count($_SESSION['sections_student']) >0)
 			{
-			
+
 				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (Student) <span class="caret"></span></a><ul class="dropdown-menu">';
 				foreach($_SESSION['sections_student'] as $kvp)
 				{
@@ -64,7 +64,7 @@
 
 			if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0)
 			{
-			
+
 				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (TA) <span class="caret"></span></a><ul class="dropdown-menu">';
 				foreach($_SESSION['sections_ta'] as $kvp)
 				{
@@ -78,8 +78,10 @@
 				$can_list_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::LIST));
 				$can_list_exercise = has_permission(new Permission(Securable::EXERCISE, Permission_Type::LIST));
 				$can_list_concept = has_permission(new Permission(Securable::CONCEPT, Permission_Type::LIST));
+				$can_list_exam = has_permission(new Permission(Securable::EXAM, Permission_Type::LIST));
+				$can_list_question = has_permission(new Permission(Securable::QUESTION, Permission_Type::LIST));
 
-			if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise)
+				if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_exam || $can_list_question)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
@@ -89,6 +91,8 @@
 					if ($can_list_project) echo '<li><a href="?controller=project&action=index">Projects</a></li>';
 					if ($can_list_lesson) echo '<li><a href="?controller=lesson&action=index">Lessons</a></li>';
 					if ($can_list_exercise) echo '<li><a href="?controller=exercise&action=index">Exercises</a></li>';
+					if ($can_list_exam) echo '<li><a href="?controller=exam&action=index">Exams</a></li>';
+					if ($can_list_question) echo '<li><a href="?controller=question&action=index">Questions</a></li>';
 				  echo '</ul>
 				</li>';
 			}
@@ -116,7 +120,7 @@
 			}
 		}
 		echo '<li><a href="?controller=sandbox&action=index">Sandbox</a></li>';
-			?>
+	  	?>
 
 			
 		    <!-- <li><a href="#">Users</a></li>

@@ -21,18 +21,31 @@
 			{
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$postedToken = filter_input(INPUT_POST, 'token');
+					?>'<pre>'<?php
+					print_r($postedToken);
+					?>'</pre>'<?php
 					if(!empty($postedToken) && isTokenValid($postedToken))
 					{
 						//probably i should do that isset stuff
 						$model = new $this->model_name();
+						echo "<pre>";
+						print_r($_POST);
+						echo "</pre>";
 						$model->set_properties($_POST);
+						echo "<script>console.log( 'Debug Objects: Test1 ' );</script>";
+						?>'<pre>'<?php
+						print_r($model);
+						?>'</pre>'<?php
 						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)) //must make sure the lesson selected belongs to this user.
 						{
+							echo "<script>console.log( 'Debug Objects: Test2 ' );</script>";
 							$lessons_belong_to_user = true;
 							foreach($model->get_properties()['lessons'] as $lesson)
 							{
+								echo "<script>console.log( 'Debug Objects: Test3 ' );</script>";
 								if(!array_key_exists($lesson, $lessons))
 								{
+									echo "<script>console.log( 'Debug Objects: Test4 ' );</script>";
 									$lessons_belong_to_user = false;
 									break;
 								}						
@@ -50,17 +63,17 @@
 							}
 							else
 							{
-								add_alert('Please try again.', Alert_Type::DANGER);
+								add_alert('Please try again. 1', Alert_Type::DANGER);
 							}
 						}
 						else
 						{
-							add_alert('Please try again.', Alert_Type::DANGER);
+							add_alert('Please try again. 2', Alert_Type::DANGER);
 						}
 					}
 					else
 					{
-						add_alert('Please try again.', Alert_Type::DANGER);
+						add_alert('Please try again. 3', Alert_Type::DANGER);
 					}
 				}
 				//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...

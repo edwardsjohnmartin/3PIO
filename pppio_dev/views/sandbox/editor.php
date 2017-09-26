@@ -1,6 +1,6 @@
 <?php
 
-echo '<link rel="stylesheet" href="css/editor.css?v=1.5">';
+echo '<link rel="stylesheet" href="css/editor.css">';
 require_once('views/shared/CodeMirror.php');
 require_once('views/shared/Skulpt.php');
 
