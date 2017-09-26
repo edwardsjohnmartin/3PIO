@@ -2,9 +2,9 @@
 	require_once('models/model.php');
 	class Exam extends Model
 	{
-        protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING ,'description' => Type::STRING, 'owner' => Type::USER, 'section' => Type::SECTION);
+        protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING ,'instructions' => Type::STRING, 'owner' => Type::USER, 'section' => Type::SECTION);
         protected $name = '';
-        protected $description = '';
+        protected $instructions = '';
         protected $owner;
         protected $section;
 

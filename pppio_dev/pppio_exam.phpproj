@@ -82,7 +82,6 @@
     <Compile Include="js\bootstrap.min.js" />
     <Compile Include="js\editor_test.js" />
     <Compile Include="js\exercise_editor.js" />
-    <Compile Include="js\Index (Will's version).html" />
     <Compile Include="js\jquery-3.2.1.min.js" />
     <Compile Include="js\key_handler.js" />
     <Compile Include="js\moment.js" />
@@ -123,6 +122,7 @@
     <Compile Include="multi-select\LICENSE.txt" />
     <Compile Include="php-enum\Enum.php" />
     <Compile Include="php-enum\LICENSE" />
+    <Compile Include="phpinfo.php" />
     <Compile Include="python\python.js" />
     <Compile Include="py_test\METHODS.py" />
     <Compile Include="theme\solarized.css" />
@@ -179,8 +179,6 @@
     <Compile Include="index.php" />
     <Compile Include="oldupdate" />
     <Compile Include="routes.php" />
-    <Compile Include="test.php" />
-    <Compile Include="will's_test.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\pppio_Exam\v15" />
