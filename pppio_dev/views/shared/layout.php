@@ -81,7 +81,7 @@
 				$can_list_exam = has_permission(new Permission(Securable::EXAM, Permission_Type::LIST));
 				$can_list_question = has_permission(new Permission(Securable::QUESTION, Permission_Type::LIST));
 
-				if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_exam || $can_list_question)
+				if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_concept || $can_list_exam || $can_list_question)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
@@ -102,7 +102,7 @@
 			$can_list_course = has_permission(new Permission(Securable::COURSE, Permission_Type::LIST));
 			$can_list_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::LIST));
 
-			if($can_list_course || $can_list_language)
+			if($can_list_user || $can_list_role || $can_list_course || $can_list_language)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
@@ -115,14 +115,22 @@
 				</li>';
 			}
 			$can_create_lesson = has_permission(new Permission(Securable::LESSON, Permission_Type::CREATE));
-			if($can_create_lesson){
-				echo '<li><a href="?controller=importer&action=index">Importer</a></li>';
+			$can_create_exam = has_permission(new Permission(Securable::EXAM, Permission_Type::CREATE));
+			if($can_create_lesson || $can_create_exam)
+			{
+				echo '<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Importer <span class="caret"></span></a>
+					<ul class="dropdown-menu">';
+						if ($can_create_lesson) echo '<li><a href="?controller=importer&action=index">Lesson</a></li>';
+						if ($can_create_exam) echo '<li><a href="?controller=importer&action=index">Exam</a></li>';
+					echo '</ul>
+				</li>';
 			}
 		}
 		echo '<li><a href="?controller=sandbox&action=index">Sandbox</a></li>';
 	  	?>
 
-			
+
 		    <!-- <li><a href="#">Users</a></li>
 
 			<li class="dropdown">
@@ -155,7 +163,7 @@
 			echo '<li><a href="?controller=user&action=log_in_partner">Add a partner</a></li>';
 			echo '<li><a href="?controller=user&action=manage_partners">Manage partners</a></li>';
 		  echo '</ul>
-		</li>';			
+		</li>';
 
 		    	echo '<li><a href="?controller=user&action=log_out">Log out</a></li>';
 
@@ -166,7 +174,7 @@
 					<li><a href="?controller=user&action=log_in">Log in</a></li>';
 			}
 
-			 ?>
+	  	?>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->

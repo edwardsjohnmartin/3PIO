@@ -3,14 +3,39 @@
 	class ExamController extends BaseController
 	{
         //now has the basic actions
-        
+
         public function index()
 		{
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/exam/index.php';
 			require_once('views/shared/layout.php');
         }
-        
+
+		public function update_times()
+		{
+			//if a exam id wasn't passed in, throw error
+			if (!isset($_GET['id']))
+			{
+				return call('pages', 'error');
+			}
+			else
+			{
+				$model = ($this->model_name)::get($_GET['id']);
+				//if the exam with the passed in id doesn't exist, throw error
+				if($model == null)
+				{
+					return call('pages', 'error');
+				}
+				else
+				{
+					$view_to_show = 'views/exam/update_times.php';
+					$types = $model::get_types();
+					$properties = $model->get_properties();
+					require_once('views/shared/layout.php');
+				}
+			}
+		}
+
         public function create()
         {
             require_once('models/section.php');
@@ -18,17 +43,15 @@
             $options = array('section' => $sections);
             if(count($sections) > 0)
 			{
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+                if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 {
 					$postedToken = filter_input(INPUT_POST, 'token');
 					if(!empty($postedToken) && isTokenValid($postedToken))
 					{
 						//probably i should do that isset stuff
 						$model = new $this->model_name();
-						echo "<pre>";
-						print_r($_POST);
-						echo "</pre>";
 						$model->set_properties($_POST);
+						$model->set_owner($_SESSION['user']->get_id());
 						if($model->is_valid())
 						{
                             $model->create();
@@ -52,6 +75,8 @@
                 }
                 $properties = $this->model_name::get_available_properties();
                 $types = $this->model_name::get_types();
+				unset($properties['owner']);
+				unset($types['owner']);
                 require_once('views/shared/layout.php');
             }
             else

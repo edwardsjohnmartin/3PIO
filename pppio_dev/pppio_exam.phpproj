@@ -128,6 +128,8 @@
     <Compile Include="theme\solarized.css" />
     <Compile Include="views\concept\read.php" />
     <Compile Include="views\exam\index.php" />
+    <Compile Include="views\exam\exam_table.php" />
+    <Compile Include="views\exam\update_times.php" />
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
     <Compile Include="views\exercise\read.php" />

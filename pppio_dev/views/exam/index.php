@@ -26,7 +26,7 @@ foreach($models as $k => $v)
 	if($can_read)
 	{ ?>
 		<td>
-			<a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $k;?>">View</a>
+			<a href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View</a>
 		</td>
 		<?php }
 	if($can_edit)

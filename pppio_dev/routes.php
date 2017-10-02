@@ -238,6 +238,8 @@
 						'sandbox' => ['index' =>new Authorization_Requirements(null, [])],
 						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
 								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)]),
+								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'update_time_for_students'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
 						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),

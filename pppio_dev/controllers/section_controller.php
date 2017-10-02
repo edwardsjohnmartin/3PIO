@@ -49,7 +49,7 @@
 			unset($types['concepts']);
 			require_once('views/shared/layout.php');
 		}
-		
+
 		public function update() {
 			//check if this lesson belongs to me
 			//check the owner!!!!!!!
@@ -89,7 +89,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -110,7 +110,7 @@
 
 		}
 
-
+		protected $exams;
 
 		public function read_student() //the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
 		{
@@ -140,10 +140,11 @@
 					//where should all models be included? in the controller? right now the one that goes with the controller is included in routes.
 					//i need to include the course model
 					require_once('models/concept.php');
-
+					require_once('models/exam.php');
 					$concepts = concept::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
+					$this->exams = exam::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
 					//require_once('views/section/read_student.php');
-
+					
 					$view_to_show = 'views/section/read_student.php';
 					require_once('views/shared/layout.php');
 				}
