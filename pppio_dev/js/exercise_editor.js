@@ -39,9 +39,24 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
+function getTestCode() {
+	// var pre = "";
+	// var post = "";
+	var pre = "\nimport sys\nclass Buffer:\n    def __init__(self):\n        self.str = \"\"\n    def write(self, txt):\n        self.str += str(txt)\nold_stdout = sys.stdout\nsys.stdout = mystdout = Buffer()\n";
+	var post = "sys.stdout = old_stdout";
+	// We can examine mystdout.str
+	var code = pre + "\n" + document.getElementById('test_code_to_run').innerText + "\n" + post + "\n";
+	// var code = document.getElementById('test_code_to_run').innerText;
+	code = code.replace(/\n/g, "\n    ");
+	code = "try:\n" + code + "\nexcept NameError as e:\n    __returns.append(str(e).split(\"'\")[1] + \" not defined.\")";
+	return code;
+}
+
 function run() {
   var mod;
-  var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
+  // var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
+  var program = editor.getValue() + "\n" + getTestCode();
+	// console.log(program);
   var outputArea = document.getElementById("output")
   outputArea.innerHTML = '';
   Sk.pre = "output";
@@ -55,6 +70,7 @@ function run() {
 
 	myPromise.then(function(mod) {
         var runMethod = mod.tp$getattr('__TEST');
+		// console.log(String(Sk.builtin.str(outputArea.innerHTML)));
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
 		if(ret.v.length == 0 || ret.v[0].v == null)
