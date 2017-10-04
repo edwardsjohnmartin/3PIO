@@ -226,7 +226,6 @@
 			require_once('views/shared/layout.php');
 		}
 
-
 		public function save_code() //
 		{
 			$success = false;

@@ -21,7 +21,15 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     extraKeys: { Tab: betterTab }
 });
 
-document.getElementById("runButton").onclick = function () { clearAlerts(); if (!readonly) { save(concept_id, editor.getValue()); } run(); };
+document.getElementById("runButton").onclick = function () {
+    clearAlerts();
+    if (!readonly) {
+        /*Replaces any tab characters in the code area as 4 spaces. If code was pasted in from a 
+        source where tabs are a different amount of spaces, it will cause indentation 
+        errors. This prevents the issue.*/
+        save(concept_id, editor.setValue(editor.getValue().replace(/\t/g, '    ')));
+    } run();
+};
 
 /*
 uncomment to disable copy/paste for projects
@@ -100,6 +108,10 @@ function clearAlerts() {
 
 function markError(errorMessage) {
     codeAlerts.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" role="alert" id="infoAlert">' + errorMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+}
+
+function markInfo(infoMessage) {
+    codeAlerts.innerHTML += '<div class="alert alert-info alert-dismissible mar-0" role="alert" id="infoAlert">' + infoMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
 
 function markSuccess(successMessage) {
