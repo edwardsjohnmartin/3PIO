@@ -21,7 +21,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 });
 
 document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
-editor.on('copy', function(a, e) {e.preventDefault();});
+//editor.on('copy', function(a, e) {e.preventDefault();});
 editor.on('cut', function(a, e) {e.preventDefault();});
 editor.on('paste', function(a, e) {e.preventDefault();});
 
