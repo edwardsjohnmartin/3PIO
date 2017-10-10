@@ -237,14 +237,16 @@
 						'importer' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)])],
 						'sandbox' => ['index' =>new Authorization_Requirements(null, [])],
 						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
-								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)]),
+								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
 								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'update_time_for_students'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
-								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
+								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'read_for_student'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)])],
 						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
-								       'read'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
-								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)])]
+								       'read'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
+								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
+									   'read_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

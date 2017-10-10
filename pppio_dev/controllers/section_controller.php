@@ -142,7 +142,7 @@
 					require_once('models/concept.php');
 					require_once('models/exam.php');
 					$concepts = concept::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
-					$this->exams = exam::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
+					$exams = exam::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
 					//require_once('views/section/read_student.php');
 					
 					$view_to_show = 'views/section/read_student.php';

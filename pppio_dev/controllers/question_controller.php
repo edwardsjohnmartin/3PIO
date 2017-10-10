@@ -55,5 +55,20 @@
 				redirect('question', 'index');
 			}
 		}
+
+		public function read_for_student(){
+			if (!isset($_GET['id']) || !isset($_GET['exam_id']))
+			{
+				return call('pages', 'error'); //or even call a blank editor for playing around in
+			}
+
+			$question = question::get($_GET['id']);
+
+			require_once('models/exam.php');
+			$exam = Exam::get_for_student($_GET['id']);
+
+			$view_to_show = 'views/question/editor.php';
+			require_once('views/shared/layout.php');
+		}
 	}
 ?>

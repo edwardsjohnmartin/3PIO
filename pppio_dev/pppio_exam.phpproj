@@ -129,6 +129,7 @@
     <Compile Include="views\concept\read.php" />
     <Compile Include="views\exam\index.php" />
     <Compile Include="views\exam\exam_table.php" />
+    <Compile Include="views\exam\read_for_student.php" />
     <Compile Include="views\exam\update_times.php" />
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
@@ -154,6 +155,7 @@
     <Compile Include="views\pages\home.php" />
     <Compile Include="views\project\check.php" />
     <Compile Include="views\project\editor.php" />
+    <Compile Include="views\question\editor.php" />
     <Compile Include="views\role\index.php" />
     <Compile Include="views\role\read.php" />
     <Compile Include="views\sandbox\editor.php" />
@@ -225,6 +227,7 @@
     <Folder Include="views\importer" />
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
+    <Folder Include="views\question\" />
     <Folder Include="views\not_in_use\lesson" />
     <Folder Include="views\not_in_use\posts" />
     <Folder Include="views\not_in_use\section" />

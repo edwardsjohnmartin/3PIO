@@ -22,5 +22,16 @@
 
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 		}
+
+		public static function get_pairs_for_exam($exam_id){
+			$db = Db::getReader();
+			$exam_id = intval($exam_id);
+
+			$function_name = 'sproc_read_question_get_pairs_for_exam';
+			$req = $db->prepare(static::build_query($function_name, array('exam_id')));
+			$req->execute(array('exam_id' => $exam_id));
+
+			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+		}
 	}
 ?>

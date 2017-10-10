@@ -56,7 +56,6 @@
 			}
 		}
 
-
 		public function update() { //only differences: validation + get lessons
 			require_once('models/lesson.php');
 			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());

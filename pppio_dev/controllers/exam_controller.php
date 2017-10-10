@@ -77,6 +77,8 @@
                 $types = $this->model_name::get_types();
 				unset($properties['owner']);
 				unset($types['owner']);
+				unset($properties['questions']);
+				unset($types['questions']);
                 require_once('views/shared/layout.php');
             }
             else
@@ -169,6 +171,23 @@
 				}
 			}
 			$view_to_show = 'views/lesson/create_file.php';
+			require_once('views/shared/layout.php');
+		}
+
+		public function read_for_student(){
+			if (!isset($_GET['id'])) {
+				return call('pages', 'error');
+			}
+
+			//$can_access = exam::can_preview($_GET['id'], $_SESSION['user']->get_id());
+
+			//if(!$can_access){
+				//return call('pages', 'error');
+			//}
+
+			$exam = Exam::get_for_student($_GET['id']);
+			//$exam = Exam::get($_GET['id']);
+			$view_to_show = 'views/exam/read_for_student.php';
 			require_once('views/shared/layout.php');
 		}
 	}

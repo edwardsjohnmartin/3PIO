@@ -1,6 +1,7 @@
 <?php
+require_once('models/question.php');
 echo '<h1>Exams</h1>';
-if(count($this->exams) > 0)
+if(count($exams) > 0)
 {
 	echo '<div class="force-x-scroll">';
 	echo '<table class="table table-striped table-bordered">';
@@ -13,7 +14,7 @@ if(count($this->exams) > 0)
 	echo '</thead>';
 	echo '<tbody>';
 	$now = intval(date_format(new DateTime(), 'U'));
-	foreach($this->exams as $key => $value)
+	foreach($exams as $key => $value)
 	{
 		$start = date_create_from_format('Y-m-d H:i:s', $value['start_time']);
 		$start_seconds = intval(date_format($start, 'U'));
@@ -22,14 +23,13 @@ if(count($this->exams) > 0)
 		if($start_seconds < $now && $now < $close_seconds)
 		{
 			$class = ' class="success">';
-			$link = '<a href="?controller=exam&action=read&id='.$value['id'].'">'.htmlspecialchars($value['name']).'</a>';
+			$link = '<a href="?controller=exam&action=read_for_student&id='.$value['id'].'">'.htmlspecialchars($value['name']).'</a>';
 		}
 		else
 		{
 			$class = ' class="warning">';
 			$link = $value['name'];
 		}
-
 		echo '<tr>';
 		echo '<td ' . $class . $link . '</td>';
 		echo '<td ' . $class . $value['start_time'] . '</td>';
