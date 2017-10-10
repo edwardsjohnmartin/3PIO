@@ -33,5 +33,46 @@
 
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 		}
+
+		public static function update_code_file($question_id, $exam_id, $user_id, $contents) //well.. it doesn't make sense to add it if the user is not in the concept. i probably should check that somewhere
+		{
+			$db = Db::getReader();
+			$question_id = intval($question_id);
+			$exam_id = intval($exam_id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_write_question_update_student_answer';
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'contents')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents));
+		}
+
+		public static function set_completion_status($question_id, $exam_id, $user_id, $completion_status_id)
+		{
+			require_once('enums/completion_status.php');
+
+			$db = Db::getReader();
+			$question_id = intval($question_id);
+			$exam_id = intval($lesson_id);
+			$user_id = intval($user_id);
+			$completion_status_id = intval($completion_status_id); //please be valid
+
+			$function_name = 'sproc_write_completion_status_to_question';
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'completion_status_id')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'completion_status_id' => $completion_status_id));
+		}
+
+		public static function get_completion_status($question_id, $exam_id, $user_id)
+		{
+			$db = Db::getReader();
+			$question_id = intval($question_id);
+			$exam_id = intval($exam_id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_completion_status_to_question';
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id));
+
+			return $req->fetch(PDO::FETCH_COLUMN);
+		}
 	}
 ?>

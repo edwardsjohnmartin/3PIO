@@ -42,7 +42,7 @@ function builtinRead(x) {
 function run() {
   var mod;
   var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
-  var outputArea = document.getElementById("output")
+  var outputArea = document.getElementById("output");
   outputArea.innerHTML = '';
   Sk.pre = "output";
   Sk.configure({output:outf, read:builtinRead,
@@ -82,11 +82,11 @@ function run() {
         function(err) {
           var line_num = Number(err.toString().split("on line", 2)[1]);
 		if (err.args != undefined) {
-			if (err.args.v[0].v === "EOF in multi-line string") {
-          		markError("ERROR: It looks like you have an open multi-line comment.");
+            if (err.args.v[0].v === "EOF in multi-line string") {
+                markError("ERROR: It looks like you have an open multi-line comment.");
 			}
 			else {
-          markError(err.toString());
+                markError(err.toString());
 			}
 		}
 		else {

@@ -241,4 +241,7 @@
     <Folder Include="views\user" />
     <Folder Include="views" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\question_editor.js" />
+  </ItemGroup>
 </Project>
