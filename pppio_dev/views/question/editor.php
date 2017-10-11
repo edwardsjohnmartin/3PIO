@@ -3,6 +3,10 @@
 	$question_props = $question->get_properties();
 	$exam_props = $exam->get_properties();
 	$exam_id = $exam->get_id();
+	$current_question_id = $_GET['id'];
+	$last_question_id = end($exam_props['questions'])->key;
+	$trying_last = (intval($current_question_id) === $last_question_id);
+	$mark_next = false;
 
 	echo '<link rel="stylesheet" href="css/editor.css">';
 	require_once('views/shared/CodeMirror.php');
@@ -18,6 +22,18 @@
 				$i = 1;
 				foreach($exam_props['questions'] as $question_id => $question_obj)
 				{
+					if($mark_next)
+					{
+						$next_question_id = $question_id;
+						$mark_next = false;
+					}
+					if(!$trying_last)
+					{
+						if($question_id == $current_question_id)
+						{
+							$mark_next = true;
+						}
+					}
 					echo '<div class="col-xs-4 text-center">';
 					if($question_obj->status == Completion_Status::COMPLETED)
 					{
@@ -52,7 +68,7 @@
 			</div>
 			<div class="row overflow-hidden height-100">
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
-					<textarea id="code" name="code">' . $question_props['starter_code'] . '</textarea>
+					<textarea id="code" name="code">' . $question_props['start_code'] . '</textarea>
 				</div>
 				<div class="col-xs-6 height-100">
 					<div id="mycanvas" class="graphicalOutput"></div>
@@ -65,12 +81,23 @@
 	</div>
 
 	<script type="text/x-python" id="test_code_to_run">';
+
+	if($trying_last)
+	{
+		$link = '"?controller=exam&action=read_for_student&id=' . $exam_id . '"';
+	}
+	else
+	{
+		$link = '"?controller=question&action=read_for_student&id=' . $next_question_id . '&exam_id=' . $exam_id . '"';
+	}
 	require('py_test/METHODS.py');
 	echo $question_props['test_code'];
     echo '</script>';
 	echo '<script>var current_tile_id = "question-' . $question_id . '-exam-' . $exam_id . '";</script>'; //use to color tile
 	echo '<script>var readonly = ' . ($readonly ? 'true' : 'false') . ';</script>';
 	echo '<script>var exam_id = ' . $exam_id . ';</script>';
-	echo '<script>var question_id = ' . $question_id . ';</script>';
+	echo '<script>var current_question_id = ' . $_GET['id'] . ';</script>';
+	echo '<script>var trying_last = "' . $trying_last . '";</script>';
+	echo '<script>var link = ' . $link . ';</script>';
 	echo '<script src="js/question_editor.js"></script>';
 ?>

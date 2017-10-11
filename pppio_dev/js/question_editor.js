@@ -25,7 +25,7 @@ document.getElementById("runButton").onclick = function () {
     clearAlerts();
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
     if (!readonly) {
-        save(question_id, exam_id, editor.getValue());
+        save(current_question_id, exam_id, editor.getValue());
     }
     run();
 };
@@ -57,14 +57,12 @@ function run() {
     });
 
     myPromise.then(function (mod) {
-        console.log("do we get here");
         var runMethod = mod.tp$getattr('__TEST');
-        console.log("how about here");
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
         if (ret.v.length == 0 || ret.v[0].v == null) {
             //success
-            markAsComplete(question_id, exam_id);
+            markAsComplete(current_question_id, exam_id);
         }
         else {
             //print errors
@@ -90,21 +88,15 @@ function run() {
 }
 
 function save(question_id, exam_id, contents) {
-    console.log(question_id);
-    console.log(exam_id);
-    console.log(contents);
     $.ajax({
         type: "POST",
         url: "?controller=question&action=save_code",
         data: { question_id: question_id, exam_id: exam_id, contents: contents },
         success: function (data) {
-            console.log(data);
             if (data.success) {
-                console.log("thing");
                 markSuccess('Code saved.');
             }
             else {
-                console.log("thing");
                 markError('Unable to save code.');
             }
         },
@@ -120,6 +112,7 @@ function markAsComplete(question_id, exam_id)
         data: { question_id: question_id, exam_id: exam_id },
         success: function (data) {
             if (data.success) {
+                console.log("debug");
                 completeExercise();
             }
             else {
@@ -137,12 +130,9 @@ function completeExercise() {
     }
     else {
         successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
-
     }
     markSuccess(successMessage);
-    if (trying_latest) {
-        updateTiles();
-    }
+    updateTiles();
 }
 
 var codeAlerts = document.getElementById('codeAlerts');

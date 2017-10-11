@@ -2,10 +2,10 @@
 	require_once('models/model.php');
 	class Question extends Model
 	{
-		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'instructions' => Type::STRING, 'starter_code' => Type::CODE, 'test_code' => Type::CODE, 'language' => Type::LANGUAGE, 'exam' => Type::EXAM, 'weight' => TYPE::INTEGER); //use the enum
+		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'instructions' => Type::STRING, 'start_code' => Type::CODE, 'test_code' => Type::CODE, 'language' => Type::LANGUAGE, 'exam' => Type::EXAM, 'weight' => TYPE::INTEGER); //use the enum
 		protected $name = '';
 		protected $instructions = '';
-		protected $starter_code = '';
+		protected $start_code = '';
 		protected $test_code = '';
 		protected $language;
 		protected $exam;
@@ -36,7 +36,7 @@
 
 		public static function update_code_file($question_id, $exam_id, $user_id, $contents) //well.. it doesn't make sense to add it if the user is not in the concept. i probably should check that somewhere
 		{
-			$db = Db::getReader();
+			$db = Db::getWriter();
 			$question_id = intval($question_id);
 			$exam_id = intval($exam_id);
 			$user_id = intval($user_id);
@@ -46,13 +46,26 @@
 			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents));
 		}
 
+		public static function get_code_file($concept_id, $user_id)
+		{
+			$db = Db::getReader();
+			$concept_id = intval($concept_id);
+			$user_id = intval($user_id);
+
+			$function_name = 'sproc_read_project_get_code_file_for_user';
+			$req = $db->prepare(static::build_query($function_name, array('concept_id', 'user_id')));
+			$req->execute(array('concept_id' => $concept_id, 'user_id' => $user_id));
+
+			return $req->fetch(PDO::FETCH_COLUMN); //returns only the contents
+		}
+
 		public static function set_completion_status($question_id, $exam_id, $user_id, $completion_status_id)
 		{
 			require_once('enums/completion_status.php');
 
 			$db = Db::getReader();
 			$question_id = intval($question_id);
-			$exam_id = intval($lesson_id);
+			$exam_id = intval($exam_id);
 			$user_id = intval($user_id);
 			$completion_status_id = intval($completion_status_id); //please be valid
 

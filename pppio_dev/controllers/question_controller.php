@@ -22,6 +22,11 @@
 					{
 						//probably i should do that isset stuff
 						$model = new $this->model_name();
+						//Default weight to 10 if nothing was entered
+						if(empty($_POST['weight']))
+						{
+							$_POST['weight'] = "10";
+						}
 						$model->set_properties($_POST);
 						if($model->is_valid() && array_key_exists($model->get_properties()['exam'], $exams)) //must make sure the lesson selected belongs to this user.
 						{
@@ -78,7 +83,7 @@
 			if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']))
 			{
 				require_once('models/exam.php');
-				$exam = exam::get($_POST['exam_id']);
+				$exam = Exam::get_for_student($_POST['exam_id']);
 				if($exam != null)
 				{
 					$user_id = $_SESSION['user']->get_id();

@@ -186,7 +186,6 @@
 			//}
 
 			$exam = Exam::get_for_student($_GET['id']);
-			//$exam = Exam::get($_GET['id']);
 			$view_to_show = 'views/exam/read_for_student.php';
 			require_once('views/shared/layout.php');
 		}
