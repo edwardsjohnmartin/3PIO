@@ -152,6 +152,10 @@
 				require_once('models/question.php');
 				$controller = new QuestionController;
 				break;
+			case 'grades':
+				require_once('models/grades.php');
+				$controller = new GradesController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -248,7 +252,9 @@
 								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
 									   'read_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
-									   'mark_as_completed' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])]
+									   'mark_as_completed' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
+									   'mark_as_in_progress' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
+						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

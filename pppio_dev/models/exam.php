@@ -22,6 +22,23 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 	}
 
+	public static function get_all_for_section($section_id)
+	{
+		$db = Db::getReader();
+		$section_id = intval($section_id);
+
+		$function_name = 'sproc_read_exams_for_section';
+		$req = $db->prepare(static::build_query($function_name, array('section_id')));
+		$req->execute(array('section_id' => $section_id));
+		$ret = $req->fetchAll(PDO::FETCH_ASSOC);
+		foreach($ret as $key => $val)
+		{
+			$ret[$key]['questions'] = json_decode($val['questions']);
+
+		}
+		return $ret;
+	}
+
 	public static function get_all_for_section_and_student($section_id, $user_id)
 	{
 		$db = Db::getReader();

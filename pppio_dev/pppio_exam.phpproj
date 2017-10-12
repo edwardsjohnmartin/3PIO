@@ -23,6 +23,7 @@
     <Compile Include="CodeMirror\mode\python\python.js" />
     <Compile Include="CodeMirror\theme\solarized.css" />
     <Compile Include="controllers\exam_controller.php" />
+    <Compile Include="controllers\grades_controller.php" />
     <Compile Include="controllers\not_in_use\completion_status_controller.php" />
     <Compile Include="controllers\not_in_use\participation_type_controller.php" />
     <Compile Include="controllers\not_in_use\problem_controller.php" />
@@ -92,6 +93,7 @@
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
     <Compile Include="models\exam.php" />
+    <Compile Include="models\grades.php" />
     <Compile Include="models\question.php" />
     <Compile Include="mode\python\python.js" />
     <Compile Include="models\not_in_use\completion_status.php" />

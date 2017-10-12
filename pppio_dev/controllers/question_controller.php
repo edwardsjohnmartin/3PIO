@@ -72,6 +72,7 @@
 
 			require_once('models/exam.php');
 			$exam = Exam::get_for_student($_GET['exam_id']);
+			$student_answer = Question::get_code_file($question->get_id(), $exam->get_id());
 
 			$view_to_show = 'views/question/editor.php';
 			require_once('views/shared/layout.php');
@@ -106,6 +107,25 @@
 				if(question::get_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id()) != Completion_Status::COMPLETED)
 				{
 					question::set_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id(), Completion_Status::COMPLETED);
+				}
+				$success = true;
+			}
+
+			$json_data = array('success' => $success);
+			require_once('views/shared/json_wrapper.php');
+		}
+
+		public function mark_as_in_progress()
+		{
+			require_once('enums/completion_status.php');
+			$success = false;
+
+			if (isset($_POST['question_id']) && isset($_POST['exam_id']))
+			{
+				//if it accidentally gets marked twice somehow, it's not a problem, but let's try to avoid
+				if(question::get_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id()) != Completion_Status::STARTED)
+				{
+					question::set_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id(), Completion_Status::STARTED);
 				}
 				$success = true;
 			}

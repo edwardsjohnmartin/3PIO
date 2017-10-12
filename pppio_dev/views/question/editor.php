@@ -55,7 +55,7 @@
 			<div class="row no-shrink">
 				<div class="col-xs-12">';
 				if($question_props['name'] !== '') echo '<h2>' . htmlspecialchars($question_props['name']). '</h2>';
-					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . '</p>
+					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . $question_props['start_code'] . '</p>
 				</div>
 			</div>
 			<div class="row no-shrink navbar-default navbar-form navbar-left">
@@ -68,7 +68,7 @@
 			</div>
 			<div class="row overflow-hidden height-100">
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
-					<textarea id="code" name="code">' . $question_props['start_code'] . '</textarea>
+					<textarea id="code" name="code">' . $student_answer . '</textarea>
 				</div>
 				<div class="col-xs-6 height-100">
 					<div id="mycanvas" class="graphicalOutput"></div>
@@ -93,10 +93,10 @@
 	require('py_test/METHODS.py');
 	echo $question_props['test_code'];
     echo '</script>';
-	echo '<script>var current_tile_id = "question-' . $question_id . '-exam-' . $exam_id . '";</script>'; //use to color tile
+	echo '<script>var current_tile_id = "question-' . $current_question_id . '-exam-' . $exam_id . '";</script>'; //use to color tile
 	echo '<script>var readonly = ' . ($readonly ? 'true' : 'false') . ';</script>';
 	echo '<script>var exam_id = ' . $exam_id . ';</script>';
-	echo '<script>var current_question_id = ' . $_GET['id'] . ';</script>';
+	echo '<script>var current_question_id = ' . $current_question_id . ';</script>';
 	echo '<script>var trying_last = "' . $trying_last . '";</script>';
 	echo '<script>var link = ' . $link . ';</script>';
 	echo '<script src="js/question_editor.js"></script>';

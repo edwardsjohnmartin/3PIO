@@ -68,6 +68,7 @@ function run() {
             //print errors
             for (var i = 0, l = ret.v.length; i < l; i++) {
                 markError(ret.v[i].v);
+                markAsInProgress(current_question_id, exam_id);
             }
         }
     },
@@ -123,6 +124,20 @@ function markAsComplete(question_id, exam_id)
     });
 }
 
+function markAsInProgress(question_id, exam_id) {
+    $.ajax({
+        method: "POST",
+        url: "?controller=question&action=mark_as_in_progress",
+        data: { question_id: question_id, exam_id: exam_id },
+        success: function (data) {
+            if (data.success) {
+                console.log("I think it worked?");
+            }
+        },
+        error: function () { markError('Something went wrong.'); }
+    });
+}
+
 function completeExercise() {
     var successMessage = 'Good job! ';
     if (trying_last) {
@@ -154,3 +169,24 @@ function updateTiles() {
     current_tile.classList.remove('btn-default');
     current_tile.classList.add('btn-success');
 }
+
+window.onblur = function () {
+    //console.log("went off the page.");
+}
+
+function addEvent(obj, evt, fn) {
+    if (obj.addEventListener) {
+        obj.addEventListener(evt, fn, false);
+    }
+    else if (obj.attachEvent) {
+        obj.attachEvent("on" + evt, fn);
+    }
+}
+
+addEvent(document, "mouseout", function (e) {
+    e = e ? e : window.event;
+    var from = e.relatedTarget || e.toElement;
+    if (!from || from.nodeName == "HTML") {
+        //console.log("cursor left");
+    }
+});

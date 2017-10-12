@@ -1,8 +1,7 @@
 <?php
-require_once('models/question.php');
-echo '<h1>Exams</h1>';
 if(count($exams) > 0)
 {
+	echo '<h1>Exams</h1>';
 	echo '<div class="force-x-scroll">';
 	echo '<table class="table table-striped table-bordered">';
 	echo '<thead>';
