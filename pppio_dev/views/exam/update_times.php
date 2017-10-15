@@ -71,26 +71,6 @@ if($is_owner || $is_ta)
 	if(!isset($options)) $options = null;
 
 	echo HtmlHelper::form($types, $properties, null, $options);
-
-	//this should only be true after the submit button was pressed to update times
-	if($_SERVER['REQUEST_METHOD'] === 'POST')
-	{
-		$postedToken = filter_input(INPUT_POST, 'token');
-		if(!empty($postedToken) && isTokenValid($postedToken))
-		{
-			$times = array('students' => $_POST['students'], 'exam_id' => $_GET['id'] , 'start_time' => $_POST['start_time'], 'close_time' => $_POST['close_time']);
-			if(!isset($times['students']) || !is_valid_date($times['start_time']) || !is_valid_date($times['close_time']))
-			//if(!isset($times['students']) || $times['start_time'] == "" || $times['close_time'] == "")
-			{
-				redirect('exam', 'update_times');
-				add_alert('Please try again.', Alert_Type::DANGER);
-			}
-			else
-			{
-				$model->update_times($times);
-			}
-		}
-	}
 }
 //a user who isn't the owner of the exam or a ta for the section is trying to access this exam
 else
@@ -98,8 +78,5 @@ else
 	return call('pages', 'error');
 }
 
-function is_valid_date($date, $format = 'm/d/Y g:i A')
-{
-	return date($format, strtotime($date)) == $date;
-}
+
 ?>

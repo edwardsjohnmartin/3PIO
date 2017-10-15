@@ -20,17 +20,35 @@
 			}
 			else
 			{
-				$model = ($this->model_name)::get($_GET['id']);
+				$exam = exam::get($_GET['id']);
+
 				//if the exam with the passed in id doesn't exist, throw error
-				if($model == null)
+				if(empty($exam))
 				{
 					return call('pages', 'error');
 				}
 				else
 				{
+					if ($_SERVER['REQUEST_METHOD'] === 'POST')
+					{
+						$postedToken = filter_input(INPUT_POST, 'token');
+						if(!empty($postedToken) && isTokenValid($postedToken))
+						{
+							$times = array('students' => $_POST['students'], 'exam_id' => $_GET['id'] , 'start_time' => $_POST['start_time'], 'close_time' => $_POST['close_time']);
+							if(!isset($times['students']) || !$this::is_valid_date($times['start_time']) || !$this::is_valid_date($times['close_time']))
+							{
+								add_alert('Please try again.', Alert_Type::DANGER);
+							}
+							else
+							{
+								add_alert('Successfully updated times!', Alert_Type::SUCCESS);
+								$exam->update_times($times);
+							}
+						}
+					}
 					$view_to_show = 'views/exam/update_times.php';
-					$types = $model::get_types();
-					$properties = $model->get_properties();
+					$types = $exam::get_types();
+					$properties = $exam->get_properties();
 					require_once('views/shared/layout.php');
 				}
 			}
@@ -174,14 +192,9 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public function read_for_student(){
-			if (!isset($_GET['id'])) {
-				return call('pages', 'error');
-			}
-
-			$exam = Exam::get_for_student($_GET['id']);
-			$view_to_show = 'views/exam/read_for_student.php';
-			require_once('views/shared/layout.php');
+		public static function is_valid_date($date, $format = 'm/d/Y g:i A')
+		{
+			return date($format, strtotime($date)) == $date;
 		}
 	}
 ?>

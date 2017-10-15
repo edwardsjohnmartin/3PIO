@@ -125,56 +125,53 @@
 
 		public function save_code()
 		{
-			$success = true;
+			$success = false;
 			if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']) && isset($_POST['completion_status_id']))
 			{
 				require_once('models/exam.php');
+				require_once('models/section.php');
+
 				$exam = Exam::get_for_student($_POST['exam_id']);
-				if($exam != null)
+				$exam_props = $exam->get_properties();
+				$times = Exam::get_times_for_student($_POST['exam_id'], $_SESSION['user']->get_id());
+
+				//make sure exam, exam_props, and times arent null
+				if(!empty($exam) and !empty($exam_props) and !empty($times))
 				{
 					$user_id = $_SESSION['user']->get_id();
+					$now = intval(date_format(new DateTime(), 'U'));
+					$start = date_create_from_format('Y-m-d H:i:s', $times[0]->start_time);
+					$start_seconds = intval(date_format($start, 'U'));
+					$close = date_create_from_format('Y-m-d H:i:s', $times[0]->close_time);
+					$close_seconds = intval(date_format($close, 'U'));
+
+					//make sure the current time is within the start time and close time
+					if(!($start_seconds < $now) or !($now < $close_seconds))
+					{
+						return call('pages', 'error');
+					}
+
+					//make sure the question exists in the exam
+					if(!array_key_exists($_POST['question_id'], $exam_props['questions']))
+					{
+						return call('pages', 'error');
+					}
+
+					//make sure student is in section the exam is for
+					if (!section::is_student($exam_props['section']->key, $_SESSION['user']->get_id()))
+					{
+						add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+						return call('pages', 'error');
+					}
+
 					question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents'], $_POST['completion_status_id']);
 					$success = true;
 				}
-			}
-			$json_data = array('success' => $success);
-			require_once('views/shared/json_wrapper.php');
-		}
-
-		public function mark_as_completed() //
-		{
-			require_once('enums/completion_status.php');
-			$success = false;
-
-			if (isset($_POST['question_id']) && isset($_POST['exam_id']))
-			{
-				//if it accidentally gets marked twice somehow, it's not a problem, but let's try to avoid
-				if(question::get_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id()) != Completion_Status::COMPLETED)
+				else
 				{
-					question::set_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id(), Completion_Status::COMPLETED);
+					return call('pages', 'error');
 				}
-				$success = true;
 			}
-
-			$json_data = array('success' => $success);
-			require_once('views/shared/json_wrapper.php');
-		}
-
-		public function mark_as_in_progress()
-		{
-			require_once('enums/completion_status.php');
-			$success = false;
-
-			if (isset($_POST['question_id']) && isset($_POST['exam_id']))
-			{
-				//if it accidentally gets marked twice somehow, it's not a problem, but let's try to avoid
-				if(question::get_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id()) != Completion_Status::STARTED)
-				{
-					question::set_completion_status($_POST['question_id'], $_POST['exam_id'], $_SESSION['user']->get_id(), Completion_Status::STARTED);
-				}
-				$success = true;
-			}
-
 			$json_data = array('success' => $success);
 			require_once('views/shared/json_wrapper.php');
 		}
