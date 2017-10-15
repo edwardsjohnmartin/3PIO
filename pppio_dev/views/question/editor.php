@@ -7,6 +7,7 @@
 	$last_question_id = end($exam_props['questions'])->key;
 	$trying_last = (intval($current_question_id) === $last_question_id);
 	$total_weight = intval(Exam::get_total_weight($exam_id));
+	$mark_next = false;
 
 	echo '<link rel="stylesheet" href="css/editor.css">';
 	require_once('views/shared/CodeMirror.php');
@@ -22,10 +23,16 @@
 				$i = 1;
 				foreach($exam_props['questions'] as $question_id => $question_obj)
 				{
-					if($trying_last)
+					if($mark_next)
 					{
 						$next_question_id = $question_id;
+						$mark_next = false;
 					}
+					if($question_id == $current_question_id)
+					{
+						$mark_next = true;
+					}
+
 					echo '<div class="col-xs-4 text-center">';
 					if($question_obj->status == Completion_Status::COMPLETED)
 					{
