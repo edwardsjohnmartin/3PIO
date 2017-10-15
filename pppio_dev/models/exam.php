@@ -66,14 +66,26 @@ class Exam extends Model
 		return $req->fetch(PDO::FETCH_CLASS);
 	}
 
-	public static function get_times($id)
+	public static function get_times($exam_id)
 	{
 		$db = Db::getReader();
-		$exam_id = intval($id);
+		$exam_id = intval($exam_id);
 
 		$function_name = 'sproc_read_exam_get_times';
 		$req = $db->prepare(static::build_query($function_name, array('exam_id')));
 		$req->execute(array('exam_id' => $exam_id));
+		return $req->fetchAll(PDO::FETCH_CLASS);
+	}
+
+	public static function get_times_for_student($exam_id, $user_id)
+	{
+		$db = Db::getReader();
+		$exam_id = intval($exam_id);
+		$user_id = intval($user_id);
+
+		$function_name = 'sproc_read_exam_get_times_for_student';
+		$req = $db->prepare(static::build_query($function_name, array('exam_id', 'user_id')));
+		$req->execute(array('exam_id' => $exam_id, 'user_id' => $user_id));
 		return $req->fetchAll(PDO::FETCH_CLASS);
 	}
 

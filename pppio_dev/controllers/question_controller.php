@@ -68,12 +68,57 @@
 				return call('pages', 'error'); //or even call a blank editor for playing around in
 			}
 
-			$question = question::get($_GET['id']);
-
 			require_once('models/exam.php');
-			$exam = Exam::get_for_student($_GET['exam_id']);
-			$student_answer = Question::get_code_file($question->get_id(), $exam->get_id());
+			require_once('models/section.php');
 
+			$question = question::get($_GET['id']);
+			$exam = Exam::get_for_student($_GET['exam_id']);
+
+			//make sure exam and question exists
+			if(!empty($exam) and !empty($question))
+			{
+				$exam_props = $exam->get_properties();
+				$times = Exam::get_times_for_student($_GET['exam_id'], $_SESSION['user']->get_id());
+
+				//make sure there exists times for this user and exam
+				if(!empty($times))
+				{
+					$now = intval(date_format(new DateTime(), 'U'));
+					$start = date_create_from_format('Y-m-d H:i:s', $times[0]->start_time);
+					$start_seconds = intval(date_format($start, 'U'));
+					$close = date_create_from_format('Y-m-d H:i:s', $times[0]->close_time);
+					$close_seconds = intval(date_format($close, 'U'));
+
+					//make sure the current time is within the start time and close time
+					if(!($start_seconds < $now) or !($now < $close_seconds))
+					{
+						return call('pages', 'error');
+					}
+				}
+				else
+				{
+					return call('pages', 'error');
+				}
+
+				//make sure the question exists in the exam
+				if(!array_key_exists($_GET['id'], $exam_props['questions']))
+				{
+					return call('pages', 'error');
+				}
+
+				//make sure student is in section the exam is for
+				if (!section::is_student($exam_props['section']->key, $_SESSION['user']->get_id()))
+				{
+					add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+					return call('pages', 'error');
+				}
+			}
+			else
+			{
+				return call('pages', 'error');
+			}
+
+			$student_answer = Question::get_code_file($question->get_id(), $exam->get_id());
 			$view_to_show = 'views/question/editor.php';
 			require_once('views/shared/layout.php');
 		}
