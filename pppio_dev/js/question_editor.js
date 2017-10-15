@@ -21,12 +21,11 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     extraKeys: { Tab: betterTab }
 });
 
+var isSuccess = false;
+
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
-    if (!readonly) {
-        save(current_question_id, exam_id, editor.getValue());
-    }
     run();
 };
 
@@ -44,6 +43,7 @@ function run() {
     var mod;
     var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
     var outputArea = document.getElementById("output");
+    var completion_status_id = 2;
     outputArea.innerHTML = '';
     Sk.pre = "output";
     Sk.configure({
@@ -62,15 +62,20 @@ function run() {
         //ret.v is an array of problems
         if (ret.v.length == 0 || ret.v[0].v == null) {
             //success
-            markAsComplete(current_question_id, exam_id);
+            //markAsComplete(current_question_id, exam_id);
+            completion_status_id = 1;
+            completeExercise();
         }
         else {
             //print errors
             for (var i = 0, l = ret.v.length; i < l; i++) {
-                markError(ret.v[i].v);
-                markAsInProgress(current_question_id, exam_id);
+                markError(ret.v[i].v); 
             }
         }
+        //console.log("complete status is " + completion_status_id);
+        updateTiles(completion_status_id);
+        save(current_question_id, exam_id, editor.getValue(), completion_status_id);
+        //console.log("save 2");
     },
     function (err) {
         var line_num = Number(err.toString().split("on line", 2)[1]);
@@ -80,19 +85,23 @@ function run() {
             }
             else {
                 markError(err.toString());
+                save(current_question_id, exam_id, editor.getValue(), completion_status_id);
+                //console.log("save 3");
             }
         }
         else {
             markError(err.toString());
+            save(current_question_id, exam_id, editor.getValue(), completion_status_id);
+            //console.log("save 4");
         }
     });
 }
 
-function save(question_id, exam_id, contents) {
+function save(question_id, exam_id, contents, completion_status_id) {
     $.ajax({
         type: "POST",
         url: "?controller=question&action=save_code",
-        data: { question_id: question_id, exam_id: exam_id, contents: contents },
+        data: { question_id: question_id, exam_id: exam_id, contents: contents, completion_status_id: completion_status_id },
         success: function (data) {
             if (data.success) {
                 markSuccess('Code saved.');
@@ -101,7 +110,7 @@ function save(question_id, exam_id, contents) {
                 markError('Unable to save code.');
             }
         },
-        error: function () { console.log("thing"); markError('Unable to save code.'); }
+        error: function () { markError('Unable to save code.'); }
     });
 }
 
@@ -113,28 +122,14 @@ function markAsComplete(question_id, exam_id)
         data: { question_id: question_id, exam_id: exam_id },
         success: function (data) {
             if (data.success) {
-                console.log("debug");
-                completeExercise();
+                //console.log("debug");
+                //completeExercise();
             }
             else {
                 markError('Something went wrong.');
             }
         },
         error: function () { markError('Something went wrong.'); 　}
-    });
-}
-
-function markAsInProgress(question_id, exam_id) {
-    $.ajax({
-        method: "POST",
-        url: "?controller=question&action=mark_as_in_progress",
-        data: { question_id: question_id, exam_id: exam_id },
-        success: function (data) {
-            if (data.success) {
-                console.log("I think it worked?");
-            }
-        },
-        error: function () { markError('Something went wrong.'); }
     });
 }
 
@@ -147,7 +142,6 @@ function completeExercise() {
         successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
     }
     markSuccess(successMessage);
-    updateTiles();
 }
 
 var codeAlerts = document.getElementById('codeAlerts');
@@ -164,15 +158,24 @@ function markSuccess(successMessage) {
     codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
 
-function updateTiles() {
+function updateTiles(completion_status_id) {
     var current_tile = document.getElementById(current_tile_id);
-    current_tile.classList.remove('btn-default');
-    current_tile.classList.add('btn-success');
+    if (completion_status_id == 1) {
+        current_tile.classList.remove('btn-default');
+        current_tile.classList.remove('btn-primary');
+        current_tile.classList.add('btn-success');
+    }
+    else if (completion_status_id == 2)
+    {
+        current_tile.classList.remove('btn-default');
+        current_tile.classList.remove('btn-success');
+        current_tile.classList.add('btn-primary');
+    }
 }
 
 window.onblur = function () {
     //console.log("went off the page.");
-}
+};
 
 function addEvent(obj, evt, fn) {
     if (obj.addEventListener) {

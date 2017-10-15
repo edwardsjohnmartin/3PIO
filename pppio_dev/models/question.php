@@ -34,16 +34,17 @@
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 		}
 
-		public static function update_code_file($question_id, $exam_id, $user_id, $contents)
+		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id)
 		{
 			$db = Db::getWriter();
 			$question_id = intval($question_id);
 			$exam_id = intval($exam_id);
 			$user_id = intval($user_id);
+			$completion_status_id = intval($completion_status_id);
 
 			$function_name = 'sproc_write_question_update_student_answer';
-			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'contents')));
-			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents));
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'contents', 'completion_status_id')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents, 'completion_status_id' => $completion_status_id));
 		}
 
 		public static function get_code_file($question_id, $exam_id)

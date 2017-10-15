@@ -254,7 +254,8 @@
 									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'mark_as_completed' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'mark_as_in_progress' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
-						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)])]
+						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)]),
+									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

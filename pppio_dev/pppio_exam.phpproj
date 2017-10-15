@@ -136,6 +136,8 @@
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
     <Compile Include="views\exercise\read.php" />
+    <Compile Include="views\grades\index.php" />
+    <Compile Include="views\grades\section_grades.php" />
     <Compile Include="views\importer\index.php" />
     <Compile Include="views\lesson\create_file.php" />
     <Compile Include="views\lesson\index.php" />
@@ -229,6 +231,7 @@
     <Folder Include="views\importer" />
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
+    <Folder Include="views\grades\" />
     <Folder Include="views\question\" />
     <Folder Include="views\not_in_use\lesson" />
     <Folder Include="views\not_in_use\posts" />

@@ -6,7 +6,7 @@
 	$current_question_id = $_GET['id'];
 	$last_question_id = end($exam_props['questions'])->key;
 	$trying_last = (intval($current_question_id) === $last_question_id);
-	$mark_next = false;
+	$total_weight = intval(Exam::get_total_weight($exam_id));
 
 	echo '<link rel="stylesheet" href="css/editor.css">';
 	require_once('views/shared/CodeMirror.php');
@@ -16,28 +16,24 @@
 	<div class="row height-100 overflow-hidden">
 		<div class="col-xs-3 height-100 overflow-auto right-pad-0">
 			<div class="container-fluid">
-				<h2>' . $exam_props['name'] . '</h2>
+				<h2>' . $exam_props['name'] . ' - ' . $total_weight . 'pts.</h2>
 				<div class="row">';
 
 				$i = 1;
 				foreach($exam_props['questions'] as $question_id => $question_obj)
 				{
-					if($mark_next)
+					if($trying_last)
 					{
 						$next_question_id = $question_id;
-						$mark_next = false;
-					}
-					if(!$trying_last)
-					{
-						if($question_id == $current_question_id)
-						{
-							$mark_next = true;
-						}
 					}
 					echo '<div class="col-xs-4 text-center">';
 					if($question_obj->status == Completion_Status::COMPLETED)
 					{
 						echo '<a href="?controller=question&action=read_for_student&id=' . $question_id . '&exam_id=' . $exam_id . '" class="tile btn btn-success" id="question-' . $question_id . '-exam-' . $exam->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
+					}
+					else if($question_obj->status == Completion_Status::STARTED)
+					{
+						echo '<a href="?controller=question&action=read_for_student&id=' . $question_id . '&exam_id=' . $exam_id . '" class="tile btn btn-primary" id="question-' . $question_id . '-exam-' . $exam->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 					}
 					else
 					{
@@ -47,14 +43,26 @@
 					echo '</div>';
 					$i++;
 				}
-				echo '
-				</div>
+			echo '</div>
+					<div class="row">
+                      <h4>Legend</h4>
+					  <h5>White = Not Started</h5>
+				      <h5>Blue = Started</h5>
+				      <h5>Green = Completed</h5>
+			        </div>
 			</div>
 		</div>
 		<div class="col-xs-9 height-100 flex-columns">
 			<div class="row no-shrink">
 				<div class="col-xs-12">';
-				if($question_props['name'] !== '') echo '<h2>' . htmlspecialchars($question_props['name']). '</h2>';
+				if($question_props['name'] !== '')
+				{
+					echo '<h2>' . htmlspecialchars($question_props['name']). ' - ' . $question_props[weight] . 'pts.</h2>';
+				}
+				else
+				{
+					echo '<h2>' . $question_props[weight] . 'pts.</h2>';
+				}
 					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . $question_props['start_code'] . '</p>
 				</div>
 			</div>
@@ -84,7 +92,7 @@
 
 	if($trying_last)
 	{
-		$link = '"?controller=exam&action=read_for_student&id=' . $exam_id . '"';
+		$link = '"?controller=section&action=read_student&id=' . $exam_props['section']->key . '"';
 	}
 	else
 	{

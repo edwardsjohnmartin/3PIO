@@ -97,5 +97,16 @@ class Exam extends Model
 	{
 		return static::is_teaching_assistant($id, $user_id) || static::is_owner($id, $user_id);
 	}
+
+	public static function get_total_weight($exam_id)
+	{
+		$db = Db::getReader();
+		$exam_id = intval($exam_id);
+
+		$function_name = 'sproc_read_exam_get_total_weight';
+		$req = $db->prepare(static::build_query($function_name, array('exam_id')));
+		$req->execute(array('exam_id' => $exam_id));
+		return $req->fetch(PDO::FETCH_COLUMN);
+	}
 }
 ?>

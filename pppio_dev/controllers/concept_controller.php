@@ -32,20 +32,16 @@
 						print_r($_POST);
 						echo "</pre>";
 						$model->set_properties($_POST);
-						echo "<script>console.log( 'Debug Objects: Test1 ' );</script>";
 						?>'<pre>'<?php
 						print_r($model);
 						?>'</pre>'<?php
 						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)) //must make sure the lesson selected belongs to this user.
 						{
-							echo "<script>console.log( 'Debug Objects: Test2 ' );</script>";
 							$lessons_belong_to_user = true;
 							foreach($model->get_properties()['lessons'] as $lesson)
 							{
-								echo "<script>console.log( 'Debug Objects: Test3 ' );</script>";
 								if(!array_key_exists($lesson, $lessons))
 								{
-									echo "<script>console.log( 'Debug Objects: Test4 ' );</script>";
 									$lessons_belong_to_user = false;
 									break;
 								}						

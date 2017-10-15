@@ -15,14 +15,18 @@ if(count($exams) > 0)
 	$now = intval(date_format(new DateTime(), 'U'));
 	foreach($exams as $key => $value)
 	{
+		$exam = exam::get_for_student($value[id]);
+		$exam_props = $exam->get_properties();
+		$first_question_id = reset($exam_props['questions'])->key;
 		$start = date_create_from_format('Y-m-d H:i:s', $value['start_time']);
 		$start_seconds = intval(date_format($start, 'U'));
 		$close = date_create_from_format('Y-m-d H:i:s', $value['close_time']);
 		$close_seconds = intval(date_format($close, 'U'));
 		if($start_seconds < $now && $now < $close_seconds)
 		{
+
 			$class = ' class="success">';
-			$link = '<a href="?controller=exam&action=read_for_student&id='.$value['id'].'">'.htmlspecialchars($value['name']).'</a>';
+			$link = '<a href="?controller=question&action=read_for_student&id=' . $first_question_id . '&exam_id=' . $exam->get_id() . '">' . htmlspecialchars($value['name']).'</a>';
 		}
 		else
 		{

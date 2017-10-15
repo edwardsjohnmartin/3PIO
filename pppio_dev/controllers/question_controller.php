@@ -81,14 +81,14 @@
 		public function save_code()
 		{
 			$success = true;
-			if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']))
+			if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']) && isset($_POST['completion_status_id']))
 			{
 				require_once('models/exam.php');
 				$exam = Exam::get_for_student($_POST['exam_id']);
 				if($exam != null)
 				{
 					$user_id = $_SESSION['user']->get_id();
-					question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents']);
+					question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents'], $_POST['completion_status_id']);
 					$success = true;
 				}
 			}

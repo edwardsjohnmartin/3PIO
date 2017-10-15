@@ -179,12 +179,6 @@
 				return call('pages', 'error');
 			}
 
-			//$can_access = exam::can_preview($_GET['id'], $_SESSION['user']->get_id());
-
-			//if(!$can_access){
-				//return call('pages', 'error');
-			//}
-
 			$exam = Exam::get_for_student($_GET['id']);
 			$view_to_show = 'views/exam/read_for_student.php';
 			require_once('views/shared/layout.php');
