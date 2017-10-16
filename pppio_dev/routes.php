@@ -243,7 +243,7 @@
 						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
 								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
 								   'update'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
-								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)]),
 								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
 						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),

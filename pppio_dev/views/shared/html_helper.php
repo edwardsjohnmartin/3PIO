@@ -332,7 +332,6 @@
 			}
 */
 
-
 		static function input_submit($value = 'Submit')
 		{
 			return '<input type="submit" class="form-control" value="' . $value . '">';

@@ -70,7 +70,7 @@
 				{
 					echo '<h2>' . $question_props[weight] . 'pts.</h2>';
 				}
-					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . $question_props['start_code'] . '</p>
+					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . '</p><p><pre>' . $question_props['start_code'] . '</pre></p>
 				</div>
 			</div>
 			<div class="row no-shrink navbar-default navbar-form navbar-left">

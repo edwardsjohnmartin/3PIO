@@ -62,7 +62,6 @@ function run() {
         //ret.v is an array of problems
         if (ret.v.length == 0 || ret.v[0].v == null) {
             //success
-            //markAsComplete(current_question_id, exam_id);
             completion_status_id = 1;
             completeExercise();
         }
@@ -85,15 +84,15 @@ function run() {
             }
             else {
                 markError(err.toString());
-                save(current_question_id, exam_id, editor.getValue(), completion_status_id);
                 //console.log("save 3");
             }
         }
         else {
             markError(err.toString());
-            save(current_question_id, exam_id, editor.getValue(), completion_status_id);
             //console.log("save 4");
         }
+        save(current_question_id, exam_id, editor.getValue(), completion_status_id);
+        updateTiles(completion_status_id);
     });
 }
 
@@ -111,25 +110,6 @@ function save(question_id, exam_id, contents, completion_status_id) {
             }
         },
         error: function () { markError('Unable to save code.'); }
-    });
-}
-
-function markAsComplete(question_id, exam_id)
-{
-    $.ajax({
-        method: "POST",
-        url: "?controller=question&action=mark_as_completed",
-        data: { question_id: question_id, exam_id: exam_id },
-        success: function (data) {
-            if (data.success) {
-                //console.log("debug");
-                //completeExercise();
-            }
-            else {
-                markError('Something went wrong.');
-            }
-        },
-        error: function () { markError('Something went wrong.'); 　}
     });
 }
 
@@ -174,7 +154,9 @@ function updateTiles(completion_status_id) {
 }
 
 window.onblur = function () {
-    //console.log("went off the page.");
+    //use this one
+    //make left nav area yellow
+    console.log("went off the page.");
 };
 
 function addEvent(obj, evt, fn) {
@@ -190,6 +172,6 @@ addEvent(document, "mouseout", function (e) {
     e = e ? e : window.event;
     var from = e.relatedTarget || e.toElement;
     if (!from || from.nodeName == "HTML") {
-        //console.log("cursor left");
+        console.log("cursor left");
     }
 });

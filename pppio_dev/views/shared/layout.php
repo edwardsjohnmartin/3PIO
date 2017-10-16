@@ -198,13 +198,28 @@
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<?php echo $alert->message; ?>
 			</div>
-			<?php
+		<?php
 			//get rid of alert...
 			}
 		unset($_SESSION['alerts']);
 		}
+		unset($is_ta);
+		unset($kvp);
+		unset($can_create_exam);
+		unset($can_create_lesson);
+		unset($can_list_concept);
+		unset($can_list_course);
+		unset($can_list_exam);
+		unset($can_list_exercise);
+		unset($can_list_language);
+		unset($can_list_lesson);
+		unset($can_list_project);
+		unset($can_list_question);
+		unset($can_list_role);
+		unset($can_list_section);
+		unset($can_list_user);
+		require_once($view_to_show);
 		?>
-		<?php require_once($view_to_show); ?>
 	</div>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->

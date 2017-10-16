@@ -164,6 +164,7 @@
     <Compile Include="views\role\index.php" />
     <Compile Include="views\role\read.php" />
     <Compile Include="views\sandbox\editor.php" />
+    <Compile Include="views\section\read.php" />
     <Compile Include="views\section\read_student.php" />
     <Compile Include="views\section\read_student_old.php" />
     <Compile Include="views\shared\CodeMirror.php" />
