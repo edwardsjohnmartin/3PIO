@@ -129,6 +129,7 @@
     <Compile Include="py_test\METHODS.py" />
     <Compile Include="theme\solarized.css" />
     <Compile Include="views\concept\read.php" />
+    <Compile Include="views\exam\create_file.php" />
     <Compile Include="views\exam\index.php" />
     <Compile Include="views\exam\exam_table.php" />
     <Compile Include="views\exam\read_for_student.php" />

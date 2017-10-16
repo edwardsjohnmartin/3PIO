@@ -357,6 +357,5 @@ abstract class Model
 		$u="{" . pg_escape_string($u) . "}";
 		return $u;
 	}
-
 }
 ?>

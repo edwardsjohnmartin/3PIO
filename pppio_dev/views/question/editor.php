@@ -9,15 +9,24 @@
 	$total_weight = intval(Exam::get_total_weight($exam_id));
 	$mark_next = false;
 
+	if(!$student_answer)
+	{
+		$start_area_code = $question_props['start_code'];
+	}
+	else
+	{
+		$start_area_code = $student_answer;
+	}
+
 	echo '<link rel="stylesheet" href="css/editor.css">';
 	require_once('views/shared/CodeMirror.php');
 	require_once('views/shared/Skulpt.php');
 
 	echo '
 	<div class="row height-100 overflow-hidden">
-		<div class="col-xs-3 height-100 overflow-auto right-pad-0">
+		<div class="col-xs-3 height-100 overflow-auto right-pad-0" style="background-color: yellow">
 			<div class="container-fluid">
-				<h2>' . $exam_props['name'] . ' - ' . $total_weight . 'pts.</h2>
+				<h2>' . $exam_props['name'] . ' - ' . $total_weight . 'pts</h2>
 				<div class="row">';
 
 				$i = 1;
@@ -31,6 +40,7 @@
 					if($question_id == $current_question_id)
 					{
 						$mark_next = true;
+						$q_pos = $i;
 					}
 
 					echo '<div class="col-xs-4 text-center">';
@@ -64,13 +74,17 @@
 				<div class="col-xs-12">';
 				if($question_props['name'] !== '')
 				{
-					echo '<h2>' . htmlspecialchars($question_props['name']). ' - ' . $question_props[weight] . 'pts.</h2>';
+					echo '<h2>' . htmlspecialchars($question_props['name']) . ' - ' . $question_props[weight] . 'pts</h2>';
 				}
 				else
 				{
-					echo '<h2>' . $question_props[weight] . 'pts.</h2>';
+					echo '<h2>Q' . $q_pos . ' - ' . $question_props[weight] . 'pts</h2>';
 				}
-					echo '<p id="prompt">' . htmlspecialchars($question_props['instructions']) . '</p><p><pre>' . $question_props['start_code'] . '</pre></p>
+				echo '<h4 class="panel-title"><a data-toggle="collapse" data-target="#instructions" href="#prompt">Instructions</a></h4><div id="instructions" class="collapse in">
+					<p id="prompt">' . 
+						htmlspecialchars($question_props['instructions']) . 
+						'<p>Start Code</p><p><pre>' . $question_props['start_code'] . '</pre></p>
+					</p></div>
 				</div>
 			</div>
 			<div class="row no-shrink navbar-default navbar-form navbar-left">
@@ -83,7 +97,7 @@
 			</div>
 			<div class="row overflow-hidden height-100">
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
-					<textarea id="code" name="code">' . $student_answer . '</textarea>
+					<textarea id="code" name="code">' . $start_area_code . '</textarea>
 				</div>
 				<div class="col-xs-6 height-100">
 					<div id="mycanvas" class="graphicalOutput"></div>

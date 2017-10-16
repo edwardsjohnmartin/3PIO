@@ -170,6 +170,5 @@
 			//echo $_SERVER['HTTP_REFERER'];
 			//it's still really easy to cheat, but it should help a little...
 		}
-
 	}
 ?>

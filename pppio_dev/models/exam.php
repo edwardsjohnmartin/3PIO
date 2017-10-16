@@ -137,6 +137,38 @@ class Exam extends Model
 		return $ret_props;
 	}
 
+	public function set_properties($args) //should be able to accept the return value of get_properties
+	{
+		foreach($args as $key => $value)
+		{
+			if ($key == "questions")
+			{
+				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
+					$this->$key = true;
+				}else{
+					$this->$key = $value;
+				}
+			}
+			else if ($key == "owner")
+			{
+				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
+					$this->$key = true;
+				}else{
+					$this->$key = $value;
+				}
+			}
+			else if(property_exists($this, $key) && (!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])) //i could also check if it's in the types
+			{
+				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
+					$this->$key = true;
+				}else{
+					$this->$key = $value;
+				}
+			}
+
+		}
+	}
+
 	public function create()
 	{
 		$model_name = static::class;

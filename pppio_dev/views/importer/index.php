@@ -13,5 +13,14 @@ if (isset($lessons)) {
 	echo '</pre>';
 }
 
+$exam_props = array('exam_input' => $exam_input);
+$exam_types = array('exam_input' => TYPE::CODE);
 
+echo HtmlHelper::form($exam_types, $exam_props);
+
+if (isset($exams)) {
+	echo '<pre>';
+	print_r($exams);
+	echo '</pre>';
+}
 ?>

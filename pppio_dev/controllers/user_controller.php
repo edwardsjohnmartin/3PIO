@@ -2,7 +2,6 @@
 	require_once('controllers/base_controller.php');
 	class UserController extends BaseController
 	{
-
 		public function index()
 		{
 			$models = ($this->model_name)::get_all();
@@ -103,7 +102,6 @@
 			require_once('views/shared/layout.php');
 		}
 
-
 		public function log_out_partner()
 		{
 			if (!isset($_GET['id']))
@@ -141,7 +139,6 @@
 			redirect_to_index();
 			
 		}
-
 
 		public function create()
 		{
@@ -230,8 +227,6 @@
 			$types = array('email' => Type::EMAIL, 'name' => Type::STRING, 'password' => Type::PASSWORD, 'confirm_password' => Type::PASSWORD);
 			require_once('views/shared/layout.php');
 		}
-
-
 
 		public function update() {
 			//must set id and the rest too. id is separate.

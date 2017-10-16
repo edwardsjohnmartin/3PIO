@@ -13,7 +13,6 @@
 		protected $teaching_assistants;
 		protected $concepts;
 
-
 		public static function get_pairs_for_student($user_id) //expecting multiple
 		{
 			$db = Db::getReader();

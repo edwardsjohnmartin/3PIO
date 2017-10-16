@@ -21,20 +21,10 @@
 			{
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$postedToken = filter_input(INPUT_POST, 'token');
-					?>'<pre>'<?php
-					print_r($postedToken);
-					?>'</pre>'<?php
 					if(!empty($postedToken) && isTokenValid($postedToken))
 					{
-						//probably i should do that isset stuff
 						$model = new $this->model_name();
-						echo "<pre>";
-						print_r($_POST);
-						echo "</pre>";
 						$model->set_properties($_POST);
-						?>'<pre>'<?php
-						print_r($model);
-						?>'</pre>'<?php
 						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)) //must make sure the lesson selected belongs to this user.
 						{
 							$lessons_belong_to_user = true;
@@ -89,7 +79,6 @@
 					redirect('concept', 'index');
 			}
 		}
-
 
 		public function update() { //only differences: validation + get lessons
 			require_once('models/section.php');
@@ -159,7 +148,5 @@
 				require_once('views/shared/layout.php');
 			}
 		}
-
-
 	}
 ?>

@@ -16,6 +16,5 @@
 			$view_to_show = 'views/pages/error.php';
 			require_once('views/shared/layout.php');
 		}
-
 	}
 ?>

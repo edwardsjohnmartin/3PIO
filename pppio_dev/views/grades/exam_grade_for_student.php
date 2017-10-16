@@ -37,7 +37,8 @@ foreach($questions as $question_key => $question_value)
 	array_push($weights_array, $question_value->weight);
 	echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
 }
-echo '<th>Grade (' . array_sum($weights_array) . ')</th>';
+echo '<th>Total Weight (' . array_sum($weights_array) . ')</th>';
+echo '<th>Grade</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -62,7 +63,8 @@ foreach($question_array as $q_key => $q_value)
 	array_push($score_array, $score_var);
 	echo '<td class="warning">' . $score_var . '</td>';
 }
-echo '<td class="warning">' . array_sum($score_array) . ' - ' . array_sum($score_array)/array_sum($weights_array)*100 . '%</td>';
+echo '<td class="warning">' . array_sum($score_array) . '</td>';
+echo '<td class="warning">' . number_format(array_sum($score_array)/array_sum($weights_array)*100, 2) . '%</td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';

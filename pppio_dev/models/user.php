@@ -80,6 +80,5 @@
 			$this->set_id($req->fetchColumn());
 			$this->password = null;
 		}
-
 	}
 ?>

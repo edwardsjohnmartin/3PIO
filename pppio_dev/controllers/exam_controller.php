@@ -2,8 +2,6 @@
 	require_once('controllers/base_controller.php');
 	class ExamController extends BaseController
 	{
-        //now has the basic actions
-
         public function index()
 		{
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
@@ -165,22 +163,21 @@
 					{
 						require_once('importer.php');
 						//header('Content-Type: text/plain; charset=utf-8');
-						$lessons = Importer::get_lessons(file_get_contents($_FILES['file']['tmp_name']));
+						$exams = Importer::get_exams(file_get_contents($_FILES['file']['tmp_name']));
 
-						foreach($lessons as $lesson)
+						foreach($exams as $exam)
 						{
 							//validate...
-							$lesson->set_properties(array('owner' => $_SESSION['user']->get_id()));
-							$lesson->create(); //this will set the id
-							foreach($lesson->get_properties()['exercises'] as $exercise) //the getter is bad... :/
+							$exam->set_properties(array('owner' => $_SESSION['user']->get_id(), 'section' => 1));
+							$exam->create(); //this will set the id
+							foreach($exam->get_properties()['questions'] as $question) //the getter is bad... :/
 							{
-								$exercise->set_properties(array('lesson' => $lesson->get_id(), 'language' => 1)); //python hard coded
-								$exercise->create();
+								$question->set_properties(array('exam' => $exam->get_id(), 'language' => 1)); //python hard coded
+								$question->create();
 							}
 						}
 						$success = true;
 						add_alert('Successfully created!', Alert_Type::SUCCESS);
-						//return redirect('lesson', 'index');
 					}
 				}
 				else
@@ -188,7 +185,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			$view_to_show = 'views/lesson/create_file.php';
+			$view_to_show = 'views/exam/create_file.php';
 			require_once('views/shared/layout.php');
 		}
 

@@ -11,8 +11,7 @@ echo '<div class="col-xs-12 height-100 flex-columns">
 			<h3>' . $project_props['name']  . '</h3>
 			<h4 class="panel-title"><a data-toggle="collapse" data-target="#description" href="#prompt">Description</a></h4><div id="description" class="collapse in"><p id="prompt">' . $project_props['description'] . '</p></div>
 		</div>
-	</div>;
-
+	</div>
 	<div class="row no-shrink navbar-default navbar-form navbar-left">
 		<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>
 	</div>

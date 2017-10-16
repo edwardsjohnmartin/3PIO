@@ -18,30 +18,25 @@ $can_edit = has_permission(new Permission(Securable::EXAM, Permission_Type::EDIT
 foreach($models as $k => $v)
 {
     ?>
-	<tr>
-		<td>
-			<?php echo htmlspecialchars($v); ?>
-		</td>
-		<?php
+    <tr>
+        <td><?php echo htmlspecialchars($v); ?>
+        </td><?php
 	if($can_read)
 	{ ?>
-		<td>
-			<a href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View</a>
-		</td>
-		<?php }
+        <td>
+            <a href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View</a>
+        </td><?php }
 	if($can_edit)
 	{ ?>
+        <td>
+            <a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
+        </td>
 		<td>
-			<a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
+			<a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this exam?');">Delete</a>
 		</td>
-		
 		<?php } ?>
 	</tr>
 	<?php
 }
-		//this is only here because I can comment it out here
-		//<td>
-			//<a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;? >" onclick="return confirm('Do you want to delete this exam?');">Delete</a> delete the 
-		//</td>
 	?>
 </table>

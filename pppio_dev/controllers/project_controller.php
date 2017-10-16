@@ -2,7 +2,6 @@
 	require_once('controllers/base_controller.php');
 	class ProjectController extends BaseController
 	{
-
 		public function create()
 		{
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -255,8 +254,5 @@
 			//echo $_SERVER['HTTP_REFERER'];
 			//it's still really easy to cheat, but it should help a little...
 		}
-
-
-
 	}
 ?>

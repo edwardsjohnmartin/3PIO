@@ -119,18 +119,11 @@
 			$can_create_exam = has_permission(new Permission(Securable::EXAM, Permission_Type::CREATE));
 			if($can_create_lesson || $can_create_exam)
 			{
-				echo '<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Importer <span class="caret"></span></a>
-					<ul class="dropdown-menu">';
-						if ($can_create_lesson) echo '<li><a href="?controller=importer&action=index">Lesson</a></li>';
-						if ($can_create_exam) echo '<li><a href="?controller=importer&action=index">Exam</a></li>';
-					echo '</ul>
-				</li>';
+				echo '<li><a href="?controller=importer&action=index">Importer</a></li>';
 			}
 		}
 		echo '<li><a href="?controller=sandbox&action=index">Sandbox</a></li>';
 	  	?>
-
 
 		    <!-- <li><a href="#">Users</a></li>
 
@@ -203,7 +196,6 @@
 			}
 		unset($_SESSION['alerts']);
 		}
-		unset($is_ta);
 		unset($kvp);
 		unset($can_create_exam);
 		unset($can_create_lesson);

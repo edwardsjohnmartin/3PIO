@@ -1,11 +1,11 @@
 <?php
-
 	class ImporterController
 	{
 		public function index()
 		{
             //$input = "Lesson: Example\nEx:\n{Create a variable named 'a' and set it equal to 7.\nCreate a function named 'func' and have it accept a numeric value. Then have it return a * (the integer).\n(Note: make sure to use the '*' symbol when multiplying these values.)\nCreate another function named 'pointless' and have it accept no values. It shouldn't return anything.\nCreate another function named 'buncha_params' and have it accept 2 strings and 3 ints. It shouldn't return anything.\nUsing the '#' symbol, write a comment (it can say anything).\nPrint 'Hello World!'.}\n{b = 5}\n{test_val('a', 7)\ntest_func('func', 42, 6)\ntest_func('pointless', None)\ntest_func('buncha_params', None, 'string 1', 'string 2', 1, 2, 3)\ntest_in('*')\ntest_in('#')\ntest_out('Hello World!')}";
-			$input = "Lesson: Example\nEx:\n<desc>Create a variable named 'a' and set it equal to 7.\nCreate a function named 'func' and have it accept a numeric value. Then have it return a * (the integer).\n(Note: make sure to use the '*' symbol when multiplying these values.)\nCreate another function named 'pointless' and have it accept no values. It shouldn't return anything.\nCreate another function named 'buncha_params' and have it accept 2 strings and 3 ints. It shouldn't return anything.\nUsing the '#' symbol, write a comment (it can say anything).\nPrint 'Hello World!'.</desc>\n<starter>b = 5</starter>\n<test>test_val('a', 7)\ntest_func('func', 42, 6)\ntest_func('pointless', None)\ntest_func('buncha_params', None, 'string 1', 'string 2', 1, 2, 3)\ntest_in('*')\ntest_in('#')\ntest_out('Hello World!')</test>";
+			$input = "Lesson: Example\nEx:\n<d>Create a variable named 'a' and set it equal to 7.\nCreate a function named 'func' and have it accept a numeric value. Then have it return a * (the integer).\n(Note: make sure to use the '*' symbol when multiplying these values.)\nCreate another function named 'pointless' and have it accept no values. It shouldn't return anything.\nCreate another function named 'buncha_params' and have it accept 2 strings and 3 ints. It shouldn't return anything.\nUsing the '#' symbol, write a comment (it can say anything).\nPrint 'Hello World!'.</d>\n<s>b = 5</s>\n<t>test_val('a', 7)\ntest_func('func', 42, 6)\ntest_func('pointless', None)\ntest_func('buncha_params', None, 'string 1', 'string 2', 1, 2, 3)\ntest_in('*')\ntest_in('#')\ntest_out('Hello World!')</t>";
+			$exam_input = "default exam regex here";
 
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				if (isset($_POST['input'])) {
@@ -13,14 +13,18 @@
 					//$lessons = 'Hello';
 					$input = $_POST['input'];
 				}
-				
+				else if(isset($_POST['exam_input']))
+				{
+					$exams = Importer::get_exams($_POST['exam_input']);
+					$exam_input = $_POST['exam_input'];
+				}
+
 			}
 			//require_once('views/pages/home.php');
 			$view_to_show = 'views/importer/index.php';
 			require_once('views/shared/layout.php');
-			
-			
+
+
 		}
 	}
 ?>
-
