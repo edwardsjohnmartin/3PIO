@@ -6,12 +6,29 @@ class GradesController extends BaseController
 	{
 		require_once('models/section.php');
 		require_once('models/exam.php');
-		$owner_id = $_SESSION['user']->get_id();
+		$user_id = $_SESSION['user']->get_id();
 
-		$sections = Section::get_students($owner_id);
+		$sections = Section::get_students($user_id);
 
-		$view_to_show = 'views/grades/index.php';
-		require_once('views/shared/layout.php');
+		if(empty($sections))
+		{
+			$sections = Section::get_pairs_for_teaching_assistant($user_id);
+			if(empty($sections))
+			{
+				return call('pages', 'error');
+			}
+			else
+			{
+				$is_ta = true;
+				$view_to_show = 'views/grades/index.php';
+				require_once('views/shared/layout.php');
+			}
+		}
+		else
+		{
+			$view_to_show = 'views/grades/index.php';
+			require_once('views/shared/layout.php');
+		}
 	}
 
 	public function get_section_grades()
@@ -24,10 +41,21 @@ class GradesController extends BaseController
 		require_once('models/section.php');
 		require_once('models/exam.php');
 
-		$section = Section::get($_GET['id']);
+		$user_id = $_SESSION['user']->get_id();
+		$section_id = $_GET['id'];
+		$section = Section::get($section_id);
+		$is_owner = Section::is_owner($section_id, $user_id);
+		$is_ta = Section::is_teaching_assistant($section_id, $user_id);
 
-		$view_to_show = 'views/grades/section_grades.php';
-		require_once('views/shared/layout.php');
+		if($is_ta or $is_owner)
+		{
+			$view_to_show = 'views/grades/section_grades.php';
+			require_once('views/shared/layout.php');
+		}
+		else
+		{
+			return call('pages', 'error');
+		}
 	}
 
 	public function get_exam_grade_for_student()

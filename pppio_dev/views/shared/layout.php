@@ -64,7 +64,7 @@
 
 			if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0)
 			{
-
+				$is_ta = true;
 				echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (TA) <span class="caret"></span></a><ul class="dropdown-menu">';
 				foreach($_SESSION['sections_ta'] as $kvp)
 				{
@@ -102,12 +102,12 @@
 			$can_list_course = has_permission(new Permission(Securable::COURSE, Permission_Type::LIST));
 			$can_list_language = has_permission(new Permission(Securable::LANGUAGE, Permission_Type::LIST));
 
-			if($can_list_user || $can_list_role || $can_list_course || $can_list_language)
+			if($can_list_user || $can_list_role || $can_list_course || $can_list_language || $is_ta)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
 				  <ul class="dropdown-menu">';
-					if ($can_list_user) echo '<li><a href="?controller=grades&action=index">Grades</a></li>';
+					if ($can_list_user || $is_ta) echo '<li><a href="?controller=grades&action=index">Grades</a></li>';
 					if ($can_list_user) echo '<li><a href="?controller=user&action=index">Users</a></li>';
 					if ($can_list_role) echo '<li><a href="?controller=role&action=index">Roles</a></li>';
 					if ($can_list_course) echo '<li><a href="?controller=course&action=index">Courses</a></li>';
