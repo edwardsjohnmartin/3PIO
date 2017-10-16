@@ -3,7 +3,8 @@ require_once('models/model.php');
 class Exam extends Model
 {
 	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING,'instructions' => Type::STRING, 'owner' => Type::USER, 'section' => Type::SECTION, 'questions' => Type::LIST_QUESTION);
-	protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'questions' => true);
+	protected static $hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'owner' => true, 'questions' => true);
+	protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'owner' => true, 'questions' => true);
 	protected $name = '';
 	protected $instructions = '';
 	protected $owner;
@@ -119,6 +120,37 @@ class Exam extends Model
 		$req = $db->prepare(static::build_query($function_name, array('exam_id')));
 		$req->execute(array('exam_id' => $exam_id));
 		return $req->fetch(PDO::FETCH_COLUMN);
+	}
+
+	public function get_properties()
+	{
+		$all_props = get_class_vars(static::class);
+		$ret_props = array();
+		foreach($all_props as $key => $value)
+		{
+			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])
+			{
+				$ret_props[$key] = $this->$key;
+			}
+		}
+		$ret_props['questions'] = $this->questions;
+		return $ret_props;
+	}
+
+	public function create()
+	{
+		$model_name = static::class;
+		$db = Db::getWriter();
+
+		$props = $this->get_db_properties();
+		$props['owner'] = $_SESSION['user']->get_id();
+
+		$function_name = 'sproc_write_' . $model_name . '_create';
+		$req = $db->prepare(static::build_query($function_name, array_keys($props)));
+
+		$req->execute($props);
+
+		$this->set_id($req->fetchColumn()); //something like that. i'm using the setter here but not the getter above, which should i do?
 	}
 }
 ?>

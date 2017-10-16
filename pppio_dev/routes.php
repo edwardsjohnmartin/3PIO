@@ -242,16 +242,19 @@
 						'sandbox' => ['index' =>new Authorization_Requirements(null, [])],
 						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
 								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
+								   'update'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
 								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
 						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
 								       'read'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
+									   'update'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
 								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
 									   'read_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
 						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)]),
-									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)])]
+									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::LIST)]),
+									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

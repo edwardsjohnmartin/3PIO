@@ -136,6 +136,7 @@
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
     <Compile Include="views\exercise\read.php" />
+    <Compile Include="views\grades\exam_grade_for_student.php" />
     <Compile Include="views\grades\index.php" />
     <Compile Include="views\grades\section_grades.php" />
     <Compile Include="views\importer\index.php" />
