@@ -162,6 +162,7 @@
     <Compile Include="views\project\check.php" />
     <Compile Include="views\project\editor.php" />
     <Compile Include="views\question\editor.php" />
+    <Compile Include="views\question\read_occurrences.php" />
     <Compile Include="views\role\index.php" />
     <Compile Include="views\role\read.php" />
     <Compile Include="views\sandbox\editor.php" />

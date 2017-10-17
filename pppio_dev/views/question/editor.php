@@ -81,8 +81,8 @@
 					echo '<h2>Q' . $q_pos . ' - ' . $question_props[weight] . 'pts</h2>';
 				}
 				echo '<h4 class="panel-title"><a data-toggle="collapse" data-target="#instructions" href="#prompt">Instructions</a></h4><div id="instructions" class="collapse in">
-					<p id="prompt">' . 
-						htmlspecialchars($question_props['instructions']) . 
+					<p id="prompt">' .
+						htmlspecialchars($question_props['instructions']) .
 						'<p>Start Code</p><p><pre>' . $question_props['start_code'] . '</pre></p>
 					</p></div>
 				</div>
@@ -124,6 +124,7 @@
     echo '</script>';
 	echo '<script>var current_tile_id = "question-' . $current_question_id . '-exam-' . $exam_id . '";</script>'; //use to color tile
 	echo '<script>var readonly = ' . ($readonly ? 'true' : 'false') . ';</script>';
+	echo '<script>var user_id = ' . $_SESSION['user']->get_id() . ';</script>';
 	echo '<script>var exam_id = ' . $exam_id . ';</script>';
 	echo '<script>var current_question_id = ' . $current_question_id . ';</script>';
 	echo '<script>var trying_last = "' . $trying_last . '";</script>';

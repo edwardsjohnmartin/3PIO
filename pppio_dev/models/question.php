@@ -89,5 +89,26 @@
 
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}
+
+		public static function read_occurrences($user_id, $exam_id)
+		{
+			$db = Db::getReader();
+			$user_id = intval($user_id);
+			$exam_id = intval($exam_id);
+
+			$function_name = 'sproc_read_get_left_page_occurrences_for_user_and_exam';
+			$req = $db->prepare(static::build_query($function_name, array('user_id', 'exam_id')));
+			$req->execute(array('user_id' => $user_id, 'exam_id' => $exam_id));
+
+			return $req->fetchAll(PDO::FETCH_ASSOC);
+		}
+
+		public static function create_occurrence($user_id, $question_id, $exam_id, $date_of_occurrence)
+		{
+			$db = Db::getReader();
+			$function_name = 'sproc_write_user_left_page_occurrence_create';
+			$req = $db->prepare(static::build_query($function_name, array('user_id', 'question_id', 'exam_id', 'date_of_occurrence')));
+			$req->execute(array('user_id' => $user_id, 'question_id' => $question_id, 'exam_id' => $exam_id, 'date_of_occurrence' => $date_of_occurrence));
+		}
 	}
 ?>

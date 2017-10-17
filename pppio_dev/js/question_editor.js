@@ -154,9 +154,19 @@ function updateTiles(completion_status_id) {
 }
 
 window.onblur = function () {
-    //use this one
-    //make left nav area yellow
-    console.log("went off the page.");
+    $.ajax({
+        type: "POST",
+        url: "?controller=question&action=create_occurrence",
+        data: { user_id: user_id, question_id: current_question_id, exam_id: exam_id },
+        success: function (data) {
+            if (data.success) {
+                console.log("Occurrence create success");
+            }
+            else {
+                console.log("Occurrence create fail");
+            }
+        }
+    });
 };
 
 function addEvent(obj, evt, fn) {

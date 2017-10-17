@@ -175,5 +175,94 @@
 			$json_data = array('success' => $success);
 			require_once('views/shared/json_wrapper.php');
 		}
+
+		public function create_occurrence()
+		{
+			$success = false;
+			if (isset($_POST['user_id']) && isset($_POST['question_id']) && isset($_POST['exam_id']))
+			{
+				$user_id = intval($_POST['user_id']);
+				$question_id = intval($_POST['question_id']);
+				$exam_id = intval($_POST['exam_id']);
+				$date_of_occurrence = date_format(new DateTime(), 'Y-m-d H:i:s');
+
+				Question::create_occurrence($user_id, $question_id, $exam_id, $date_of_occurrence);
+				$success = true;
+			}
+			$json_data = array('success' => $success);
+			require_once('views/shared/json_wrapper.php');
+		}
+
+		public function read_occurrences()
+		{
+			require_once('models/section.php');
+			require_once('models/exam.php');
+
+			//get all sections current user owns
+			//get all exams in those sections
+			$sections = Section::get_pairs_for_owner($_SESSION['user']->get_id());
+			if(empty($sections))
+			{
+				add_alert("You do not own any sections.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+			else
+			{
+				$finished_array = array();
+
+				foreach($sections as $s_key => $s_value)
+				{
+					$data_arr = Section::get_students($_SESSION['user']->get_id());
+
+					if(empty($data_arr))
+					{
+						add_alert("You do not own any sections.", Alert_Type::DANGER);
+						return call('pages', 'error');
+					}
+					else
+					{
+						$students_ret = array();
+						foreach($data_arr as $section)
+						{
+							if($section['id'] == $s_key)
+							{
+								foreach($section['students'] as $st_key => $st_value)
+								{
+									$students_ret[$st_value->key] = $st_value->value;
+								}
+								$finished_array[$s_value]['students'] = $students_ret;
+							}
+						}
+					}
+
+					$exams_ret = array();
+					$exams = Exam::get_all_for_section($s_key);
+					foreach($exams as $e_key => $e_value)
+					{
+						$exams_ret[$e_value['id']] = $e_value['name'];
+					}
+					$finished_array[$s_value]['exams'] = $exams_ret;
+				}
+			}
+
+			$_SESSION['arr'] = $finished_array;
+
+			unset($data_arr);
+			unset($e_key);
+			unset($e_value);
+			unset($exams);
+			unset($exams_ret);
+			unset($s_key);
+			unset($s_value);
+			unset($section);
+			unset($sections);
+			unset($st_key);
+			unset($st_value);
+			unset($students_ret);
+			unset($finished_array);
+
+			$view_to_show = 'views/question/read_occurrences.php';
+			require_once('views/shared/layout.php');
+		}
 	}
 ?>
