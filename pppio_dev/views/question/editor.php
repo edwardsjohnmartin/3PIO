@@ -1,4 +1,6 @@
-<?php
+
+<div id="test-form">
+	<?php
 	require_once('enums/completion_status.php');
 	$question_props = $question->get_properties();
 	$exam_props = $exam->get_properties();
@@ -24,7 +26,7 @@
 
 	echo '
 	<div class="row height-100 overflow-hidden">
-		<div class="col-xs-3 height-100 overflow-auto right-pad-0" style="background-color: yellow">
+		<div class="col-xs-3 height-100 overflow-auto right-pad-0 test-sidebar">
 			<div class="container-fluid">
 				<h2>' . $exam_props['name'] . ' - ' . $total_weight . 'pts</h2>
 				<div class="row">';
@@ -130,4 +132,5 @@
 	echo '<script>var trying_last = "' . $trying_last . '";</script>';
 	echo '<script>var link = ' . $link . ';</script>';
 	echo '<script src="js/question_editor.js"></script>';
-?>
+    ?>
+</div>

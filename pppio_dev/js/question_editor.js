@@ -119,7 +119,7 @@ function completeExercise() {
         successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Continue</span></a>';
     }
     else {
-        successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next exercise</span></a>';
+        successMessage += '<a href="' + link + '" class="btn btn-success btn-sm"><span class="">Next question</span></a>';
     }
     markSuccess(successMessage);
 }
@@ -154,19 +154,24 @@ function updateTiles(completion_status_id) {
 }
 
 window.onblur = function () {
+    console.log("Blur happened");
     $.ajax({
         type: "POST",
         url: "?controller=question&action=create_occurrence",
         data: { user_id: user_id, question_id: current_question_id, exam_id: exam_id },
         success: function (data) {
             if (data.success) {
-                console.log("Occurrence create success");
+                //console.log("Occurrence create success");
             }
             else {
-                console.log("Occurrence create fail");
+                //console.log("Occurrence create fail");
             }
         }
     });
+};
+
+window.onfocus = function () {
+    console.log("Focus happened");
 };
 
 function addEvent(obj, evt, fn) {

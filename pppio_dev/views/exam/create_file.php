@@ -7,7 +7,7 @@ if($success)
 	{
 		$exam_props = $exam->get_properties();
 		echo '<div class="panel panel-default">';
-		echo '<div class="panel-heading"><a href="?controller=exam&action=read&id=' . $exam->get_id() . '">' . htmlspecialchars($exam_props['name']) . '</a></div>';
+		echo '<div class="panel-heading"><a href="?controller=exam&action=update_times&id=' . $exam->get_id() . '">' . htmlspecialchars($exam_props['name']) . '</a></div>';
 		//validate...
 		foreach($exam_props['questions'] as $question)
 		{

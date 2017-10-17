@@ -71,3 +71,12 @@ table.code-padded td {
 span.code {
   font-family: monospace;
 }
+
+.test-sidebar {
+    background-color:#000;
+    color: #FFF;
+}
+#test-form {
+    border: 10vh solid #5cb85c;
+    height: 100%;
+}

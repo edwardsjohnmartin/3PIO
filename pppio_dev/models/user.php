@@ -20,7 +20,7 @@
 			return $req->fetchAll(PDO::FETCH_CLASS);
 		}
 
-		public function get_for_login($email, $password)
+		public static function get_for_login($email, $password)
 		{
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_get_for_login';

@@ -33,7 +33,7 @@ else
 								$wrote_section_name = true;
 							}
 							echo '<div>';
-							if(!$wrote_section_name)
+							if(!$wrote_exam_name)
 							{
 								echo '<h3>' . $e_value . '</h3>';
 								$wrote_exam_name = true;
