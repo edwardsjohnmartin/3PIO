@@ -7,11 +7,11 @@ if($success)
 	{
 		$exam_props = $exam->get_properties();
 		echo '<div class="panel panel-default">';
-		echo '<div class="panel-heading"><a href="?controller=exam&action=read&id=' . $exam->get_id() .'" target="_blank">' . htmlspecialchars($exam_props['name']) . '</a></div>';
+		echo '<div class="panel-heading"><a href="?controller=exam&action=read&id=' . $exam->get_id() . '">' . htmlspecialchars($exam_props['name']) . '</a></div>';
 		//validate...
 		foreach($exam_props['questions'] as $question)
 		{
-			echo '<a href="?controller=question&action=read&id=' . $question->get_id() .'" class="list-group-item" target="_blank">' . htmlspecialchars($question->get_properties()['instructions']) . '</a>';
+			echo '<a href="?controller=question&action=read&id=' . $question->get_id() . '" class="list-group-item">' . htmlspecialchars($question->get_properties()['instructions']) . '</a>';
 		}
 		echo '</div>';
 	}

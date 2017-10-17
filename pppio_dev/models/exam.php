@@ -78,6 +78,11 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_CLASS);
 	}
 
+	public function get_section_id()
+	{
+		return $this->section->key;
+	}
+
 	public static function get_times_for_student($exam_id, $user_id)
 	{
 		$db = Db::getReader();

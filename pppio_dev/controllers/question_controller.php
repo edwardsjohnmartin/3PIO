@@ -56,7 +56,7 @@
 			}
 			else
 			{
-				add_alert('Oops, you don\'t have any exams. Questions must be added to exams. Please <a href="?controller=exam&action=create">create a exam</a> before creating an question!', Alert_Type::DANGER);
+				add_alert('Oops, you don\'t have any exams. Questions must be added to exams. Please <a href="?controller=exam&action=create">create an exam</a> before creating an question!', Alert_Type::DANGER);
 				redirect('question', 'index');
 			}
 		}
@@ -65,6 +65,7 @@
 			$readonly = false;
 			if (!isset($_GET['id']))
 			{
+				add_alert('The question you are trying to access doesn\'t exist.', Alert_Type::DANGER);
 				return call('pages', 'error'); //or even call a blank editor for playing around in
 			}
 
@@ -92,17 +93,20 @@
 					//make sure the current time is within the start time and close time
 					if(!($start_seconds < $now) or !($now < $close_seconds))
 					{
+						add_alert("The time to take this exam has expired.", Alert_Type::DANGER);
 						return call('pages', 'error');
 					}
 				}
 				else
 				{
+					add_alert("You have not been given a time to take this exam. Please contact instructor.", Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
 
 				//make sure the question exists in the exam
 				if(!array_key_exists($_GET['id'], $exam_props['questions']))
 				{
+					add_alert("Invalid question/exam combination.", Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
 
@@ -115,6 +119,7 @@
 			}
 			else
 			{
+				add_alert("The item you are trying to access doesn't exist.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -148,12 +153,14 @@
 					//make sure the current time is within the start time and close time
 					if(!($start_seconds < $now) or !($now < $close_seconds))
 					{
+						add_alert("The time to take this exam has expired.", Alert_Type::DANGER);
 						return call('pages', 'error');
 					}
 
 					//make sure the question exists in the exam
 					if(!array_key_exists($_POST['question_id'], $exam_props['questions']))
 					{
+						add_alert("Invalid question/exam combination.", Alert_Type::DANGER);
 						return call('pages', 'error');
 					}
 
@@ -169,8 +176,14 @@
 				}
 				else
 				{
+					add_alert("The item you are trying to access doesn't exist.", Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
+			}
+			else
+			{
+				add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+				return call('pages', 'error');
 			}
 			$json_data = array('success' => $success);
 			require_once('views/shared/json_wrapper.php');
@@ -188,6 +201,11 @@
 
 				Question::create_occurrence($user_id, $question_id, $exam_id, $date_of_occurrence);
 				$success = true;
+			}
+			else
+			{
+				add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+				return call('pages', 'error');
 			}
 			$json_data = array('success' => $success);
 			require_once('views/shared/json_wrapper.php');

@@ -31,13 +31,22 @@ echo '<thead>';
 echo '<tr>';
 $question_array = array();
 $weights_array = array();
+$q_index = 1;
 foreach($questions as $question_key => $question_value)
 {
 	array_push($question_array, $question_value->id);
 	array_push($weights_array, $question_value->weight);
-	echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
+	if($question_value->name !== '')
+	{
+		echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
+	}
+	else
+	{
+		echo '<th>Q' . $q_index . ' (' . $question_value->weight . ')</th>';
+	}
+	$q_index++;
 }
-echo '<th>Total Weight (' . array_sum($weights_array) . ')</th>';
+echo '<th>Total Points Earned (' . array_sum($weights_array) . ')</th>';
 echo '<th>Grade</th>';
 echo '</tr>';
 echo '</thead>';

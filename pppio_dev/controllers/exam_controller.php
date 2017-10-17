@@ -14,6 +14,7 @@
 			//if a exam id wasn't passed in, throw error
 			if (!isset($_GET['id']))
 			{
+				add_alert("No exam was selected to update times for.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 			else
@@ -23,10 +24,23 @@
 				//if the exam with the passed in id doesn't exist, throw error
 				if(empty($exam))
 				{
+					add_alert("The exam you are trying to access doesn't exist.", Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
 				else
 				{
+					require_once("models/section.php");
+
+					$s_id = $exam->get_section_id();
+					$is_owner = Section::is_owner($s_id, $_SESSION['user']->get_id());
+					$is_ta = Section::is_teaching_assistant($s_id, $_SESSION['user']->get_id());
+
+					if(!$is_owner and !$is_ta)
+					{
+						add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+						return call('pages', 'error');
+					}
+
 					if ($_SERVER['REQUEST_METHOD'] === 'POST')
 					{
 						$postedToken = filter_input(INPUT_POST, 'token');
@@ -42,6 +56,10 @@
 								add_alert('Successfully updated times!', Alert_Type::SUCCESS);
 								$exam->update_times($times);
 							}
+						}
+						else
+						{
+							add_alert('Please try again.', Alert_Type::DANGER);
 						}
 					}
 					$view_to_show = 'views/exam/update_times.php';

@@ -22,7 +22,7 @@
 			" class="tile btn btn-success"><span class="tile-number">' . $i . '</span><span class="tile-label">'
 			. htmlspecialchars($question_obj->value) . '</span></a>';
 		}
-		else//if ($question_obj->status == Completion_Status::NOT_STARTED)
+		else //if ($question_obj->status == Completion_Status::NOT_STARTED)
 		{
 			echo '<a href="?controller=question&action=read_for_student&id=' . $question_id . '&exam_id=' . $exam_id . '
 			" class="tile btn btn-default"><span class="tile-number">' . $i . '</span><span class="tile-label">'
