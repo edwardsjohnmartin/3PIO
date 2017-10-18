@@ -97,7 +97,7 @@
                     <h4 class="panel-title collapse-link">
                        <a data-toggle="collapse" data-target="#start_code" href="#prompt1">Start Code</a>
                     </h4>
-				    <div id="start_code" class="collapse in">
+				    <div id="start_code" class="collapse">
                        <p id=prompt1>
                           <pre>' . $question_props['start_code'] . '</pre>
                        </p>
