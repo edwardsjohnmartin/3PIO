@@ -104,7 +104,7 @@ function save(question_id, exam_id, contents, completion_status_id) {
         data: { question_id: question_id, exam_id: exam_id, contents: contents, completion_status_id: completion_status_id },
         success: function (data) {
             if (data.success) {
-                markSuccess('Code saved.');
+                //markSuccess('Code saved.');
             }
             else {
                 markError('Unable to save code.');
