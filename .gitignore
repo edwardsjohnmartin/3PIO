@@ -290,7 +290,5 @@ __pycache__/
 *.DS_Store
 
 *.json
-*.sln
 *.sqlite
 *.config
-*.phpproj
