@@ -62,6 +62,7 @@
 				echo '</ul></li>';
 			}
 
+            $is_ta = false;
 			if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0)
 			{
 				$is_ta = true;

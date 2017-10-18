@@ -168,11 +168,11 @@
 					{
 						$finfo = new finfo(FILEINFO_MIME_TYPE);
 						if (false === $ext = array_search(
-							$finfo->file($_FILES['file']['tmp_name']),
-							array('text/plain', 'text/x-fortran'),
+                                $finfo->file($_FILES['file']['tmp_name']),
+							array('text/plain', 'text/x-fortran', 'text/x-python'),
 							true
 						)) {
-							add_alert('Invalid file format.', Alert_Type::DANGER);
+							add_alert('Invalid file format: '.$finfo->file($_FILES['file']['tmp_name']), Alert_Type::DANGER);
 							$failed = true;
 						}
 					}
