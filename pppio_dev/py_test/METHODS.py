@@ -8,6 +8,13 @@ __in_strings = []
 __out_string = [None] #this was overwriting teacher's value, so I changed it to use an array. Don't know why this works.
 
 
+def split_type(arg):
+    a = str(type(arg))
+    if a[:5] == "<type":
+        return a.split("<type '")[1].split("'>")[0]
+    #return a.split("<class '")[1].split("'>")[0]
+    return a[a.rfind(".")+1:a.rfind("'")]
+
 #this is what all the functions used to validate a variable or a function eventually call.
 #if a problem is encountered, it returns a string about the problem.
 #if there is no problem, it returns true.
@@ -21,11 +28,13 @@ def __UNIVERSAL_VALIDATOR(desired_var_name, desired_type_str, desired_return, *a
         arg_types = []
 
         for arg in args:
-            arg_type = str(type(arg)).split("<type '")[1].split("'>")[0]
+            #arg_type = str(type(arg)).split("<type '")[1].split("'>")[0]
+            arg_type = split_type(arg)
             arg_types.append(arg_type)
 
         if student_var != None:
-            if str(type(student_func)).split("<type '")[1].split("'>")[0] == 'function':
+            #if str(type(student_func)).split("<type '")[1].split("'>")[0] == 'function':
+            if split_type(student_func) == 'function':
                 if (len(args) > 0):
                     try:
                         if (globals()[func_name](*args) != desired_return):
@@ -50,7 +59,8 @@ def __UNIVERSAL_VALIDATOR(desired_var_name, desired_type_str, desired_return, *a
 
     
     if student_var != None:
-        if str(type(student_var)).split("<type '")[1].split("'>")[0] == desired_type_str:
+        #if str(type(student_var)).split("<type '")[1].split("'>")[0] == desired_type_str:
+        if split_type(student_var) == desired_type_str:
             if (len(args) == 1):
                 if (student_var == args[0]):
                     return True
@@ -91,8 +101,12 @@ def __VALIDATE_VAR(var_name, desired_type, *args):
 #these are the methods the professors will call in their test code
 # --------------------------------------------------------------------
 def test_val(var_name, var_val):
-    var_type = str(type(var_val)).split("<type '")[1].split("'>")[0]
+    #var_type = str(type(var_val)).split("<type '")[1].split("'>")[0]
+    var_type = split_type(var_val)
     __returns.append(__VALIDATE_VAR(var_name, var_type, var_val))
+
+def test_type(var_name, var_type):
+    __returns.append(__VALIDATE_VAR(var_name, var_type))
 
 def test_func(func_name, desired_return, *params):
     __returns.append(__VALIDATE_FUNC(func_name, desired_return, *params))
@@ -102,6 +116,10 @@ def test_in(string):
 
 def test_out(string):
     __out_string[0] = string + "\n"
+
+def test_equal(a, b):
+    if a <> b:
+        __returns.append("{} not equal to {}".format(a, b))
 
 # --------------------------------------------------------------------
 
