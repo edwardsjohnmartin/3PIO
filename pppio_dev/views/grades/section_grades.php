@@ -10,19 +10,24 @@ if(count($exams) > 0)
 
 	foreach($exams as $exam_key => $exam_value)
 	{
+		//get an array of students and their scores
 		$exam_scores = Grades::get_exam_scores($exam_value['id']);
 
-		foreach($exam_scores as $key => $value)
+		if(!empty($exam_scores))
 		{
-			$exam_scores[$value[student]] = $value;
-			foreach($value['scores'] as $key1 => $value1)
+			foreach($exam_scores as $key => $value)
 			{
-				$exam_scores[$value[student]]['scores'][$value1->question_id] = $value1;
-				unset($exam_scores[$value['student']]['scores'][$key1]);
+				$exam_scores[$value['student']] = $value;
+				unset($exam_scores[$key]);
+				unset($exam_scores[$value['student']]['student']);
+				$var = $value['student'];
+				foreach($exam_scores[$var]['scores'] as $key1 => $value1)
+				{
+					$exam_scores[$var]['scores'][$value1->question_id] = $value1->score;
+					unset($exam_scores[$var]['scores'][$key1]);
+				}
 			}
-			unset($exam_scores[$key]);
 		}
-
 
 		echo '<table class="table table-striped table-bordered">';
 		echo '<thead>';
@@ -33,8 +38,12 @@ if(count($exams) > 0)
 		$q_index = 1;
 		foreach($exam_value['questions'] as $question_key => $question_value)
 		{
+			//iterate through all the questions putting their
+			//id's and weights into seperate parallel arrays
 			array_push($question_array, $question_value->id);
 			array_push($weights_array, $question_value->weight);
+
+			//create a header in the table for each question
 			if($question_value->name !== '')
 			{
 				echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
@@ -59,12 +68,11 @@ if(count($exams) > 0)
 			$score_array = array();
 			foreach($question_array as $q_key => $q_value)
 			{
-				if(in_array($current_student, $exam_scores[$current_student]))
+				if(array_key_exists($current_student, $exam_scores))
 				{
-					$arr_to_check = $exam_scores[$current_student]['scores'][$q_value];
-					if($q_value == $arr_to_check->question_id)
+					if(array_key_exists($q_value, $exam_scores[$current_student]['scores']))
 					{
-						$score_var = $arr_to_check->score * $weights_array[$q_key];
+						$score_var = $exam_scores[$current_student]['scores'][$q_value] * $weights_array[$q_key];
 					}
 					else
 					{
