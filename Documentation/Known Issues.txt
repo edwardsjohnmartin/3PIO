@@ -12,7 +12,7 @@
 (MED)need to show exam instructions to the students in some way
    (VIEW)can only see instructions in /exam/update_times.php and /shared/read.php
 
-[which solution to implement?]
+[we want to make both grade views the same as it is on the exam]
 (MED)check to see how we want to show weights in grade views
    (VIEW)/grades/section_grades.php
    (VIEW)/grades/exam_grades_for_student.php)
@@ -55,6 +55,7 @@
    (CONTROLLER)move read_occurrences function in /question_controller.php to /exam_controller.php
 
 (HIGH)need a way to review exams
+   (VIEW)need to also show the timestamp of completion
 
 (LOW)add a button to view/question/editor that replaces the current code with the start code
                
