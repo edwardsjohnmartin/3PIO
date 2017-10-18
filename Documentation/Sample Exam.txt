@@ -1,0 +1,27 @@
+Exam: Sample Exam
+Q:
+<w>6</w>
+<d>These should be the instructions for a question</d>
+<s>#This is the start_code 
+print("hello world")
+</s>
+<t>print("goodbye world")
+</t>
+
+Q:
+<w>12</w>
+<d>question 2 instructions</d>
+<s>#start_code for Q2
+print("this is q2")
+</s>
+<t>print("goodbye q2")
+</t>
+
+Q:
+<w>18</w>
+<d>q3 instructions</d>
+<s>#q3 start_code 
+print("q3")
+</s>
+<t>print("q3 world")
+</t>

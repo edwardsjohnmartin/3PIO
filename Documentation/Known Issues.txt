@@ -1,0 +1,145 @@
+-------------------------------------------------------------------------------
+
+[which solution to implement?]
+(LOW)questions heading shown but doesn't display questions
+   (SOLUTION)make questions not visible on either
+   (SOLUTION)make questions only visible on /shared/read.php
+   (VIEW)happens in /exam/update_times.php and /shared/read.php
+
+(MED)exam instructions aren't being filled when created through importer
+   (REGEX)fix get_exams function in /importer.php 
+
+(MED)need to show exam instructions to the students in some way
+   (VIEW)can only see instructions in /exam/update_times.php and /shared/read.php
+
+[which solution to implement?]
+(MED)check to see how we want to show weights in grade views
+   (VIEW)/grades/section_grades.php
+   (VIEW)/grades/exam_grades_for_student.php)
+
+(HIGH)need to make sure a student can't access controller functions they shouldnt
+   (CONTROLLER)(ROUTES)need to make sure ta's can access what they should
+   (CONTROLLER)(ROUTES)need to make sure ta's can't access what they shouldn't
+
+(VERY LOW)sproc_read_section_get(id integer) can return concepts that are deleted
+    (CONTROLLER)as a ta, on controller=section action=read id=[section_id] 
+    (CONTROLLER)deleted concepts show up
+    (VIEW)creates links to controller=concept action=read id=[concept_id] that lead to error page
+
+[which solution to implement?]
+(LOW)make exam delete button work
+   (DATABASE)sproc_write_exam_delete(exam_id)
+   (DATABASE)exam_id is saved in question so we should delete the questions associated with that exam too
+   (DATABASE)or we can take out the exam_id column from questions and make a question_to_exam table and remove the links of those questions to the deleted exam
+
+(LOW)annotate point value on left navbar squares
+   (VIEW)(MODEL)
+
+(LOW)should we block entry to controller=question action=read_for_student if a partner is logged in? NOT YET
+   (CHECK)scenario: student1 logged in, student2 logged in as partner, student2 logs in on another computer, student1 removes student2 from partners. ?does this log out student2 from other computer?
+
+[which solution to implement?]
+(MED)add a way to track when the window regained focus while a student is taking an exam
+   (DATABASE)rename user_left_page_occurrences to just occurrences
+   (DATABASE)change date_of_occurrence column to time_left
+   (DATABASE)add column time_returned
+   (VIEW)will also need a better way to view these
+   (VIEW)do we want to see all the occurred in the sections the logged-in user has access to 
+   (VIEW)do we want to view by sections, students, exams, or questions
+
+(MED)ta's need to be able to view occurrences
+
+(LOW)move occurrence files to make more logical sense
+   (VIEW)add /occurences/ folder and put views in there
+   (VIEW)move /questions/read_occurrences.php to occurrences/ folder and rename to read
+   (CONTROLLER)move read_occurrences function in /question_controller.php to /exam_controller.php
+
+(HIGH)need a way to review exams
+
+(LOW)add a button to view/question/editor that replaces the current code with the start code
+               
+-------------------------------------------------------------------------------
+
+(DONE)ALWAYS POPULATE ERROR MESSAGE
+
+(DONE)How do I handle bringing up a question where there is starter code?
+    (DONE)YES - If an answer exists don't show starter code?
+    (DONE)NO - Have a reset button that puts the starter code back?
+    (DONE)YES - Show the starter code in the instructions?
+    (DONE)NO - Show the starter code in a different area?
+
+(DONE)Should we allow or deny copy and paste? STAY DISABLED
+
+(DONE)move completion_status_id to students_answers_to_questions
+
+(DONE)move date_updated to students_answers_to_questions
+
+(DONE)checks for question controller read_for_student view
+   (DONE)make sure is within start_time and close_time
+   (DONE)make sure question id is in exam
+   (DONE)make sure exam is available to student
+
+(DONE)fix order of alerts when creating exam/question
+
+(DONE)need a way for a student to see their grades for exams on the website
+
+(DONE)make exam update button work
+
+(DONE)make question update button work
+
+(DONE)change the permission type of controller=grades action=get_section_grades so TA can see grades   
+   (DONE)will need to do error handling to make sure only a TA student will be able to access this
+
+(DONE)on controller=question action=read_for_student or run button being pressed
+   (DONE)check to make sure current_time is still within start_time and close_time
+
+(DONE)not updating tiles when there is a bug in the code
+   (DONE)is updating tiles when finished successfully
+   (DONE)is updating when no bugs but not correct tested again test_code
+
+(DONE)not saving or updating when there is an open multi-line comment
+
+(DONE)does questions need a delete button? NO
+
+(DONE)how should we handle partial credit?
+   (DONE)make score for started questions 0
+
+(DONE)Default question name to 'Q' + question_number
+
+(DONE)students_answers_to_questions will always update on run with current values, even when completion_status=completed
+   (DONE)this could lead to a student getting an answer right and changing it and losing points, thats ok though
+
+(DONE)need to find a good way to show the start_code after the instructions in controller question action read_for_student
+
+(DONE)Make start_code area in controller=question action=read_for_student collapsible
+
+(DONE)Make description in controller=project action=check collapsible
+
+(DONE)on controller=grades action=get_section_grades
+   (DONE)put percentage in seperate column
+
+(DONE)(NO)do we want to be able to update grades in controller=grades action=get_section_grades?
+   (DONE)brings the issue of needing to change the completion_status for a student_to_question to change the score in the db
+   (DONE)this ruins the integrity of the score
+
+(DONE)user needs to be notified somehow that a new tab or window was opened and browsed to
+   (DONE)not gonna do this, changing the navbar color is the solution
+
+(DONE)make the left navbar area of controller=question action=read_for_student yellow so can be easily seen
+   (DONE)teacher and ta in the room will know they are on the wrong page if they dont see the yellow
+
+(DONE)Add a database table to record if a student went off the page
+   (DONE)student_id, question_id, exam_id, date_of_occurrence
+
+(DONE)while taking an exam, make the next button that pops up to next question instead of next exercise
+
+(DONE)after uploading an exam through a file, make the exam link go to exam_controller action=update_times instead of action=read
+
+(DONE)exam names not coming up in occurrences view
+
+(DONE)change the permission type of controller=exam action=update_times to read so TA can update times
+    (DONE)will need to do error handling to make sure only a TA student will be able to access this
+    (DONE)need to add a path to controller=exam action=update_times for the TA
+
+-------------------------------------------------------------------------------
+

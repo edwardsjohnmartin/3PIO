@@ -80,3 +80,13 @@ span.code {
     border: 10vh solid #5cb85c;
     height: 100%;
 }
+
+.btn-started {
+    background-color: #e9e660;
+    color: #000;
+}
+
+.collapse-link {
+    text-decoration:underline;
+    color: #2b5bf6;
+}
