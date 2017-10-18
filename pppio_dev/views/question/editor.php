@@ -76,11 +76,11 @@
 				<div class="col-xs-12">';
 				if($question_props['name'] !== '')
 				{
-					echo '<h2>' . htmlspecialchars($question_props['name']) . ' - ' . $question_props[weight] . 'pts</h2>';
+					echo '<h2>' . htmlspecialchars($question_props['name']) . ' - ' . $question_props['weight'] . 'pts</h2>';
 				}
 				else
 				{
-					echo '<h2>Q' . $q_pos . ' - ' . $question_props[weight] . 'pts</h2>';
+					echo '<h2>Q' . $q_pos . ' - ' . $question_props['weight'] . 'pts</h2>';
 				}
 				echo '<h4 class="panel-title"><a data-toggle="collapse" data-target="#instructions" href="#prompt">Instructions</a></h4><div id="instructions" class="collapse in">
 					<p id="prompt">' .

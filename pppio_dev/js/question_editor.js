@@ -69,6 +69,7 @@ function run() {
             //print errors
             for (var i = 0, l = ret.v.length; i < l; i++) {
                 markError(ret.v[i].v); 
+							break;
             }
         }
         //console.log("complete status is " + completion_status_id);
