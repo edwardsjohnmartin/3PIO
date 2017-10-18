@@ -29,13 +29,13 @@ else
 							echo '<div>';
 							if(!$wrote_section_name)
 							{
-								echo'<h2>' . $s_key . '</h2>';
+								echo'<h1>' . $s_key . '</h1>';
 								$wrote_section_name = true;
 							}
 							echo '<div>';
 							if(!$wrote_exam_name)
 							{
-								echo '<h3>' . $e_value . '</h3>';
+								echo '<h4>' . $e_value . '</h4>';
 								$wrote_exam_name = true;
 							}
 							echo '<table class="table table-striped table-bordered">';

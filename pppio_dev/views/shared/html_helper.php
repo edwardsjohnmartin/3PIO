@@ -105,6 +105,15 @@
 						}
 						$str .= '</div>';
 					}
+					else if($type == Type::LIST_EXAM)
+					{
+						$str .= '<div class="list-group">';
+						foreach($value as $key => $val)
+						{
+							$str .= '<a href="?controller=' . $typestr . '&action=update_times&id=' . $key . '" class="list-group-item">' . htmlspecialchars($val->value) . '</a>';
+						}
+						$str .= '</div>';
+					}
 					else
 					{
 						$str .= '<div class="list-group">';
@@ -131,11 +140,11 @@
 		static function span_code($property, $value = null) //these code mirror windows need to put the correct language
 		{
 			//it's kind of sloppy to do the include here
-			include_once('views/shared/CodeMirror.php');	
+			include_once('views/shared/CodeMirror.php');
 			//$input = '<input type="text" id="' . $property .'" name="' . $property . '" value="' . nl2br($value) . '">';
 			$input = '<textarea id="' . $property .'" name="' . $property .'">' . htmlspecialchars($value) . '</textarea>';
 			//put the language properly.
-			//var editor' . $property . ' = 
+			//var editor' . $property . ' =
 			$js = '<script type="text/javascript">CodeMirror.fromTextArea(document.getElementById("' . $property . '"), {
 						mode: {name: "python",
 							   version: 3,
@@ -209,12 +218,12 @@
 			{
 				return static::input_string($property, $value);
 			}
-			
+
 		}
 
 		static function input_integer($property, $value = null)
 		{
-			return '<input type="number" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">'; 
+			return '<input type="number" class="form-control" name="' . $property . '" value="' . htmlspecialchars($value) . '">';
 		}
 
 		static function input_boolean($property, $value = null)
@@ -246,11 +255,11 @@
 		static function input_code($property, $value = null)
 		{
 			//it's kind of sloppy to do the include here
-			include_once('views/shared/CodeMirror.php');	
+			include_once('views/shared/CodeMirror.php');
 			//$input = '<input type="text" id="' . $property .'" name="' . $property . '" value="' . nl2br($value) . '">';
 			$input = '<textarea id="' . $property .'" name="' . $property .'">' . htmlspecialchars($value) . '</textarea>';
 			//put the language properly.
-			//var editor' . $property . ' = 
+			//var editor' . $property . ' =
 			$js = '<script type="text/javascript">CodeMirror.fromTextArea(document.getElementById("' . $property . '"), {
 						mode: {name: "python",
 							   version: 3,
@@ -283,10 +292,10 @@
 			$select .= '</select>';
 			return $select;
 		}
-		
+
 		static function input_select_multiple($property, $value = null, $options) //these are in the wrong order on update for lesson's exercises
 		{
-			include_once('views/shared/MultiSelect.php');	
+			include_once('views/shared/MultiSelect.php');
 			$select = '<select class="form-control" name="'. $property . '[]" id="' . $property . '" multiple>';
 			if($value != null)
 			{

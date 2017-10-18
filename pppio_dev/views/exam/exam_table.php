@@ -45,7 +45,7 @@ if(count($exams) > 0)
 			echo '<td ' . $class . $link . '</td>';
 			echo '<td ' . $class . $value['start_time'] . '</td>';
 			echo '<td ' . $class . $value['close_time'] . '</td>';
-			echo '<td ' . $class . '<a href="?controller=grades&action=get_exam_grade_for_student&section_id=' . $section->get_id() . '&exam_id=' . $exam->get_id() . '">View Grade</a></td>';
+			echo '<td ' . $class . '<a href="?controller=grades&action=get_exam_grade_for_student&exam_id=' . $exam->get_id() . '">View Grade</a></td>';
 			echo '</tr>';
 		}
 	}

@@ -3,8 +3,7 @@ require_once('models/exam.php');
 
 $user_id = $_SESSION['user']->get_id();
 $exam_id = $_GET['exam_id'];
-$exam = exam::get_for_student($exam_id);
-$exams = Exam::get_all_for_section($_GET['section_id']);
+$exams = Exam::get_all_for_section($exam->get_section_id());
 $exam_props = $exam->get_properties();
 $exam_scores = Grades::get_exam_scores($exam_id);
 

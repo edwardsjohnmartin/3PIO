@@ -72,23 +72,17 @@ class GradesController extends BaseController
 			return call('pages', 'error');
 		}
 
-		if(!isset($_GET['section_id']))
-		{
-			add_alert("No section was selected to get grades for.", Alert_Type::DANGER);
-			return call('pages', 'error');
-		}
-
-		$is_student = Section::is_student($_GET['section_id'], $_SESSION['user']->get_id());
-		if(!$is_student)
-		{
-			add_alert("You do not have access to this section.", Alert_Type::DANGER);
-			return call('pages', 'error');
-		}
-
 		$exam = Exam::get($_GET['exam_id']);
 		if(empty(Exam::get($_GET['exam_id'])))
 		{
 			add_alert("The exam you are trying to access doesn't exist.", Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
+
+		$is_student = Section::is_student($exam->get_section_id(), $_SESSION['user']->get_id());
+		if(!$is_student)
+		{
+			add_alert("You do not have access to this section.", Alert_Type::DANGER);
 			return call('pages', 'error');
 		}
 
