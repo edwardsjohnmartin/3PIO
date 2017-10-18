@@ -1,5 +1,4 @@
 <?php
-
 	class SandboxController
 	{
 		public function index()

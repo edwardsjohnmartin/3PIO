@@ -31,8 +31,7 @@
 			} 
 			$can_preview = concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id());
 			
-			if(!(lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id())
-			|| $can_preview))
+			if(!(lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id()) || $can_preview))
 			{
 				return call('pages', 'error');
 			}
@@ -87,7 +86,6 @@
 			unset($types['owner']);
 			require_once('views/shared/layout.php');
 		}
-
 
 		public function create_file()
 		{

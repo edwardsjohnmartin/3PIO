@@ -22,30 +22,35 @@ class Type extends Enum
 	const PROJECT =		14;
 	const SECTION =		15;
 	const CONCEPT =		16;
-	const FUNCTION =	17;
-	const COURSE =		18;
-	const PARTICIPATION_TYPE =	19;
-	const ROLE = 20;
-	const TAG = 21;
-	const PERMISSION = 22;
+	const EXAM =        17;
+	const QESTION =     18;
+	const STUDENTFUNCTION =	19;
+	const COURSE =		20;
+	const PARTICIPATION_TYPE =	21;
+	const ROLE = 22;
+	const TAG = 23;
+	const PERMISSION = 24;
 
-	const LIST_TAG = 23;
-	const LIST_EXERCISE = 24;
-	const LIST_LANGUAGE = 25;
-	const LIST_PROBLEM = 26;
-	const LIST_USER = 27;
-	const LIST_LESSON = 28;
-	const LIST_PROJECT = 29;
-	const LIST_SECTION = 30;
-	const LIST_CONCEPT = 31;
-	const LIST_FUNCTION = 32;
-	const LIST_COURSE =	33;
-	const LIST_PARTICIPATION_TYPE =	34;
-	const LIST_ROLE = 35;
-	const LIST_PERMISSION = 36;
-	
+	const LIST_TAG = 25;
+	const LIST_EXERCISE = 26;
+	const LIST_LANGUAGE = 27;
+	const LIST_PROBLEM = 28;
+	const LIST_USER = 29;
+	const LIST_LESSON = 30;
+	const LIST_PROJECT = 31;
+	const LIST_SECTION = 32;
+	const LIST_CONCEPT = 33;
+	const LIST_EXAM = 34;
+	const LIST_QUESTION = 35;
+	const LIST_STUDENTFUNCTION = 36;
+	const LIST_COURSE =	37;
+	const LIST_PARTICIPATION_TYPE =	38;
+	const LIST_ROLE = 39;
+	const LIST_PERMISSION = 40;
+
+
 	public static function is_model($type)
-	{ 
+	{
 		return ($type >= static::LANGUAGE && $type < static::LIST_TAG);
 	}
 

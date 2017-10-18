@@ -9,6 +9,9 @@
 	{
 		foreach($concepts as $concept)
 		{
+			//echo '<pre>';
+			//print_r($concept);
+			//echo '</pre>';
 			if($concept->get_properties()['project']->status == Completion_Status::COMPLETED) $completed_concept_count++;
 		}
 		$section_completion_percentage = $completed_concept_count/(float)$total_concept_count * 100;
@@ -86,7 +89,7 @@
 				$lesson_complete = false;
 				echo '<a class="list-group-item disabled">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
 			}
-			
+
 
 			if($lesson_complete && new Datetime($concept_props['project_open_date']) < new Datetime()) //check open date
 			{
@@ -98,7 +101,7 @@
 			{
 			echo '<a class="list-group-item disabled">Project<span class="pull-right">' . $concept_props['project_open_date'] . ' to ' . $concept_props['project_due_date'] . '</span></a>';
 			}
-			
+
 
 		echo '</ul>';
 	echo '</div>
@@ -107,6 +110,6 @@
 	$is_current = false;
 	}
 	echo '</div>';
-
+	require_once('views/exam/exam_table.php');
 ?>
 

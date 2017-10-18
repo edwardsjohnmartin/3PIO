@@ -32,7 +32,7 @@
 			$req = $db->prepare(static::build_query($function_name, array('id', 'concept_id', 'user_id')));
 			$req->execute(array('id' => $id, 'concept_id' => $concept_id, 'user_id' => $user_id));
 
-			$req->setFetchMode(PDO::FETCH_CLASS,  'Lesson');
+			$req->setFetchMode(PDO::FETCH_CLASS, Lesson);
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 

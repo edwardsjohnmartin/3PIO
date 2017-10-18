@@ -29,6 +29,5 @@
 			}
 			return $permissions; // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 		}
-
 	}
 ?>

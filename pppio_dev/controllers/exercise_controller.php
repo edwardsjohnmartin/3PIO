@@ -4,7 +4,6 @@
 	{
 		public function index()
 		{
-
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/shared/index.php';
 			require_once('views/shared/layout.php');
@@ -56,7 +55,6 @@
 					redirect('exercise', 'index');
 			}
 		}
-
 
 		public function update() { //only differences: validation + get lessons
 			require_once('models/lesson.php');
@@ -172,6 +170,5 @@
 			//echo $_SERVER['HTTP_REFERER'];
 			//it's still really easy to cheat, but it should help a little...
 		}
-
 	}
 ?>

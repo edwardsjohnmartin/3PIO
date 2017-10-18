@@ -144,6 +144,18 @@
 			case 'sandbox':
 				$controller = new SandboxController;
 				break;
+			case 'exam':
+				require_once('models/exam.php');
+				$controller = new ExamController;
+				break;
+			case 'question':
+				require_once('models/question.php');
+				$controller = new QuestionController;
+				break;
+			case 'grades':
+				require_once('models/grades.php');
+				$controller = new GradesController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -227,7 +239,24 @@
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::ROLE, Permission_Type::READ)])
 								],
 						'importer' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::LESSON, Permission_Type::CREATE)])],
-						'sandbox' => ['index' =>new Authorization_Requirements(null, [])]
+						'sandbox' => ['index' =>new Authorization_Requirements(null, [])],
+						'exam' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
+								   'read'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::LIST)]),
+								   'update'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'update_times'=>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::READ)]),
+								   'create' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)]),
+								   'create_file' =>new Authorization_Requirements(true, [new Permission(Securable::EXAM, Permission_Type::CREATE)])],
+						'question' => ['index' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
+								       'read'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::LIST)]),
+									   'update'=>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
+								       'create' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::CREATE)]),
+									   'read_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
+									   'create_occurrence' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
+									   'read_occurrences' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
+									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
+						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

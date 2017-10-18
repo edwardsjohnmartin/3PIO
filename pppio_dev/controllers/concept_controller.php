@@ -23,7 +23,6 @@
 					$postedToken = filter_input(INPUT_POST, 'token');
 					if(!empty($postedToken) && isTokenValid($postedToken))
 					{
-						//probably i should do that isset stuff
 						$model = new $this->model_name();
 						$model->set_properties($_POST);
 						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)) //must make sure the lesson selected belongs to this user.
@@ -50,17 +49,17 @@
 							}
 							else
 							{
-								add_alert('Please try again.', Alert_Type::DANGER);
+								add_alert('Please try again. 1', Alert_Type::DANGER);
 							}
 						}
 						else
 						{
-							add_alert('Please try again.', Alert_Type::DANGER);
+							add_alert('Please try again. 2', Alert_Type::DANGER);
 						}
 					}
 					else
 					{
-						add_alert('Please try again.', Alert_Type::DANGER);
+						add_alert('Please try again. 3', Alert_Type::DANGER);
 					}
 				}
 				//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
@@ -80,7 +79,6 @@
 					redirect('concept', 'index');
 			}
 		}
-
 
 		public function update() { //only differences: validation + get lessons
 			require_once('models/section.php');
@@ -150,7 +148,5 @@
 				require_once('views/shared/layout.php');
 			}
 		}
-
-
 	}
 ?>

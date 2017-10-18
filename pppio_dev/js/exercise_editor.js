@@ -58,6 +58,7 @@ function run() {
   var program = editor.getValue() + "\n" + getTestCode();
 	// console.log(program);
   var outputArea = document.getElementById("output")
+  
   outputArea.innerHTML = '';
   Sk.pre = "output";
   Sk.configure({output:outf, read:builtinRead,
@@ -98,11 +99,11 @@ function run() {
         function(err) {
           var line_num = Number(err.toString().split("on line", 2)[1]);
 		if (err.args != undefined) {
-			if (err.args.v[0].v === "EOF in multi-line string") {
-          		markError("ERROR: It looks like you have an open multi-line comment.");
+            if (err.args.v[0].v === "EOF in multi-line string") {
+                markError("ERROR: It looks like you have an open multi-line comment.");
 			}
 			else {
-          markError(err.toString());
+                markError(err.toString());
 			}
 		}
 		else {

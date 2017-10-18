@@ -13,7 +13,6 @@
 		protected $teaching_assistants;
 		protected $concepts;
 
-
 		public static function get_pairs_for_student($user_id) //expecting multiple
 		{
 			$db = Db::getReader();
@@ -40,9 +39,26 @@
 			return $req->fetchAll(PDO::FETCH_CLASS, 'key_value_pair');
 		}
 
+		public static function get_students($owner_id)
+		{
+			$db = Db::getReader();
+			$owner_id = intval($owner_id);
+
+			$function_name = 'sproc_read_section_get_students';
+			$req = $db->prepare(static::build_query($function_name, array('owner_id')));
+			$req->execute(array('owner_id' => $owner_id));
+			$ret = $req->fetchAll(PDO::FETCH_ASSOC);
+			foreach($ret as $key => $val)
+			{
+				$ret[$key]['students'] = json_decode($val['students']);
+
+			}
+			return $ret;
+		}
+
 		public static function get_pairs_for_owner($owner_id)
 		{
-			$db = Db::getReader(); 
+			$db = Db::getReader();
 			$owner_id = intval($owner_id);
 
 			$function_name = 'sproc_read_section_get_pairs_for_owner';

@@ -105,7 +105,6 @@
 			require_once('views/shared/layout.php');
 		}
 
-		//should be called show or view instead?
 		public function read()
 		{
 			if (!isset($_GET['id']))
@@ -114,18 +113,22 @@
 			}
 			else
 			{
-				//something like this
 				$model = ($this->model_name)::get($_GET['id']);
 				if($model == null)
 				{
+					add_alert('The item you are trying to access doesn\'t exist.', Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
 				else
 				{
-					//todo: should show error if there isn't one with that id!
-					//require_once('views/shared/read.php'); //just show all properties... do this one first as a test
-
-				//$view_to_show = 'views/shared/read.php';
+					if(strtolower($this->model_name) == "exercise")
+					{
+						if(!$this->model_name::is_owner($_GET['id'], $_SESSION['user']->get_id()))
+						{
+							add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+							return call('pages', 'error');
+						}
+					}
 					$view_to_show = 'views/' . strtolower($this->model_name) . '/read.php';
 					if(!file_exists($view_to_show))
 					{
@@ -175,7 +178,7 @@
 						add_alert('Successfully updated!', Alert_Type::SUCCESS);
 						//session_write_close();
 						return redirect($this->model_name, 'index');
-					
+
 						//http://getbootstrap.com/components/#alerts
 						//exit properly first!
 						//redirect header("Location: ...");
@@ -190,7 +193,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -215,14 +218,11 @@
 		//create and update are almost the same view... can i just put them into one? even if so, i need different controllers.
 
 		public function delete() {
-
 			if (!isset($_GET['id']))
 			{
 				return call('pages', 'error');
 			}
-			//something like this
 			$model = ($this->model_name)::get($_GET['id']);
-		} //delete is similar to read, but with yes/no delete this
-
+		}
 	}
 ?>
