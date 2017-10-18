@@ -19,9 +19,10 @@ if(count($exams) > 0)
 	echo '</thead>';
 	echo '<tbody>';
 	$now = intval(date_format(new DateTime(), 'U'));
+
 	foreach($exams as $key => $value)
 	{
-		$exam = exam::get_for_student($value[id]);
+		$exam = exam::get_for_student($value['id']);
 		if(!empty($exam))
 		{
 			$exam_props = $exam->get_properties();

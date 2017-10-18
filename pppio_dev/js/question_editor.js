@@ -69,6 +69,7 @@ function run() {
             //print errors
             for (var i = 0, l = ret.v.length; i < l; i++) {
                 markError(ret.v[i].v); 
+                break;
             }
         }
         //console.log("complete status is " + completion_status_id);
@@ -143,13 +144,15 @@ function updateTiles(completion_status_id) {
     if (completion_status_id == 1) {
         current_tile.classList.remove('btn-default');
         current_tile.classList.remove('btn-primary');
+        current_tile.classList.remove('btn-started');
         current_tile.classList.add('btn-success');
     }
     else if (completion_status_id == 2)
     {
         current_tile.classList.remove('btn-default');
         current_tile.classList.remove('btn-success');
-        current_tile.classList.add('btn-primary');
+        current_tile.classList.remove('btn-primary');
+        current_tile.classList.add('btn-started');
     }
 }
 

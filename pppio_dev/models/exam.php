@@ -63,7 +63,7 @@ class Exam extends Model
 		$req = $db->prepare(static::build_query($function_name, array('exam_id', 'user_id')));
 		$req->execute(array('exam_id' => $exam_id, 'user_id' => $user_id));
 
-		$req->setFetchMode(PDO::FETCH_CLASS, Exam);
+		$req->setFetchMode(PDO::FETCH_CLASS, 'exam');
 		return $req->fetch(PDO::FETCH_CLASS);
 	}
 
