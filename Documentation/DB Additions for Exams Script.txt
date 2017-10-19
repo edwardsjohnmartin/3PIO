@@ -602,7 +602,7 @@ VALUES
     CASE 
     	WHEN sproc_write_question_update_student_answer.completion_status_id = 1 
     		THEN 1
-    		ELSE .5
+    		ELSE 0
     END
 )
 ON CONFLICT ON CONSTRAINT user_to_question_to_exam_uq
