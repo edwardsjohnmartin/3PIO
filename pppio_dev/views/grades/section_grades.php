@@ -1,101 +1,88 @@
 <?php
-echo '<h1>Section Grades</h1>';
+$exams = Exam::get_all_for_section($section_id);
 
-$exams = Exam::get_all_for_section($_GET['id']);
+$html_string = '<h1>' . $section_props['name'] . 'Grades</h1>';
+
+$section_props = $section->get_properties();
+$students = $section_props['students'];
 
 if(count($exams) > 0)
 {
-	$section_props = $section->get_properties();
-	$students = $section_props['students'];
-
 	foreach($exams as $exam_key => $exam_value)
 	{
-		//get an array of students and their scores
-		$exam_scores = Grades::get_exam_scores($exam_value['id']);
+		$total_weight = 0;
 
-		if(!empty($exam_scores))
-		{
-			foreach($exam_scores as $key => $value)
-			{
-				$exam_scores[$value['student']] = $value;
-				unset($exam_scores[$key]);
-				unset($exam_scores[$value['student']]['student']);
-				$var = $value['student'];
-				foreach($exam_scores[$var]['scores'] as $key1 => $value1)
-				{
-					$exam_scores[$var]['scores'][$value1->question_id] = $value1->score;
-					unset($exam_scores[$var]['scores'][$key1]);
-				}
-			}
-		}
-
-		echo '<table class="table table-striped table-bordered">';
-		echo '<thead>';
-		echo '<tr>';
-		echo '<th>' . $exam_value['name'] . '</th>';
-		$question_array = array();
-		$weights_array = array();
+		$questions = $exam_value['questions'];
+		$exam_scores = Grades::get_exam_grades($exam_value['id']);
 		$q_index = 1;
-		foreach($exam_value['questions'] as $question_key => $question_value)
-		{
-			//iterate through all the questions putting their
-			//id's and weights into seperate parallel arrays
-			array_push($question_array, $question_value->id);
-			array_push($weights_array, $question_value->weight);
+		$header_filled = false;
 
-			//create a header in the table for each question
-			if($question_value->name !== '')
-			{
-				echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
-			}
-			else
-			{
-				echo '<th>Q' . $q_index . ' (' . $question_value->weight . ')</th>';
-			}
-			$q_index++;
-		}
-		echo '<th>Total Weight (' . array_sum($weights_array) . ')</th>';
-		echo '<th>Grade</th>';
-		echo '</tr>';
-		echo '</thead>';
-		echo '<tbody>';
-		foreach($students as $student_key => $student_value)
-		{
-			$current_student = $student_value->key;
-			echo '<tr>';
-			echo '<td class="warning">' . $student_value->value . '</td>';
+		$html_string .= '<table class="table table-striped table-bordered">';
+		$head_string = '<thead><tr><th>' . $exam_value['name'] . '</th>';
+		$body_string = '<tbody>';
 
-			$score_array = array();
-			foreach($question_array as $q_key => $q_value)
+		foreach($students as $s_key => $s_value)
+		{
+			$total_score = 0;
+
+			$body_string .= '<tr><td>' . $s_value->value . '</td>';
+
+			foreach($questions as $q_key => $q_value)
 			{
-				if(array_key_exists($current_student, $exam_scores))
+				if(!$header_filled)
 				{
-					if(array_key_exists($q_value, $exam_scores[$current_student]['scores']))
+					$total_weight += $q_value->weight;
+
+					if($q_value->name !== '')
 					{
-						$score_var = $exam_scores[$current_student]['scores'][$q_value] * $weights_array[$q_key];
+						$head_string .= '<th>' . $q_value->name . ' (' . $q_value->weight . ')</th>';
 					}
 					else
 					{
-						$score_var = 0;
+						$head_string .= '<th>Q' . $q_index . ' (' . $q_value->weight . ')</th>';
+					}
+				}
+
+				if(array_key_exists($s_key, $exam_scores))
+				{
+					if(array_key_exists($q_value->id, $exam_scores[$s_key]))
+					{
+						$cell_val = intval($exam_scores[$s_key][$q_value->id]);
+					}
+					else
+					{
+						$cell_val = 0;
 					}
 				}
 				else
 				{
-					$score_var = 0;
+					$cell_val = 0;
 				}
-				array_push($score_array, $score_var);
-				echo '<td class="warning">' . $score_var . '</td>';
+
+				$total_score += $cell_val * $q_value->weight;
+				$body_string .= '<td>' . $cell_val * $q_value->weight . '</td>';
+				$q_index++;
+
 			}
-			echo '<td class="warning">' . array_sum($score_array) . '</td>';
-			echo '<td class="warning">' . number_format(array_sum($score_array)/array_sum($weights_array)*100, 2) . '%</td>';
-			echo '</tr>';
+			if(!$header_filled)
+			{
+				$head_string .= '<th>Total Weight (' . $total_weight . ')</th>';
+				$head_string .= '<th>Grade</th></tr></thead>';
+				$html_string .= $head_string;
+			}
+			$header_filled = true;
+
+			$body_string .= '<td>' . $total_score . '</td>';
+			$body_string .= '<td>' . round($total_score / $total_weight * 100) . '</td></tr>';
 		}
-		echo '</tbody>';
-		echo '</table>';
+		$body_string .= '</tbody></table>';
+		$html_string .= $body_string;
 	}
+	echo $html_string;
 }
 else
 {
-	echo '<h3>No Exams To Show</h3>';
+	$html_string .= '<h3>No Exams To Show</h3>';
+	echo $html_string;
 }
 ?>

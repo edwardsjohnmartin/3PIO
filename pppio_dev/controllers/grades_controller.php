@@ -51,6 +51,10 @@ class GradesController extends BaseController
 
 		if($is_ta or $is_owner)
 		{
+			unset($user_id);
+			unset($is_ta);
+			unset($is_owner);
+
 			$view_to_show = 'views/grades/section_grades.php';
 			require_once('views/shared/layout.php');
 		}
