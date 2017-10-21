@@ -213,9 +213,12 @@
 		unset($can_list_section);
 		unset($can_list_user);
 		//unset($is_ta);     //leave this for now, it is being used in controller=grades&action=index while logged in as a ta. Possible other places as well.
-		require_once($view_to_show);
+		if($view_to_show != "")
+		{
+			require_once($view_to_show);
+			echo '</div>';
+		}
 		?>
-	</div>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>

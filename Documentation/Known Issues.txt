@@ -1,5 +1,95 @@
 -------------------------------------------------------------------------------
 
+(MED)
+    (BUG)
+        make the review_exam link active only when a student has at least 1 answer on the exam
+        
+(MED)
+    (FEATURE)
+         On section grades view per exam, include average, high, low
+         Be able to sort columns
+        
+         In the future include avg time on each question, most missed question, etc...
+         
+(LOW)
+    (FEATURE)
+         (DATABASE) On exam review page per student, include % of time on each question
+         (DATABASE) time_taken starts at 0, timer starts when they to get to question, when they leave the difference is added to time_taken 
+         (VIEW) How long did the student take on the exam (latest date_updated - earliest date_updated)  
+	 Save a time when they first opened the exam
+
+(MED)
+    (FEATURE/BUG)
+        Add a close option that allows you to close the students who get done with the test early
+        Currently, if a student leaves the exam early, if the close_time isnt updated for that student they would still be able to access it and could look up answers
+
+(LOW)
+    (BUG)
+        dont run logout script in sandbox, only exercise, project, and question
+
+(HIGH)
+    if a student hasnt done a set of exercises
+    the button to get to the project of any concept that comes after will be disabled
+    this makes it SEEM like the student cannot access the project and will need to do the previous exercises
+
+    the route to project will still be open to the student thought and if they enter the correct concept_id into the address bar
+    they will be able to access the project with no issue
+    it will still allow them to save the project
+
+    there is also a bug with partners where if there are 2 students
+    student A has completed all the exercises and has access to the current project
+    student B has not completed all the exercises and does not have access to the current project
+    if stud A logs in and adds stud B as a partner
+    the code will still be saved for stud B with no issue
+
+    (FIX)
+        (FUNCTION)make a project/exercise/concept/lesson controller function that checks for unfinished exercises
+            make sure to check if exercises/lessons exist in that concept and account for it
+            should only be based on exercise completion, not project completion 
+        when there is 1 person logged in
+            put a check on the project controller that finds out if they have access to that project
+                if they havent completed the exercises
+            display message ('you need to complete exercises from [earliest unfinished concept name] in order to access this project')
+        when there is more than 1 person logged in
+            put a check on the project controller that finds out if all logged in users have access to the project
+            if any user hasnt completed the exercises
+                display message ('[user name] needs to complete more exercises for this group to access the project')
+
+(HIGH)
+    (BUG)
+        as a ta
+        when there are no lessons with no exercises in a concept, but that concept still
+        has a project, there is no way to access the view code for the project
+        this means a ta will have no way of grading the project 
+    (FIX)
+        create a table header row
+            student column exists when there are students in the section the concept belongs to
+            a column exists for each lesson in the concept as long as there are exercises in the lesson
+            project column exists as long as a project exists for that concept
+
+(LOW)
+    (BUG)
+        a ta/teacher can access the check project view for a student even if they havent 
+        submitted any code for that project by changing the id value in the address bar
+
+	when they access it, the start code for the project isnt displayed although with the 
+        proposed fix, this will be a non-issue
+        
+        this is inconsistent because the 'view code' link will not be available to the ta/teacher
+        on the controller=concept&action=read view
+
+    (FIX)
+        if a ta/teacher tries to access the project for a student with no progress on that project
+        display message('[student name] has not started this project')
+
+(HIGH)
+    (VIEW)on pages with left navbar for tiles, code area, output area   (exercise editor for sure)
+    (VIEW)making the <div class="textOutput"> height to 100% and <pre id="output"> height to 100% makes it scroll
+
+(HIGH)figure out how an exam knows what section to be created for when doing regulare create
+   (CHECK)figure out how an exam knows what section to be created for with the importer
+   (FIX)make sure you can set the exam section through the importer
+
 [which solution to implement?]
 (LOW)questions heading shown but doesn't display questions
    (SOLUTION)make questions not visible on either
@@ -59,7 +149,17 @@
 
 (LOW)add a button to view/question/editor that replaces the current code with the start code
                
+(MED)test section_grades view as ta/teacher
+   (TEST)no exams in section
+   (TEST)no questions in exam
+   (TEST)no students in section
+
 -------------------------------------------------------------------------------
+
+(DONE)
+    (BUG/JS)when a student is doing a project, when they hit the run button, the code
+        code window scrolls to the top
+    (BUG)the issue is the line editor.setValue(editor.getValue().replace(/\t/g, '    '));
 
 (DONE)ALWAYS POPULATE ERROR MESSAGE
 

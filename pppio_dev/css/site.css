@@ -90,3 +90,143 @@ span.code {
     text-decoration:underline;
     color: #2b5bf6;
 }
+
+/* Style the tab buttons */
+.tablink {
+    background-color: #555;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 25%;
+}
+
+.centered-content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+}
+
+/* Change background color of buttons on hover */
+.tablink:hover {
+    background-color: #777;
+}
+
+/* Set default styles for tab content */
+.tabcontent {
+    color: black;
+    display: none;
+    text-align: center;
+}
+
+.right-pad-7 {
+    padding-right:7px;
+}
+
+.right-pad-15 {
+    padding-right: 15px;
+}
+
+.right-pad-30 {
+    padding-right: 30px;
+}
+
+.left-pad-0 {
+    padding-left: 0px;
+}
+
+.left-pad-7 {
+    padding-left: 7px;
+}
+
+.left-pad-30 {
+    padding-left: 30px;
+}
+
+.alert-pad-7 {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.right-float {
+    float: right;
+}
+
+.run-btn {
+    height: 100%;
+    width: 45%;
+}
+
+.width-90 {
+    width: 90%;
+}
+
+.width-10 {
+    width: 10%;
+}
+
+.height-15 {
+    height: 15%;
+}
+
+.bot-mar-7{
+    margin-bottom: 7px;
+}
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5%;
+}
+
+.dropdown {
+    position: relative;
+    display: block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    z-index: 999;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #c0cec0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+.fa {
+    content: "\f0d7";
+}
+
+.top-bot-mar-7 {
+    margin-bottom: 7px;
+    margin-top: 7px;
+}
+
+.dd-text-output {
+    overflow:auto;
+}

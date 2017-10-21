@@ -76,7 +76,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -112,6 +112,8 @@
 					return call('pages', 'error');
 				}
 			}
+
+			$test_func = Concept::get_progress($_GET['concept_id']);
 
 			require_once('models/concept.php');
 			$concept = concept::get($_GET['concept_id']); //what if it's null? don't want that.. need to be careful of that in base, too
@@ -155,7 +157,7 @@
 
 						add_alert($warning_text, Alert_Type::WARNING);
 					}
-				
+
 					$partners_who_can_access = array_keys($partners_can_access, true);
 					if (count($partners_who_can_access) > 0)
 					{
@@ -231,7 +233,7 @@
 			//return success true/false
 			//user ids come from the session
 			if (isset($_POST['concept_id']) && isset($_POST['contents']))
-			{			
+			{
 				require_once('models/concept.php');
 				$concept = concept::get($_POST['concept_id']);
 				if($concept != null && new Datetime() < new Datetime($concept->get_properties()['project_due_date']) && project::can_access($_POST['concept_id'], $_SESSION['user']->get_id())) //should i check if all of the partners can access?
@@ -246,7 +248,7 @@
 					$success = true;
 				}
 			}
-			
+
 			$json_data = array('success' => $success); //todo: it may be nice to send back who it was saved for
 			require_once('views/shared/json_wrapper.php');
 
