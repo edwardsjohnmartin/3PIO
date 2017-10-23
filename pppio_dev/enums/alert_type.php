@@ -9,6 +9,5 @@ class Alert_Type extends Enum //where should i include this?
 	const INFO = 		2;
     const WARNING =		3;
     const DANGER =		4;
-
 }
 ?>

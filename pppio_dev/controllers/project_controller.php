@@ -113,8 +113,6 @@
 				}
 			}
 
-			$test_func = Concept::get_progress($_GET['concept_id']);
-
 			require_once('models/concept.php');
 			$concept = concept::get($_GET['concept_id']); //what if it's null? don't want that.. need to be careful of that in base, too
 			if($concept == null)
@@ -123,6 +121,7 @@
 				return call('pages', 'error');
 			}
 			$concept_props = $concept->get_properties();
+
 			$project = project::get($concept_props['project']->key);
 			if($project == null)
 			{

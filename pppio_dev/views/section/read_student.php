@@ -87,7 +87,10 @@
 			else
 			{
 				$lesson_complete = false;
-				echo '<a class="list-group-item disabled">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
+				if(count($concept_props['lessons']) > 0)
+				{
+					echo '<a class="list-group-item disabled">Exercises<span class="pull-right">' . $concept_props['open_date'] . '</span></a>';
+				}
 			}
 
 

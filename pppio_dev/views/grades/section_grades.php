@@ -25,7 +25,7 @@ if(count($exams) > 0)
 		{
 			$total_score = 0;
 
-			$body_string .= '<tr><td><a href="?controller=exam&action=review_exam&stud_id=' . $s_key . '&exam_id=' . $exam_value['id'] . '">' . $s_value->value . '</a></td>';
+			$body_string .= '<tr><td><a href="?controller=exam&action=review_exam&stud_id=' . $s_key . '&exam_id=' . $exam_value['id'] . '&question_id=' . $exam_value['questions'][0]->id . '">' . $s_value->value . '</a></td>';
 
 			foreach($questions as $q_key => $q_value)
 			{

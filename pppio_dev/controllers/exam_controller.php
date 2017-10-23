@@ -211,5 +211,113 @@
 		{
 			return date($format, strtotime($date)) == $date;
 		}
+
+		public function review_exam()
+		{
+		    //must pass in user_id through get  //must pass in exam_id through get
+			if (!isset($_GET['stud_id']) or !isset($_GET['exam_id']) or !isset($_GET['question_id']))
+			{
+				return call('pages', 'error');
+			}
+
+			require_once('models/section.php');
+			require_once('models/exam.php');
+
+			$stud_id = $_GET['stud_id'];
+			$student = User::get($stud_id);
+			$stud_props = $student->get_properties();
+
+			$exam_id = $_GET['exam_id'];
+			$exam = exam::get_for_student($exam_id);
+			$exam_props = $exam->get_properties();
+
+			$current_question_id = $_GET['question_id'];
+			$section_id = $exam->get_section_id();
+
+			$user_id = $_SESSION['user']->get_id();
+			$is_owner = Section::is_owner($section_id, $user_id);
+			$is_ta = Section::is_teaching_assistant($section_id, $user_id);
+
+		    //must be teacher or ta for section exam belongs to
+			if($is_ta or $is_owner)
+			{
+				unset($user_id);
+				unset($is_ta);
+				unset($is_owner);
+
+				$exam_results = Exam::get_exam_review_for_student($exam_id, $stud_id);
+				$exam_props = $exam->get_properties();
+
+				foreach($exam_results as $e_key => $e_value)
+				{
+					if($e_value['id'] == $current_question_id)
+					{
+						$current_question_results = $e_value;
+					}
+					//$exam_results[$e_value['id']] = $e_value;
+					//unset($exam_results[$e_key]);
+					//unset($exam_results[$e_value['id']]['id']);
+				}
+
+				include('views/shared/site_functions.php');
+				include('models/html_objects/button.php');
+				include('models/html_objects/dropdown_item.php');
+
+				$title = $exam_props['name'] . ' Review for ' . $stud_props['name'];
+				$left_title =  $current_question_results['name'];
+				$left_subtitle = 'Date Updated: ' . $current_question_results['date_update'];
+
+				$index = 1;
+				$buttons = array();
+				foreach($exam_props['questions'] as $q_key => $q_value)
+				{
+					array_push($buttons, new button('btn_' . $q_key, $index, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"'));
+					$index++;
+				}
+
+				//$find = '"';
+				//$replace = '&quot';
+
+				$new_contents = str_replace('"', '&quot', $current_question_results['contents']);
+				$new_contents = str_replace("\r", '', $new_contents);
+				$new_contents = str_replace("\n", '\n', $new_contents);
+
+				$new_start_code = str_replace('"', '&quot', $current_question_results['start_code']);
+				$new_start_code = str_replace("\r", '', $new_start_code);
+				$new_start_code = str_replace("\n", '\n', $new_start_code);
+
+				$new_test_code = str_replace('"', '&quot', $current_question_results['test_code']);
+				$new_test_code = str_replace("\r", '', $new_test_code);
+				$new_test_code = str_replace("\n", '\n', $new_test_code);
+
+				$dropdown_items = array(
+					new dropdown_item('drp_instructions', 'Instructions', $current_question_results['instructions']),
+					new dropdown_item('drp_contents', 'Student Answer',$new_contents),
+					new dropdown_item('drp_start_code', 'Start Code', $new_start_code),
+					new dropdown_item('drp_test_code', 'Test Code', $new_test_code)
+				);
+				if($current_question_results['start_code'] != "")
+				{
+					//$default_code = str_replace(array("\r", "\""), "&quot", $current_question_results['start_code']);
+				}
+
+				$params = array(
+					'title' => $title,
+					'left_title' => $left_title,
+					'left_subtitle' => $left_subtitle,
+					'buttons' => $buttons,
+					'dropdown_items' => $dropdown_items
+					//'default_code' => $default_code
+				);
+				$view_to_show = "";
+				require_once('views/shared/layout.php');
+				create_code_editor_view($params);
+			}
+			else
+			{
+				add_alert("You do not have access to this section.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+		}
 	}
 ?>

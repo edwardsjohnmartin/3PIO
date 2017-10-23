@@ -11,11 +11,15 @@ function create_code_editor_view($params = array())
 		$has_left_navbar = false;
 		unset($params['left_title']);
 	}
+	if($params['default_code'] == null)
+	{
+		unset($params['default_code']);
+	}
 
 	// Default values
 	$defaults = array(
 		'title' => 'Default Title',
-		'default_code' => '',
+		'default_code' => 'print(\"Default Code\")',
 		'text_output_height_percent' => 50,
 		'graphic_output_height_percent' => 50,
 		'buttons' => null,
@@ -44,9 +48,9 @@ function create_code_editor_view($params = array())
 				foreach($properties['buttons'] as $b)
 				{
 					echo '<div class="col-xs-4 text-center left-pad-7 right-pad-7">';
-						echo '<button type="button" id="' . $b->get_id() . '" class="tile btn btn-primary" onclick=" ' . $b->get_link() . ' ">';
+						echo '<a href=' . $b->get_link() . '><button type="button" id="' . $b->get_id() . '" class="tile btn btn-primary">';
 							echo '<span class="tile-number">' . $b->get_text() . '</span>';
-						echo '</button>';
+						echo '</button></a>';
 					echo '</div>';
 				}
 				?>

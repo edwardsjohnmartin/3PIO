@@ -1,0 +1,65 @@
+-----------------------Rewrite read_student View-----------------------
+
+concept_complete_count = 0
+
+active_concept = 0
+
+foreach concept
+
+	if concept_open_time > current_time
+
+		can_access_concept = false
+
+	concept_complete = false
+
+	enable_exercises_option = false
+	
+	if lessons_in_concept == 0
+
+		concept_complete = true
+
+		concept_complete_count++
+	
+	else
+
+		lesson_complete_count = 0
+
+		foreach lesson
+
+			if exercises_in_lesson == 0
+
+				lesson_complete_count++
+
+			else
+
+				enable_exercises_option = true		
+
+				if active_concept == 0
+
+					active_concept = this_concept_id		
+
+				if all exercises in lesson are done
+
+					lesson_complete_count++
+
+		end foreach
+
+		if lesson_count == lesson_complete_count
+
+			concept_complete++
+
+	end if
+
+	if enable_exercises_option == true
+
+		show exercises option
+
+	if concept_complete == true
+
+		show project option
+
+	this_concept_percent_complete = (lesson_complete_count / total_lessons_in_concept)
+
+end foreach
+
+this_section_percent_complete = (concept_complete_count / total_concepts_lesson)
