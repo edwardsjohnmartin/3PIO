@@ -90,6 +90,12 @@ class GradesController extends BaseController
 			return call('pages', 'error');
 		}
 
+		$exam_id = $_GET['exam_id'];
+		$exams = Exam::get_all_for_section($exam->get_section_id());
+		$exam_props = $exam->get_properties();
+		$exam_scores = Grades::get_exam_scores($exam_id);
+		$exam_weight = $exam->get_total_weight($exam_id);
+
 		$view_to_show = 'views/grades/exam_grade_for_student.php';
 		require_once('views/shared/layout.php');
 	}

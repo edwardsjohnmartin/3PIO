@@ -180,11 +180,14 @@ span.code {
     background-color: #4CAF50;
     color: white;
     padding: 16px;
-    font-size: 16px;
+    font-size: 12px;
     border: none;
     cursor: pointer;
     width: 100%;
     border-radius: 5%;
+    height: 75px;
+    min-height: 75px;
+    max-height: 75px;
 }
 
 .dropdown {
@@ -194,7 +197,7 @@ span.code {
 
 .dropdown-content {
     display: none;
-    position: absolute;
+    position: relative;
     background-color: #f9f9f9;
     z-index: 999;
 }

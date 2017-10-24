@@ -1,5 +1,10 @@
 -------------------------------------------------------------------------------
 
+(LOW)Have a button to save the code in the editor in sandbox mode
+	Save one set of code per user to the database
+	Be able to retrieve the code as well from a button or option in the dropdown
+	possibly save the code when the run button is pressed
+
 (MED)
     (BUG)
         make the review_exam link active only when a student has at least 1 answer on the exam
@@ -86,7 +91,7 @@
     (VIEW)on pages with left navbar for tiles, code area, output area   (exercise editor for sure)
     (VIEW)making the <div class="textOutput"> height to 100% and <pre id="output"> height to 100% makes it scroll
 
-(HIGH)figure out how an exam knows what section to be created for when doing regulare create
+(HIGH)figure out how an exam knows what section to be created for when doing regular create
    (CHECK)figure out how an exam knows what section to be created for with the importer
    (FIX)make sure you can set the exam section through the importer
 
@@ -97,19 +102,16 @@
    (VIEW)happens in /exam/update_times.php and /shared/read.php
 
 (MED)exam instructions aren't being filled when created through importer
-   (REGEX)fix get_exams function in /importer.php 
+   (REGEX)fix get_exams function in /importer.php
 
 (MED)need to show exam instructions to the students in some way
    (VIEW)can only see instructions in /exam/update_times.php and /shared/read.php
+   (NEW PAGE)Adding a landing page to the exam could solve this
 
 [we want to make both grade views the same as it is on the exam]
 (MED)check to see how we want to show weights in grade views
    (VIEW)/grades/section_grades.php
    (VIEW)/grades/exam_grades_for_student.php)
-
-(HIGH)need to make sure a student can't access controller functions they shouldnt
-   (CONTROLLER)(ROUTES)need to make sure ta's can access what they should
-   (CONTROLLER)(ROUTES)need to make sure ta's can't access what they shouldn't
 
 (VERY LOW)sproc_read_section_get(id integer) can return concepts that are deleted
     (CONTROLLER)as a ta, on controller=section action=read id=[section_id] 
@@ -124,9 +126,6 @@
 
 (LOW)annotate point value on left navbar squares
    (VIEW)(MODEL)
-
-(LOW)should we block entry to controller=question action=read_for_student if a partner is logged in? NOT YET
-   (CHECK)scenario: student1 logged in, student2 logged in as partner, student2 logs in on another computer, student1 removes student2 from partners. ?does this log out student2 from other computer?
 
 [which solution to implement?]
 (MED)add a way to track when the window regained focus while a student is taking an exam
@@ -144,9 +143,6 @@
    (VIEW)move /questions/read_occurrences.php to occurrences/ folder and rename to read
    (CONTROLLER)move read_occurrences function in /question_controller.php to /exam_controller.php
 
-(HIGH)need a way to review exams
-   (VIEW)need to also show the timestamp of completion
-
 (LOW)add a button to view/question/editor that replaces the current code with the start code
                
 (MED)test section_grades view as ta/teacher
@@ -155,6 +151,11 @@
    (TEST)no students in section
 
 -------------------------------------------------------------------------------
+
+(DONE)should we block entry to controller=question action=read_for_student if a partner is logged in?
+   Having a partner logged in doesn't change anything becuase it doesn't save anything for then
+
+(DONE)need a way to review exams
 
 (DONE)
     (BUG/JS)when a student is doing a project, when they hit the run button, the code

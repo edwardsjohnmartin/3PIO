@@ -15,10 +15,23 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
+
+    //Save where the cursor is and where the code editor is scrolled to
     var curPos = editor.getDoc().getCursor();
+    var scrollPos = editor.getScrollInfo();
+
+    //Clear whatever is currently drawn
+    if (Sk.TurtleGraphics !== undefined && Sk.TurtleGraphics.reset !== undefined)
+    {
+        Sk.TurtleGraphics.reset();
+    }
+
+    //Replace tabs with 4 spaces 
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
-    editor.focus();
+
+    //Set the cursor and scrollbar position to where they were before the run button was pressed
     editor.getDoc().setCursor(curPos);
+    editor.scrollTo(0, scrollPos.top);
     run();
 };
 
@@ -104,15 +117,19 @@ function setInformationTextbox(dd_text, dd_item_id) {
     document.getElementById('btn_drop').innerHTML = document.getElementById(dd_item_id).text + '<div><span class="glyphicon glyphicon-chevron-down left-pad-7" aria-hidden="true"></span></div>';
 }
 
+function setInformationTextbox(dd_text) {
+    document.getElementById('txtInfo').innerHTML = dd_text;
+}
+
 // Moves the code from txtInfo into the editor.
 function moveCode() {
     editor.setValue(txtInfo.innerHTML);
 }
 
 // Called as the page loads. Sets the editor to the default code. If none was given, will be blank.
-function setDefaultCode()
+function setDefaultCode(def_code)
 {
-    editor.setValue(default_code);
+    editor.setValue(def_code);
 }
 
 // Called in the slider.onchange event. Changes the sizes of where text is printed out and where turtle graphics are drawn. 
@@ -121,4 +138,9 @@ function resizeOutputAreas(graphicSize)
     textOutputSize = 99 - graphicSize;
     document.getElementById('mycanvas').style.height = graphicSize + "%";
     document.getElementById('output').style.height = textOutputSize + "%";
+
+    //Clear whatever is currently drawn
+    if (Sk.TurtleGraphics !== undefined && Sk.TurtleGraphics.reset !== undefined) {
+        Sk.TurtleGraphics.reset();
+    }
 }

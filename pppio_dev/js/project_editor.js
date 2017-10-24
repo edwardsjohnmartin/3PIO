@@ -24,9 +24,12 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
     var curPos = editor.getDoc().getCursor();
+    var scrollPos = editor.getScrollInfo();
+
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
-    editor.focus();
     editor.getDoc().setCursor(curPos);
+    editor.scrollTo(0, scrollPos.top);
+
     if (!readonly) {
         save(concept_id, editor.getValue());
     } 

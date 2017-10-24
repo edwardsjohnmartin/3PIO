@@ -1,5 +1,4 @@
 <?php
-
 // This will create a view with a code editor based around the parameters passed in. Any parameter not passed in will be set to a default.
 function create_code_editor_view($params = array())
 {
@@ -24,7 +23,9 @@ function create_code_editor_view($params = array())
 		'graphic_output_height_percent' => 50,
 		'buttons' => null,
 		'left_title' => '',
+		'left_subtitle' => '',
 		'has_left_navbar' => $has_left_navbar,
+		'show_dropdown_index' => null,
 		'dropdown_items' => null
 	);
 	$properties = array_merge($defaults, $params);
@@ -33,14 +34,22 @@ function create_code_editor_view($params = array())
 	require_once('views/shared/CodeMirror.php');
 	require_once('views/shared/Skulpt.php');
 ?>
+<!--HTML Elements-->
 <div class="row height-100 overflow-hidden">
+
 	<!--Left Nav Column (Only Shown When Buttons Are Passed In)-->
 	<div class="col-xs-2 height-100 overflow-auto right-pad-7" style="display:<?php if($properties['has_left_navbar']){ echo 'block';}else{echo 'none';}?>">
 		<div class="container-fluid right-pad-0">
+
 			<!--Left Title Display-->
 			<h1 class="text-center">
 				<?php echo $properties['left_title'];?>
 			</h1>
+
+            <!--Left Subtitle Display-->
+            <p class="text-left">
+				<?php echo $properties['left_subtitle'];?>
+            </p>
 
 			<!--Buttons-->
 			<div class="row">
@@ -60,6 +69,7 @@ function create_code_editor_view($params = array())
 
 	<!--Right Column, Contains All Base Elements-->
 	<div class="<?php if($properties['has_left_navbar']){ echo 'col-xs-10';}else{echo 'col-xs-12 left-pad-30';}?> height-100 flex-columns">
+
 		<!--Title Row-->
 		<div class="row no-shrink">
 			<h1 class="text-center">
@@ -69,8 +79,15 @@ function create_code_editor_view($params = array())
 
 		<!--Dropdown Menu, Information Textbox, Text Output/Graphics Output Slider-->
 		<div class="row no-shrink height-15 right-pad-15" style="display:<?php if(count($properties['dropdown_items'])){ echo 'block';}else{echo 'none';}?>">
+
 			<!--Dropdown and Slider-->
 			<div class="col-xs-2 right-pad-0 width-10 height-100">
+
+				<!--Slider-->
+				<div class="row centered-content top-bot-mar-7">
+					<input type="range" min="1" max="98" onchange="resizeOutputAreas(this.value)" />
+				</div>
+
 				<!--Dropdown-->
 				<div class="row dropdown centered-content top-bot-mar-7">
 					<button id="btn_drop" class="dropbtn">
@@ -89,12 +106,7 @@ function create_code_editor_view($params = array())
 						}
 						?>
 					</div>
-				</div>
-
-				<!--Slider-->
-				<div class="row centered-content top-bot-mar-7">
-					<input type="range" min="0" max="98" onchange="resizeOutputAreas(this.value)"/>
-				</div>				
+				</div>			
 			</div>
 
 			<!--Information Textbox-->
@@ -105,8 +117,10 @@ function create_code_editor_view($params = array())
 
 		<!--Action Buttons, Alert Bar-->
         <div class="row no-shrink top-bot-mar-7 ">
+
 			<!--Action Buttons-->
             <div class="col-xs-2 right-pad-0">
+
 				<!--Run Button-->
                 <button type="button" class="btn btn-default run-btn" id="runButton">
                     <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
@@ -126,11 +140,19 @@ function create_code_editor_view($params = array())
 
 		<!--Editor Code Area, Text/Graphics Output Area-->
 		<div class="row overflow-hidden height-100">
+
+			<!--Editor Area-->
 			<div class="col-xs-6 height-100 overflow-hidden right-pad-7">
 				<textarea id="code" name="code"></textarea>
 			</div>
+
+			<!--Output Area-->
 			<div class="col-xs-6 height-100 left-pad-7 right-pad-30">
+
+				<!--Graphics Output-->
 				<div id="mycanvas" class="graphicalOutput height-50"></div>
+
+				<!--Text Output-->
 				<div class="textOutput height-100">
 					<pre id="output" class="height-50"></pre>
 				</div>
@@ -140,12 +162,15 @@ function create_code_editor_view($params = array())
 </div>
 
 <?php
-    echo '<script>var default_code = "' . $properties['default_code'] . '";</script>';
 	echo '<script type="text/x-python" id="test_code_to_run">';
 		require('py_test/METHODS.py');
 	echo '</script>';
 	echo '<script src="js/code_editor_view.js"></script>';
-	echo '<script>setDefaultCode();</script>';
+	if($properties['show_dropdown_index'] !== null)
+	{
+		echo '<script>setInformationTextbox("' . $properties["dropdown_items"][$properties["show_dropdown_index"]]->get_text() . '");</script>';
+	}
+	echo '<script>setDefaultCode("' . $properties['default_code'] . '");</script>';
 	echo '</div>';
 }
 ?>

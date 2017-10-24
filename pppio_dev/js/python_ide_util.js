@@ -17,7 +17,7 @@ var hadActivity = false;
 $(document).ready(function () {
 	//Increment the idle time counter every minute.
 	var idleInterval = setInterval(idleTimerIncrement, 60000); //Time in ms for each counter - 60000 is one minute
-	var saveInterval = setInterval(saveTimerIncrement, 600000); //Time for autosave so server doesn't do auto logff
+	var saveInterval = setInterval(saveTimerIncrement, 900000); //Time for autosave so server doesn't do auto logff
 
 	//Zero the idle timer on mouse movement or keypress
 	$(this).mousemove(function (e) {
