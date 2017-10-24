@@ -168,7 +168,7 @@ function create_code_editor_view($params = array())
 	echo '<script src="js/code_editor_view.js"></script>';
 	if($properties['show_dropdown_index'] !== null)
 	{
-		echo '<script>setInformationTextbox("' . $properties["dropdown_items"][$properties["show_dropdown_index"]]->get_text() . '");</script>';
+		echo '<script>setInformationTextboxOnly("' . $properties["dropdown_items"][$properties["show_dropdown_index"]]->get_text() . '");</script>';
 	}
 	echo '<script>setDefaultCode("' . $properties['default_code'] . '");</script>';
 	echo '</div>';
