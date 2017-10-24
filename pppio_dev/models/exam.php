@@ -59,12 +59,30 @@ class Exam extends Model
 		$exam_id = intval($exam_id);
 		$user_id = $_SESSION['user']->get_id();
 
+		if(isset($stud_id))
+		{
+			$user_id = $stud_id;
+		}
+
 		$function_name = 'sproc_read_exam_get_for_student';
 		$req = $db->prepare(static::build_query($function_name, array('exam_id', 'user_id')));
 		$req->execute(array('exam_id' => $exam_id, 'user_id' => $user_id));
 
-		$req->setFetchMode(PDO::FETCH_CLASS, 'exam');
+		$req->setFetchMode(PDO::FETCH_CLASS, 'Exam');
 		return $req->fetch(PDO::FETCH_CLASS);
+	}
+
+	public static function get_exam_review_for_student($exam_id, $stud_id)
+	{
+		$db = Db::getReader();
+		$exam_id = intval($exam_id);
+		$user_id = intval($stud_id);
+
+		$function_name = 'sproc_read_exam_review_for_student';
+		$req = $db->prepare(static::build_query($function_name, array('exam_id', 'user_id')));
+		$req->execute(array('exam_id' => $exam_id, 'user_id' => $user_id));
+
+		return $req->fetchall(PDO::FETCH_NAMED);
 	}
 
 	public static function get_times($exam_id)

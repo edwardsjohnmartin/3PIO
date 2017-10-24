@@ -89,6 +89,7 @@ function clearAlerts()
 {
 	codeAlerts.innerHTML = '';
 }
+
 function markError(errorMessage)
 {
 	//infoAlert.classList.remove('alert-success');

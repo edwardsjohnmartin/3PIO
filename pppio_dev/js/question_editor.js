@@ -25,7 +25,10 @@ var isSuccess = false;
 
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
+    var curPos = editor.getDoc().getCursor();
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
+    editor.focus();
+    editor.getDoc().setCursor(curPos);
     run();
 };
 

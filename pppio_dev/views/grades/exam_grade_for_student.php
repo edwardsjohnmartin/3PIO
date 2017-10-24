@@ -1,79 +1,88 @@
 <?php
-require_once('models/exam.php');
+//This is the view for when a student clicks the 'View Grade' link from the section/read_student view
+//It will show the name of the exam and a table the contains what their score was on each question and what their final grade on the exam is
 
-$user_id = $_SESSION['user']->get_id();
-$exam_id = $_GET['exam_id'];
-$exams = Exam::get_all_for_section($exam->get_section_id());
-$exam_props = $exam->get_properties();
-$exam_scores = Grades::get_exam_scores($exam_id);
-
+//Fills array $scores with objects that contain the question_id and the score multiplier(based on completion_status) for the entire exam
 foreach($exam_scores as $key => $value)
 {
-	if($value['student'] == $user_id)
-	{
+	if($value['student'] == $_SESSION['user']->get_id()){
 		$scores = $value['scores'];
+		break;
 	}
 }
 
-foreach($exams as $ekey => $evalue)
+//Fills array $questions with objects that contain the question_id, name, and weight of each question on the exam
+foreach($exams as $key => $value)
 {
-	if($evalue['id'] == $exam_id)
+	if($value['id'] == $exam_id)
 	{
-		$questions = $evalue['questions'];
+		$questions = $value['questions'];
+		break;
 	}
 }
 
-echo '<h1>' . $exam_props['name'] . '</h1>';
-
-echo '<table class="table table-striped table-bordered">';
-echo '<thead>';
-echo '<tr>';
-$question_array = array();
-$weights_array = array();
 $q_index = 1;
-foreach($questions as $question_key => $question_value)
+$student_score = 0;
+$question_headers = '';
+$question_cells = '';
+
+//Go through each question and generate an html string for the headers and cells
+foreach($questions as $q_key => $q_value)
 {
-	array_push($question_array, $question_value->id);
-	array_push($weights_array, $question_value->weight);
-	if($question_value->name !== '')
+	//Use $q_index to name questions that don't have a name
+	if($q_value->name !== '')
 	{
-		echo '<th>' . $question_value->name . ' (' . $question_value->weight . ')</th>';
+	    $question_headers .= '<th>' . $q_value->name . ' (' . number_format($q_value->weight/$exam_weight*100) . ')</th>';
 	}
 	else
 	{
-		echo '<th>Q' . $q_index . ' (' . $question_value->weight . ')</th>';
+	    $question_headers .= '<th>Q' . $q_index . ' (' . number_format($q_value->weight/$exam_weight*100) . ')</th>';
 	}
+
 	$q_index++;
-}
-echo '<th>Total Points Earned (' . array_sum($weights_array) . ')</th>';
-echo '<th>Grade</th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody>';
-echo '<tr>';
-$score_array = array();
-foreach($question_array as $q_key => $q_value)
-{
 	$value_found = false;
-	foreach($scores as $skey => $svalue)
+	$score_var = 0;
+
+	foreach($scores as $s_key => $s_value)
 	{
-		if($svalue->question_id == $q_value)
+		if($s_value->question_id == $q_value->id)
 		{
-			$score_var = $svalue->score * $weights_array[$q_key];
-			$value_found = true;
+			//This is hardcoded to account for a small portion of students that got a .5 for a score on a question due to a bug
+			//The bug is now fixed so this can be deleted before the next semester 10/23/2017
+			if($s_value->score == 0.5)
+			{
+			    $score_var = 0;
+			    break;
+			}
+			else
+			{
+			    //Show question weight as a number out of 100
+				$score_var = $s_value->score * number_format($q_value->weight/$exam_weight*100);
+				break;
+			}
 		}
 	}
 
-	if(!$value_found)
-	{
-		$score_var = 0;
-	}
-	array_push($score_array, $score_var);
-	echo '<td class="warning">' . $score_var . '</td>';
+	$student_score += $score_var;
+	$question_cells .= '<td class="warning">' . $score_var . '</td>';
 }
-echo '<td class="warning">' . array_sum($score_array) . '</td>';
-echo '<td class="warning">' . number_format(array_sum($score_array)/array_sum($weights_array)*100, 2) . '%</td>';
-echo '</tr>';
-echo '</tbody>';
-echo '</table>';
 ?>
+
+<!--HTML To Make Grades Table-->
+<h1>
+	<?php echo $exam_props['name'];?>
+</h1>
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<?php echo $question_headers;?>
+			<th>Grade (%)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<?php echo $question_cells;?>
+			<td class="warning"><?php echo $student_score;?></td>
+		</tr>
+	</tbody>
+</table>

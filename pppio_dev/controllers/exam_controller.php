@@ -211,5 +211,132 @@
 		{
 			return date($format, strtotime($date)) == $date;
 		}
+
+		/*Requires stud_id, exam_id, question_id in $_GET
+		Allows a ta or teacher to review a students answers on a question on an exam
+		Gathers information about the exam pertaining to the student and displays it
+		using the dynamic code editor view.*/
+		public function review_exam()
+		{
+			if (!isset($_GET['stud_id']) or !isset($_GET['exam_id']) or !isset($_GET['question_id']))
+			{
+				return call('pages', 'error');
+			}
+
+			require_once('models/section.php');
+			require_once('models/exam.php');
+			require_once('models/question.php');
+
+			$stud_id = $_GET['stud_id'];
+			$student = User::get($stud_id);
+			$stud_props = $student->get_properties();
+
+			$exam_id = $_GET['exam_id'];
+			$exam = exam::get_for_student($exam_id);
+			$exam_props = $exam->get_properties();
+
+			$current_question_id = $_GET['question_id'];
+			$section_id = $exam->get_section_id();
+
+			$user_id = $_SESSION['user']->get_id();
+			$is_owner = Section::is_owner($section_id, $user_id);
+			$is_ta = Section::is_teaching_assistant($section_id, $user_id);
+
+		    //must be teacher or ta for section exam belongs to
+			if($is_ta or $is_owner)
+			{
+				unset($user_id);
+				unset($is_ta);
+				unset($is_owner);
+
+				$exam_results = Exam::get_exam_review_for_student($exam_id, $stud_id);
+				$exam_props = $exam->get_properties();
+
+				foreach($exam_results as $e_key => $e_value)
+				{
+					if($e_value['id'] == $current_question_id)
+					{
+						$current_question_results = $e_value;
+						break;
+					}
+				}
+
+				include('views/shared/site_functions.php');
+				include('models/html_objects/button.php');
+				include('models/html_objects/dropdown_item.php');
+
+				//If there is no answer saved for the student on this question, set some defaults
+				if(!isset($current_question_results))
+				{
+					$question_props = question::get($current_question_id)->get_properties();
+					$current_question_results['contents'] = '--No Answer Recorded--';
+					$current_question_results['start_code'] = $question_props['start_code'];
+					$current_question_results['test_code'] = $question_props['test_code'];
+					$current_question_results['instructions'] = $question_props['instructions'];
+				}
+
+				$title = '-' . $exam_props['name'] . '- Review for ' . $stud_props['name'];
+				$left_title =  'Question Selector';
+
+				//If the question was answered, show the last time is was updated in the left_subtitle area
+				if(isset($current_question_results['date_update']))
+				{
+					$time = new DateTime($current_question_results['date_update']);
+					if($time->format('G') >= 12)
+					{
+						$time = $time->format('g:iA M j, Y');
+					}
+					else
+					{
+						$time = $time->format('g:ia M j, Y');
+					}
+
+					$left_subtitle = 'Last Save: ' . $time;
+				}
+
+				//Nav buttons on the left
+				//Here they will be a link to each question on an exam
+				$index = 1;
+				$buttons = array();
+				foreach($exam_props['questions'] as $q_key => $q_value)
+				{
+					array_push($buttons, new button('btn_' . $q_key, $index, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"'));
+					$index++;
+				}
+
+				//Scrub strings so they can be output in html
+				//This will eventually be put into a method in site_functions.php
+				$new_instructions = str_replace(array('"', "\r", "\n", "'"), array('&quot', '', '\n', '&quot'), $current_question_results['instructions']);
+				$new_contents = str_replace(array('"', "\r", "\n", "'"), array('&quot', '', '\n', '&quot'), $current_question_results['contents']);
+				$new_start_code = str_replace(array('"', "\r", "\n", "'"), array('&quot', '', '\n', '&quot'), $current_question_results['start_code']);
+				$new_test_code = str_replace(array('"', "\r", "\n", "'"), array('&quot', '', '\n', '&quot'), $current_question_results['test_code']);
+
+				$dropdown_items = array(
+					new dropdown_item('drp_instructions', 'Instructions', $new_instructions),
+					new dropdown_item('drp_contents', 'Student Answer',$new_contents),
+					new dropdown_item('drp_start_code', 'Start Code', $new_start_code),
+					new dropdown_item('drp_test_code', 'Test Code', $new_test_code)
+				);
+
+				$default_code = str_replace("&quot", "'", $new_contents);
+
+				$params = array(
+					'title' => $title,
+					'left_title' => $left_title,
+					'left_subtitle' => $left_subtitle,
+					'buttons' => $buttons,
+					'dropdown_items' => $dropdown_items,
+					'default_code' => $default_code
+				);
+				$view_to_show = "";
+				require_once('views/shared/layout.php');
+				create_code_editor_view($params);
+			}
+			else
+			{
+				add_alert("You do not have access to this section.", Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+		}
 	}
 ?>

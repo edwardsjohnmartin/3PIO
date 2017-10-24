@@ -23,10 +23,13 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
-	/*Replaces any tab characters in the code area as 4 spaces. If code was pasted in from a 
-    source where tabs are a different amount of spaces, it will cause indentation 
-    errors. This prevents the issue.*/
-	editor.setValue(editor.getValue().replace(/\t/g, '    '));
+    var curPos = editor.getDoc().getCursor();
+    var scrollPos = editor.getScrollInfo();
+
+    editor.setValue(editor.getValue().replace(/\t/g, '    '));
+    editor.getDoc().setCursor(curPos);
+    editor.scrollTo(0, scrollPos.top);
+
     if (!readonly) {
         save(concept_id, editor.getValue());
     } 
@@ -115,4 +118,3 @@ function markError(errorMessage) {
 function markSuccess(successMessage) {
     codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
-

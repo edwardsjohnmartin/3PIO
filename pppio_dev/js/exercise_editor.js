@@ -20,7 +20,11 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 	extraKeys: { Tab: betterTab }
 });
 
-document.getElementById("runButton").onclick = function() { clearAlerts(); run(); };
+document.getElementById("runButton").onclick = function () {
+    clearAlerts();
+    run();
+};
+
 //editor.on('copy', function(a, e) {e.preventDefault();});
 editor.on('cut', function(a, e) {e.preventDefault();});
 editor.on('paste', function(a, e) {e.preventDefault();});
@@ -33,6 +37,7 @@ editor.on('paste', function(a, e) {e.preventDefault();});
 // 	// Must copy the prompt string for some reason
 //   return window.prompt(String(prompt));
 // }
+
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
             throw "File not found: '" + x + "'";
@@ -65,8 +70,10 @@ function run() {
 								inputfun:inf, inputfunTakesPrompt:true});
   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
 	var myPromise = Sk.misceval.asyncToPromise(function() {
-      mod = Sk.importMainWithBody("<stdin>", false, program, true);
+        mod = Sk.importMainWithBody("<stdin>", false, program, true);
+        console.log(mod);
       return mod;
+
 	});
 
 	myPromise.then(function(mod) {
@@ -184,6 +191,7 @@ function markSuccess(successMessage)
 	//infoAlert.innerHTML = successMessage;
 	codeAlerts.innerHTML += '<div class="alert alert-success alert-dismissible mar-0" role="alert" id="infoAlert">' + successMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
+
 function updateTiles()
 {
 			var current_tile = document.getElementById(current_tile_id);
@@ -198,4 +206,3 @@ function updateTiles()
 				next_tile.href = link;
 			}
 }
-

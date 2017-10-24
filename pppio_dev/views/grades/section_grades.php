@@ -25,7 +25,7 @@ if(count($exams) > 0)
 		{
 			$total_score = 0;
 
-			$body_string .= '<tr><td>' . $s_value->value . '</td>';
+			$body_string .= '<tr><td><a href="?controller=exam&action=review_exam&stud_id=' . $s_key . '&exam_id=' . $exam_value['id'] . '&question_id=' . $exam_value['questions'][0]->id . '">' . $s_value->value . '</a></td>';
 
 			foreach($questions as $q_key => $q_value)
 			{
@@ -67,7 +67,7 @@ if(count($exams) > 0)
 			if(!$header_filled)
 			{
 				$head_string .= '<th>Total Weight (' . $total_weight . ')</th>';
-				$head_string .= '<th>Grade</th></tr></thead>';
+				$head_string .= '<th>Grade (%)</th></tr></thead>';
 				$html_string .= $head_string;
 			}
 			$header_filled = true;

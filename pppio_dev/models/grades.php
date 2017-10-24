@@ -17,7 +17,6 @@ class Grades extends Model
 			foreach($ret as $key => $val)
 			{
 				$ret[$key]['scores'] = json_decode($val['scores'], false);
-
 			}
 		}
 
