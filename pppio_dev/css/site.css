@@ -49,19 +49,6 @@
 {
 	border: 1px solid #AAA;
 }
-/*
-	background-color: #000;
-	display: inline-block;
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	text-align: center;
-	transform: translate(-50%, -100%);
-	width: 100%;
-	min-width: 0;
-	min-height: 0;
-	word-wrap:break-word;
-*/
 
 table.code-padded td {
  padding: 1px 10px 1px 10px;
@@ -91,7 +78,6 @@ span.code {
     color: #2b5bf6;
 }
 
-/* Style the tab buttons */
 .tablink {
     background-color: #555;
     color: white;
@@ -110,12 +96,10 @@ span.code {
     width: 95%;
 }
 
-/* Change background color of buttons on hover */
 .tablink:hover {
     background-color: #777;
 }
 
-/* Set default styles for tab content */
 .tabcontent {
     color: black;
     display: none;
@@ -157,7 +141,7 @@ span.code {
 
 .run-btn {
     height: 100%;
-    width: 45%;
+    width: 30%;
 }
 
 .width-90 {

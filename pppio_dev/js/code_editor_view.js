@@ -32,6 +32,7 @@ document.getElementById("runButton").onclick = function () {
     //Set the cursor and scrollbar position to where they were before the run button was pressed
     editor.getDoc().setCursor(curPos);
     editor.scrollTo(0, scrollPos.top);
+
     run();
 };
 
@@ -111,7 +112,7 @@ function markError(errorMessage) {
     codeAlerts.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0 alert-pad-7" role="alert" id="infoAlert">' + errorMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
 
-// Called when a dropdown item is clicked. Sets contents of the <pre> area to the text attribute of the dropdown item.
+//Called when a dropdown item is clicked. Sets contents of the <pre> area to the text attribute of the dropdown item.
 function setInformationTextbox(dd_text, dd_item_id) {
     document.getElementById('txtInfo').innerHTML = dd_text;
     document.getElementById('btn_drop').innerHTML = document.getElementById(dd_item_id).text + '<div><span class="glyphicon glyphicon-chevron-down left-pad-7" aria-hidden="true"></span></div>';
@@ -121,18 +122,18 @@ function setInformationTextboxOnly(dd_text) {
     document.getElementById('txtInfo').innerHTML = dd_text;
 }
 
-// Moves the code from txtInfo into the editor.
+//Moves the code from txtInfo into the editor.
 function moveCode() {
     editor.setValue(txtInfo.innerHTML);
 }
 
-// Called as the page loads. Sets the editor to the default code. If none was given, will be blank.
+//Called as the page loads. Sets the editor to the default code. If none was given, will be blank.
 function setDefaultCode(def_code)
 {
     editor.setValue(def_code);
 }
 
-// Called in the slider.onchange event. Changes the sizes of where text is printed out and where turtle graphics are drawn. 
+//Called in the slider.onchange event. Changes the sizes of where text is printed out and where turtle graphics are drawn. 
 function resizeOutputAreas(graphicSize)
 {
     textOutputSize = 99 - graphicSize;
@@ -142,5 +143,30 @@ function resizeOutputAreas(graphicSize)
     //Clear whatever is currently drawn
     if (Sk.TurtleGraphics !== undefined && Sk.TurtleGraphics.reset !== undefined) {
         Sk.TurtleGraphics.reset();
+    }
+}
+
+//Hides the items contained in the row that dont go away when collapse is pressed
+//Changes the icon back and forth between expand or collapse
+//Disables the moveCode button while collapsed
+function collapseDivRow(div_id)
+{
+    if (document.getElementById(div_id) !== null) {
+        var divRow = document.getElementById(div_id);
+        var subCol1 = document.getElementById("subCol1");
+        var subCol2 = document.getElementById("subCol2");
+
+        if (divRow.classList.contains("collapse") && !divRow.classList.contains("in")) {
+            subCol1.style.display = "block";
+            subCol2.style.display = "block";
+            document.getElementById("moveCodeButton").disabled = false;
+            document.getElementById("collapseSpan").className = "glyphicon glyphicon-resize-small";
+        }
+        else if (divRow.classList.contains("collapse")) {
+            subCol1.style.display = "none";
+            subCol2.style.display = "none";
+            document.getElementById("moveCodeButton").disabled = true;
+            document.getElementById("collapseSpan").className = "glyphicon glyphicon-resize-full";
+        }
     }
 }
