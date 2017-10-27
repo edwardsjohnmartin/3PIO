@@ -1,8 +1,10 @@
 <?php
-// This will create a view with a code editor based around the parameters passed in. Any parameter not passed in will be set to a default.
+//This will create a view with a code editor based around the parameters passed in. Any parameter not passed in will be set to a default.
 function create_code_editor_view($params = array())
 {
-	if(count($params['buttons']) > 0){
+	//Make sure 'buttons' exists in $params before seeing if any buttons exist
+	//If it doesn't exist in $params, checking its count will throw an error
+	if(array_key_exists('buttons', $params) and count($params['buttons']) > 0){
 		$has_left_navbar = true;
 	}
 	else
@@ -15,7 +17,7 @@ function create_code_editor_view($params = array())
 		unset($params['default_code']);
 	}
 
-	// Default values
+	//Default values
 	$defaults = array(
 		'title' => 'Default Title',
 		'default_code' => 'print(\"Default Code\")',
@@ -78,10 +80,10 @@ function create_code_editor_view($params = array())
 		</div>
 
 		<!--Dropdown Menu, Information Textbox, Text Output/Graphics Output Slider-->
-		<div class="row no-shrink height-15 right-pad-15" style="display:<?php if(count($properties['dropdown_items'])){ echo 'block';}else{echo 'none';}?>">
+		<div id="dropdown-info-slider" class="row no-shrink height-15 right-pad-15 collapse in" aria-expanded="true" style="display:<?php if(count($properties['dropdown_items'])){ echo 'block';}else{echo 'none';}?>">
 
 			<!--Dropdown and Slider-->
-			<div class="col-xs-2 right-pad-0 width-10 height-100">
+			<div id="subCol1" class="col-xs-2 right-pad-0 width-10 height-100">
 
 				<!--Slider-->
 				<div class="row centered-content top-bot-mar-7">
@@ -104,13 +106,13 @@ function create_code_editor_view($params = array())
 						{
 							echo '<a id="' . $dd->get_id() . '" href="#" onclick="setInformationTextbox(\'' . $dd->get_text() . '\', this.id); return false;">' . $dd->get_property_name() . '</a>';
 						}
-						?>
+                        ?>
 					</div>
-				</div>			
+				</div>
 			</div>
 
 			<!--Information Textbox-->
-			<div class="col-xs-10 height-100 width-90">
+			<div id="subCol2" class="col-xs-10 height-100 width-90">
 				<pre id="txtInfo" class="height-100"></pre>
 			</div>
 		</div>
@@ -129,6 +131,11 @@ function create_code_editor_view($params = array())
 				<!--Move Code-->
 				<button type="button" class="btn btn-default run-btn" id="moveCodeButton" onclick="moveCode()">
 					<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+				</button>
+
+				<!--Collapse Code-->
+				<button type="button" class="btn btn-default run-btn" id="collapseButton" data-toggle="collapse" data-target="#dropdown-info-slider" onclick="collapseDivRow('dropdown-info-slider')">
+					<span id="collapseSpan" class="glyphicon glyphicon-resize-small" aria-hidden="true"></span>
 				</button>
             </div>
 

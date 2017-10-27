@@ -645,4 +645,18 @@ ALTER FUNCTION public.sproc_write_user_left_page_occurrence_create(user_id integ
 
 INSERT INTO securables (name, is_deleted) VALUES ('Exam', false),('Question', false);
 
-INSERT INTO permissions_to_roles (role_id,permission_type_id,securable_id) VALUES (1,1,12),(1,1,13),(1,2,12),(1,2,13),(1,3,12),(1,3,13),(1,4,12),(1,4,13),(1,5,12),(1,5,13),(2,1,12),(2,1,13),(2,2,12),(2,2,13),(2,3,12),(2,3,13),(2,4,12),(2,4,13),(2,5,12),(2,5,13),(3,1,12),(3,1,13);
+INSERT INTO permissions_to_roles (role_id, permission_type_id, securable_id) VALUES (1,1,12),(1,1,13),(1,2,12),(1,2,13),(1,3,12),(1,3,13),(1,4,12),(1,4,13),(1,5,12),(1,5,13),(2,1,12),(2,1,13),(2,2,12),(2,2,13),(2,3,12),(2,3,13),(2,4,12),(2,4,13),(2,5,12),(2,5,13),(3,1,12),(3,1,13);
+
+INSERT INTO permissions_to_roles (role_id, permission_type_id, securable_id) VALUES (), (), ();
+
+INSERT INTO completion_status (name, importance) VALUES ('Completed', 0), ('Started', 1), ('Not started', 2);
+
+INSERT INTO languages (name) VALUES ('Python');
+
+INSERT INTO participation_types (name) VALUES ('Student'), ('Teaching_Assistant');
+
+INSERT INTO permission_types (name) VALUES ('read'), ('create'), ('edit'), ('delete'), ('list');
+
+INSERT INTO roles (name) VALUES ('Admin'), ('Teacher'), ('Student');
+
+INSERT INTO securables (name) VALUES ('Exercise'), ('Function'), ('Language'), ('Lesson'), ('Project'), ('Role'), ('Section'), ('Tag'), ('User'), ('Exam'), ('Question');

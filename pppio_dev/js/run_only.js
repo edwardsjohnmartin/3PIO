@@ -23,10 +23,23 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 
 document.getElementById("runButton").onclick = function () {
     clearAlerts();
-    /*Replaces any tab characters in the code area as 4 spaces. If code was pasted in from a 
-    source where tabs are a different amount of spaces, it will cause indentation 
-    errors. This prevents the issue.*/
+
+    //Save where the cursor is and where the code editor is scrolled to
+    var curPos = editor.getDoc().getCursor();
+    var scrollPos = editor.getScrollInfo();
+
+    //Clear whatever is currently drawn
+    if (Sk.TurtleGraphics !== undefined && Sk.TurtleGraphics.reset !== undefined) {
+        Sk.TurtleGraphics.reset();
+    }
+
+    //Replace tabs with 4 spaces 
     editor.setValue(editor.getValue().replace(/\t/g, '    '));
+
+    //Set the cursor and scrollbar position to where they were before the run button was pressed
+    editor.getDoc().setCursor(curPos);
+    editor.scrollTo(0, scrollPos.top);
+
     run();
 };
 

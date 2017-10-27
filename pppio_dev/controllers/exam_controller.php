@@ -293,6 +293,10 @@
 
 					$left_subtitle = 'Last Save: ' . $time;
 				}
+				else
+				{
+					$left_subtitle = '';
+				}
 
 				//Nav buttons on the left
 				//Here they will be a link to each question on an exam
@@ -326,7 +330,8 @@
 					'left_subtitle' => $left_subtitle,
 					'buttons' => $buttons,
 					'dropdown_items' => $dropdown_items,
-					'default_code' => $default_code
+					'default_code' => $default_code,
+					'show_dropdown_index' => 0
 				);
 				$view_to_show = "";
 				require_once('views/shared/layout.php');

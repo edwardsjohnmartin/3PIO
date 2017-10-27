@@ -1,5 +1,40 @@
 -------------------------------------------------------------------------------
 
+Include an index to the lessons. Each lesson could be a link to 
+
+(HIGH) 
+	(1)sproc_read_project_can_access_for_multiple_users
+		 -> Called from controller=project&action=try_it(multiple users)
+		 -> Calls (2)
+	(2)sproc_read_project_can_access
+		 -> Called from controller=project&action=try_it(single user)
+		 -> Called from sproc_read_project_can_access_for_multiple_users
+		 -> Calls (3)
+	(3)sproc_read_lesson_get_status
+		 -> Called from sproc_read_project_can_access
+
+	(4)sproc_read_lesson_can_access_for_concept
+		 -> Called from controller=lesson&action=can_access_for_concept
+		 -> Calls (5)
+	(5)sproc_read_lesson_can_access
+		 -> Called from sproc_read_lesson_can_access_for_concept
+		 -> Calls (6)
+	(6)sproc_read_lesson_get_previous
+		-> Called from sproc_read_lesson_can_access
+	
+
+(LOW) 
+	In review_exam, add a button to get back to the section_grades view
+	Currently you have to re-navigate through selected Manage->Grades->Select Section 
+
+(MED) 
+	In the dynamic view, make the left title and subtitle stationary
+	That way no matter which button the area is scrolled to, the info can still be seen	
+
+(HIGH)
+	If code hasn't been saved, when a user tried to exit the window, let them know they need to save their code.
+	Have a prompt come up asking if they want to leave or not.
+
 (LOW)Have a button to save the code in the editor in sandbox mode
 	Save one set of code per user to the database
 	Be able to retrieve the code as well from a button or option in the dropdown
@@ -37,7 +72,7 @@
     the button to get to the project of any concept that comes after will be disabled
     this makes it SEEM like the student cannot access the project and will need to do the previous exercises
 
-    the route to project will still be open to the student thought and if they enter the correct concept_id into the address bar
+    the route to project will still be open to the student though and if they enter the correct concept_id into the address bar
     they will be able to access the project with no issue
     it will still allow them to save the project
 
@@ -108,11 +143,6 @@
    (VIEW)can only see instructions in /exam/update_times.php and /shared/read.php
    (NEW PAGE)Adding a landing page to the exam could solve this
 
-[we want to make both grade views the same as it is on the exam]
-(MED)check to see how we want to show weights in grade views
-   (VIEW)/grades/section_grades.php
-   (VIEW)/grades/exam_grades_for_student.php)
-
 (VERY LOW)sproc_read_section_get(id integer) can return concepts that are deleted
     (CONTROLLER)as a ta, on controller=section action=read id=[section_id] 
     (CONTROLLER)deleted concepts show up
@@ -144,13 +174,14 @@
    (CONTROLLER)move read_occurrences function in /question_controller.php to /exam_controller.php
 
 (LOW)add a button to view/question/editor that replaces the current code with the start code
-               
-(MED)test section_grades view as ta/teacher
-   (TEST)no exams in section
-   (TEST)no questions in exam
-   (TEST)no students in section
 
 -------------------------------------------------------------------------------
+
+(DONE)we want to make both grade views the same as it is on the exam
+   (DONE)/grades/section_grades.php
+   (DONE)/grades/exam_grades_for_student.php)
+
+(DONE)In dynamic view, make the row with the scroll bar, dropdown menu, and <pre> area collapsible
 
 (DONE)should we block entry to controller=question action=read_for_student if a partner is logged in?
    Having a partner logged in doesn't change anything becuase it doesn't save anything for then

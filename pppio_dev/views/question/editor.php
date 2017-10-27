@@ -81,11 +81,11 @@
 				<div class="col-xs-12">';
 				if($question_props['name'] !== '')
 				{
-					echo '<h2>' . htmlspecialchars($question_props['name']) . ' - ' . number_format($question_props['weight']/$total_weight*100) . 'pts</h2>';
+					echo '<h2>' . htmlspecialchars($question_props['name']) . ' - ' . round($question_props['weight']/$total_weight*100) . 'pts</h2>';
 				}
 				else
 				{
-					echo '<h2>Q' . $q_pos . ' - ' . number_format($question_props['weight']/$total_weight*100) . 'pts</h2>';
+					echo '<h2>Q' . $q_pos . ' - ' . round($question_props['weight']/$total_weight*100) . 'pts</h2>';
 				}
 				echo '
                     <h4 class="panel-title collapse-link">

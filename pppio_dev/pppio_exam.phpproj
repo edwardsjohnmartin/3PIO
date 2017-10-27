@@ -171,6 +171,7 @@
     <Compile Include="views\section\read.php" />
     <Compile Include="views\section\read_student.php" />
     <Compile Include="views\section\read_student_old.php" />
+    <Compile Include="views\section\read_student_rewrite.php" />
     <Compile Include="views\shared\CodeMirror.php" />
     <Compile Include="views\shared\create.php" />
     <Compile Include="views\shared\html_helper.php" />

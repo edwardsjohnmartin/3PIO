@@ -221,7 +221,7 @@
 			$sections = Section::get_pairs_for_owner($_SESSION['user']->get_id());
 			if(empty($sections))
 			{
-				add_alert("You do not own any sections.", Alert_Type::DANGER);
+				add_alert("You do not have access to any sections.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 			else
@@ -234,7 +234,7 @@
 
 					if(empty($data_arr))
 					{
-						add_alert("You do not own any sections.", Alert_Type::DANGER);
+						add_alert("You do not have access to any sections.", Alert_Type::DANGER);
 						return call('pages', 'error');
 					}
 					else

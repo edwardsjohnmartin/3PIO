@@ -1,10 +1,10 @@
 <?php
 $exams = Exam::get_all_for_section($section_id);
 
-$html_string = '<h1>' . $section_props['name'] . 'Grades</h1>';
-
 $section_props = $section->get_properties();
 $students = $section_props['students'];
+
+$html_string = '<h1>' . $section_props['name'] . ' Grades</h1>';
 
 if(count($exams) > 0)
 {
