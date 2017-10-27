@@ -47,9 +47,9 @@ function builtinRead(x) {
 function getTestCode() {
 	// var pre = "";
 	// var post = "";
-	var pre = "\nimport sys\nclass Buffer:\n    def __init__(self):\n        self.str = \"\"\n    def write(self, txt):\n        self.str += str(txt)\nold_stdout = sys.stdout\nsys.stdout = mystdout = Buffer()\n";
+	var pre = "\nimport sys\nclass Buffer:\n    def __init__(self):\n        self.str = \"\"\n    def write(self, txt):\n        self.str += str(txt)\nold_stdout = sys.stdout\nsys.stdout = test_std_out = Buffer()\n";
 	var post = "sys.stdout = old_stdout";
-	// We can examine mystdout.str
+	// We can examine test_std_out.str
 	var code = pre + "\n" + document.getElementById('test_code_to_run').innerText + "\n" + post + "\n";
 	// var code = document.getElementById('test_code_to_run').innerText;
 	code = code.replace(/\n/g, "\n    ");
