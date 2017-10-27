@@ -1,13 +1,14 @@
 <?php
 	//This is the main page the student will use to navigate through concepts in the section. 
 	//A concept will have links to the exercises(if any exist) and it's project.
+	//TODO: Check to see if a concept contains a lesson without any lessons, if it appears in $concepts
 	require_once('views/shared/html_helper.php');
 	require_once('enums/completion_status.php');
 
 	$concept_complete_count = 0;
 	$found_active_concept = false;
-
 	$concept_arr = array();
+	$now = intval(date_format(new DateTime(), 'U'));
 
 	foreach($concepts as $concept)
 	{
@@ -20,24 +21,23 @@
 			'proj_open_date' => $concept_props['project_open_date'],
 			'proj_due_date' => $concept_props['project_due_date'],
 			'proj_completed' => $concept_props['project']->status == Completion_Status::COMPLETED,
-			'has_exercises' => false,
+			'has_exercises' => count($concept_props['lessons']) > 0,
 			'completed' => false,
 			'is_active' => false,
 			'disabled' => false
 		);
 
-		$open_time = strtotime($concept_props["open_date"]);
-		$now = intval(date_format(new DateTime(), 'U'));
-
-		if($now > $open_time)
+		//Check to see if the project is open
+		if(intval(strtotime($concept_props["open_date"])) < $now)
 		{
 			$num_of_lessons = count($concept_props['lessons']);
 
+			//If lessons exist
 			if(isset($concept_props['lessons']) and $num_of_lessons > 0)
 			{
-				$concept_ret['has_exercises'] = true;
 				$lesson_complete_count = 0;
 
+				//If active concept has already been set
 				if($found_active_concept)
 				{
 					$concept_ret['disabled'] = true;
@@ -45,43 +45,42 @@
 
 				foreach($concept_props['lessons'] as $lesson)
 				{
+					//Lesson is complete or the concept still needs to be completed
 					if($lesson->status == Completion_Status::COMPLETED)
 					{
 						$lesson_complete_count++;
 					}
-					else
+					else if(!$found_active_concept)
 					{
-						if(!$found_active_concept)
-						{
-							$found_active_concept = true;
-							$concept_ret['is_active'] = true;
-						}
+						$found_active_concept = true;
+						$concept_ret['is_active'] = true;
 					}
 				}
 
+				//If all lessons are complete
 				if($lesson_complete_count == $num_of_lessons)
 				{
 					$concept_complete_count++;
 					$concept_ret['completed'] = true;
 				}
 			}
+			//If no lessons exist, count the concept as complete
 			else
 			{
 				$concept_complete_count++;
 			}
 		}
+		//If the concept isnt open, disable the exercises and project links
 		else
 		{
 			$concept_ret['disabled'] = true;
-
-			if(isset($concept_props['lessons']) and count($concept_props['lessons'] > 0))
-			{
-				$concept_ret['has_exercises'] = true;
-			}
 		}
+
+		//Populate main data array indexing by concept key
 		$concept_arr[$concept_ret['id']] = $concept_ret;
 	}
 
+	//Check % if at least one concept exists, don't want to divide by 0
 	if(count($concepts) > 0)
 	{
 		$section_percent_complete = $concept_complete_count / count($concepts) * 100;
@@ -145,7 +144,7 @@
 							  //Check for AM or PM and convert date to a more readable format
 							  if(date('G', strtotime($c_ele['open_date'])) >= 12)
 							  {
-								  $c_ele['open_date'] = date('g:ia m-d-y', strtotime($c_ele['open_date']));
+								  $c_ele['open_date'] = date('g:iA m-d-y', strtotime($c_ele['open_date']));
 							  }
 							  else
 							  {
@@ -183,7 +182,7 @@
 						  //Check for AM or PM and convert dates to a more readable format
 						  if(date('G', strtotime($c_ele['proj_open_date'])) >= 12)
 						  {
-						      $c_ele['proj_open_date'] = date('g:ia m-d-y', strtotime($c_ele['proj_open_date']));
+						      $c_ele['proj_open_date'] = date('g:iA m-d-y', strtotime($c_ele['proj_open_date']));
 						  }
 						  else
 						  {
@@ -193,7 +192,7 @@
 						  //Check for AM or PM and convert date to a more readable format
 						  if(date('G', strtotime($c_ele['proj_due_date'])) >= 12)
 						  {
-						      $c_ele['proj_due_date'] = date('g:ia m-d-y', strtotime($c_ele['proj_due_date']));
+						      $c_ele['proj_due_date'] = date('g:iA m-d-y', strtotime($c_ele['proj_due_date']));
 						  }
 						  else
 						  {
@@ -205,5 +204,5 @@
 			</div>
 		</div>
 	</div>
-    <?php }?>
+    <?php }require_once('views/exam/exam_table.php');?>
 </div>

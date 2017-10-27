@@ -1,0 +1,31 @@
+CREATE OR REPLACE FUNCTION public.sproc_read_exam_review_for_student(
+	exam_id integer,
+	user_id integer)
+    RETURNS TABLE(id integer, name text, instructions text, start_code text, test_code text, weights integer, score real, contents text, completion_status_id integer, date_update timestamp without time zone, start_time timestamp without time zone, close_time timestamp without time zone) 
+    LANGUAGE 'sql'
+
+    COST 100
+    VOLATILE SECURITY DEFINER 
+    ROWS 1000
+AS $BODY$
+
+SELECT q.id, q.name, q.instructions, q.start_code, q.test_code, q.weight, 
+	satq.score, satq.contents, satq.completion_status_id, satq.date_updated, 
+	ute.start_time, ute.close_time 
+
+FROM questions AS q
+JOIN students_answers_to_questions AS satq ON satq.question_id = q.id
+JOIN users_to_exams AS ute ON ute.exam_id = satq.exam_id
+
+WHERE satq.user_id = ute.user_id
+AND satq.exam_id = ute.exam_id
+AND ute.user_id = sproc_read_exam_review_for_student.user_id
+AND satq.exam_id = sproc_read_exam_review_for_student.exam_id
+
+ORDER BY q.id;
+
+$BODY$;
+
+ALTER FUNCTION public.sproc_read_exam_review_for_student(integer, integer)
+    OWNER TO postgres;
+

@@ -3,6 +3,8 @@
 //It will show the name of the exam and a table the contains what their score was on each question and what their final grade on the exam is
 
 //Fills array $scores with objects that contain the question_id and the score multiplier(based on completion_status) for the entire exam
+
+//TODO: To display final grade, dont add up percentage of weigths on each question, add the weights themselves and get percentage of that
 foreach($exam_scores as $key => $value)
 {
 	if($value['student'] == $_SESSION['user']->get_id()){
@@ -32,11 +34,11 @@ foreach($questions as $q_key => $q_value)
 	//Use $q_index to name questions that don't have a name
 	if($q_value->name !== '')
 	{
-	    $question_headers .= '<th>' . $q_value->name . ' (' . number_format($q_value->weight/$exam_weight*100) . ')</th>';
+	    $question_headers .= '<th>' . $q_value->name . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
 	}
 	else
 	{
-	    $question_headers .= '<th>Q' . $q_index . ' (' . number_format($q_value->weight/$exam_weight*100) . ')</th>';
+	    $question_headers .= '<th>Q' . $q_index . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
 	}
 
 	$q_index++;
@@ -57,7 +59,7 @@ foreach($questions as $q_key => $q_value)
 			else
 			{
 			    //Show question weight as a number out of 100
-				$score_var = $s_value->score * number_format($q_value->weight/$exam_weight*100);
+				$score_var = $s_value->score * round($q_value->weight/$exam_weight*100);
 				break;
 			}
 		}
