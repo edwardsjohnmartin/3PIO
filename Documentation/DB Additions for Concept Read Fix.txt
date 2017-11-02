@@ -1,0 +1,24 @@
+CREATE OR REPLACE FUNCTION public.sproc_read_concept_get_project_completion(
+	concept_id integer)
+    RETURNS TABLE(user_id integer, user_name text, project_completed boolean) 
+    LANGUAGE 'sql'
+
+    COST 100
+    VOLATILE SECURITY DEFINER 
+    ROWS 1000
+AS $BODY$
+
+SELECT u.id AS user_id, u.name AS user_name, (SELECT EXISTS(SELECT pcffu.user_id FROM project_code_files_for_users AS pcffu WHERE pcffu.user_id = u.id) AS project_completed)
+FROM concepts AS c
+JOIN users_to_sections AS uts ON c.section_id = uts.section_id
+JOIN users AS u ON uts.user_id = u.id
+WHERE c.id = sproc_read_concept_get_project_completion.concept_id
+AND NOT c.is_deleted
+AND uts.participation_type_id = 1
+ORDER BY u.name;
+
+$BODY$;
+
+ALTER FUNCTION public.sproc_read_concept_get_project_completion(integer)
+    OWNER TO postgres;
+

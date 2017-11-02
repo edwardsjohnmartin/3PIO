@@ -1,6 +1,6 @@
 <?php
 
-	require_once('enums/completion_status.php');
+require_once('enums/completion_status.php');
 //	this expects either a problem or a project.
 //id, name, description, starter code
 $exercise_props = $exercise->get_properties();
@@ -177,4 +177,5 @@ echo $exercise_props['test_code'];
 echo '</script>';
 
 echo '<script src="js/exercise_editor.js"></script>';
+echo '<script src="js/sessions_handler.js"></script>';
 ?>

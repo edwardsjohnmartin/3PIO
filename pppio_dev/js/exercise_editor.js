@@ -62,7 +62,7 @@ function run() {
   // var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
   var program = editor.getValue() + "\n" + getTestCode();
 	// console.log(program);
-  var outputArea = document.getElementById("output")
+  var outputArea = document.getElementById("output");
   
   outputArea.innerHTML = '';
   Sk.pre = "output";
@@ -71,7 +71,6 @@ function run() {
   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
 	var myPromise = Sk.misceval.asyncToPromise(function() {
         mod = Sk.importMainWithBody("<stdin>", false, program, true);
-        console.log(mod);
       return mod;
 
 	});
@@ -81,7 +80,7 @@ function run() {
 		// console.log(String(Sk.builtin.str(outputArea.innerHTML)));
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
-		if(ret.v.length == 0 || ret.v[0].v == null)
+		if(ret.v.length === 0 || ret.v[0].v === null)
 		{
 		//success
 			if(trying_latest && !can_preview)
@@ -105,7 +104,7 @@ function run() {
     },
         function(err) {
           var line_num = Number(err.toString().split("on line", 2)[1]);
-		if (err.args != undefined) {
+		if (err.args !== undefined) {
             if (err.args.v[0].v === "EOF in multi-line string") {
                 markError("ERROR: It looks like you have an open multi-line comment.");
 			}

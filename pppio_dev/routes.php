@@ -156,6 +156,10 @@
 				require_once('models/grades.php');
 				$controller = new GradesController;
 				break;
+			case 'session':
+				require_once('models/session.php');
+				$controller = new SessionController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -257,7 +261,9 @@
 									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
 						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
-									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
+									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])],
+						'session' => ['save' => new Authorization_Requirements(true, []),
+									  'read_all_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];

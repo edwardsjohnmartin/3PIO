@@ -1,0 +1,55 @@
+//use this to get the completion status of every exercise in a lesson
+
+select cste.exercise_id, cste.completion_status_id 
+from completion_status_to_exercise as cste
+join lessons as l on l.id = cste.lesson_id
+join exercises_to_lessons as etl on etl.lesson_id = cste.lesson_id
+join exercises as e on e.id = etl.exercise_id
+where not l.is_deleted
+and not e.is_deleted
+and cste.user_id = 5
+and cste.lesson_id = 16
+group by cste.exercise_id, cste.completion_status_id
+order by cste.exercise_id
+
+
+
+
+
+
+
+
+
+
+
+
+//use this to get the count of exercises in a lesson
+
+select coalesce(max(exercise_number), 0) from exercises_to_lessons as etl
+join lessons as l on l.is_deleted = false
+join exercises as e on e.is_deleted = false
+where etl.lesson_id = 21
+and l.id = etl.lesson_id
+
+
+
+
+//use this to get the completion status of every exercise in a lesson ordered by the order the exercise appears in the lesson
+
+select l.id as lesson_id, e.id as exercise_id, etl.exercise_number, cste.completion_status_id
+from lessons as l
+join exercises_to_lessons as etl on etl.lesson_id = l.id
+join exercises as e on etl.exercise_id = e.id
+join completion_status_to_exercise as cste on (cste.exercise_id = etl.exercise_id and cste.lesson_id = etl.lesson_id)
+where not l.is_deleted
+and not e.is_deleted
+and cste.lesson_id = 6
+and cste.user_id = 5
+and cste.concept_id = 2
+group by l.id, e.id, etl.exercise_id, etl.exercise_number, cste.completion_status_id
+order by l.id, etl.exercise_number
+
+
+
+
+select coalesce((select cste.completion_status_id from completion_status_to_exercise as cste where cste.lesson_id = 17 and cste.user_id = 5), 3) as completion_status_id

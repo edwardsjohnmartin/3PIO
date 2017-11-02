@@ -11,7 +11,7 @@
 
 		public static function get_pairs_for_owner($owner_id)
 		{
-			$db = Db::getReader(); 
+			$db = Db::getReader();
 			$owner_id = intval($owner_id);
 
 			$function_name = 'sproc_read_lesson_get_pairs_for_owner';

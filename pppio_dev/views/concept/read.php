@@ -1,74 +1,81 @@
-
 <?php
-	require_once('views/shared/html_helper.php'); 
-	//use a helper to make a form... or a helper to make the fields... haven't decided yet.
-	//right now assuming $model_name ...
-	//i want to be able to get the properties something that's not already created...
-	//i can just use the types...
+	//This view is used for seeing the information about a concept
+	//If the user is a ta or the owner then they will see additional information
+	//including: a list of students, each students progress for each lesson in the concept, 
+	//and a link to the students project if the student has saved code on it
+
+	require_once('views/shared/html_helper.php');
 	echo '<h2>' . $this->model_name . '</h2>';
 	echo HtmlHelper::view($types, $properties);
 
-//this check and get should go in the controller...
-$is_owner = concept::is_owner($model->get_id(), $_SESSION['user']->get_id());
-$is_ta = concept::is_teaching_assistant($model->get_id(), $_SESSION['user']->get_id());
-if($is_owner || $is_ta)
-{
-	echo '<div><a class="btn btn-primary" href="?controller=lesson&action=read_for_concept_for_student&concept_id='.$model->get_id().'">Preview</a></div>';
-	$progress = concept::get_progress($model->get_id());
-	if(count($progress) > 0)
+	//Get the data out of the session and remove it from the session
+	if(isset($_SESSION['progress']))
 	{
-		$current_date = new DateTime();
-		$project_due_date = new DateTime($properties['project_due_date']);
-		$project_open_date = new DateTime($properties['project_open_date']);
-		
-		echo '<label>Progress</label>';
-		echo '<div class="force-x-scroll">';
-		echo '<table class="table table-striped table-bordered">';
-		echo '<thead>';
-		echo '<tr>';
-		echo '<th>Student</th>';
-		foreach($progress[0]['lesson_completion'] as $lesson_completion)
+		$progress = $_SESSION['progress'];
+		unset($_SESSION['progress']);
+	}
+
+	if(isset($_SESSION['project_completion']))
+	{
+		$project_completion = $_SESSION['project_completion'];
+		unset($_SESSION['project_completion']);
+	}
+
+	//Nothing below will be seen for students
+	if($is_ta || $is_owner)
+	{
+?>
+
+<label>Progress</label>
+<div class="force-x-scroll">
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>Students</th>
+				<?php
+		foreach ($properties['lessons'] as $lesson)
 		{
-			echo '<th><a href="?controller=lesson&action=read&id=' . $lesson_completion->key. '">' . htmlspecialchars($properties['lessons'][$lesson_completion->key]->value) . '</a></th>';
+			echo '<th><a href="?controller=lesson&action=read&id=' . $lesson->key . '">' . $lesson->value . '</a></th>';
 		}
-		echo '<th><a href="?controller=project&action=read&id=' . $properties['project']->key . '">Project</a></th>';
-		echo '</tr>';
-
-		echo '</thead>';
-		echo '<tbody>';
-
-		foreach($progress as $student_progress)
+		echo '<th><a href="?controller=project&action=read&id=' . $properties['project']->key . '">' . $properties['project']->value . '</a></th>';
+                ?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+		foreach ($project_completion as $key => $completion_value)
 		{
 			echo '<tr>';
-			echo '<th><a href="?controller=user&action=read&id=' . $student_progress['user_id'] . '">' . htmlspecialchars($student_progress['user_name']) . '</a></th>';
-			foreach($student_progress['lesson_completion'] as $lesson_completion)
+			echo '<td>' . $completion_value['user_name'] . '</td>';
+			foreach ($progress[$key]['lesson_completion'] as $lesson_completion)
 			{
 				echo '<td';
-				if($lesson_completion->value == 1) echo ' class="success"';
-				else if($current_date > $project_open_date) echo ' class="warning"';
-				echo '>' . number_format((float)$lesson_completion->value, 4, '.', '') * 100 . '%</td>';
+				if($lesson_completion->value == 1)
+				{
+					echo ' class="success">';
+				}
+				else
+				{
+					echo ' class="danger">';
+				}
+				echo number_format((float)$lesson_completion->value, 4, '.', '') * 100 . '%';
+				echo '</td>';
 			}
-			if($student_progress['project_completed'])
+
+			if($completion_value['project_completed'])
 			{
-				echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <a href="?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $student_progress['user_id'] . '">View code</a></td>';
+				echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $completion_value['user_id'] . '">View code</a></td>';
 			}
 			else
 			{
-				echo '<td ';
-				if($current_date > $project_due_date) echo ' class="danger"';
-				echo '><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></td>';
+				echo '<td class="danger"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></td>';
 			}
+			echo '</tr>';
 		}
-		echo '</tbody>';
-		echo '</table>';
-		echo '</div>';
-
+            ?>
+		</tbody>
+	</table>
+</div>
+<?php 
 	}
-
-	if($is_owner && has_permission(new Permission(Securable::CONCEPT, Permission_Type::EDIT)))
-	{
-		echo '<a href="?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
-	}
-}
 ?>
-

@@ -41,6 +41,7 @@
     <Compile Include="controllers\role_controller.php" />
     <Compile Include="controllers\sandbox_controller.php" />
     <Compile Include="controllers\section_controller.php" />
+    <Compile Include="controllers\session_controller.php" />
     <Compile Include="controllers\tag_controller.php" />
     <Compile Include="controllers\user_controller.php" />
     <Compile Include="css\bootstrap-datetimepicker.min.css" />
@@ -97,6 +98,7 @@
     <Compile Include="models\html_objects\button.php" />
     <Compile Include="models\html_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
+    <Compile Include="models\session.php" />
     <Compile Include="mode\python\python.js" />
     <Compile Include="models\not_in_use\completion_status.php" />
     <Compile Include="models\not_in_use\participation_type.php" />
@@ -172,6 +174,8 @@
     <Compile Include="views\section\read_student.php" />
     <Compile Include="views\section\read_student_old.php" />
     <Compile Include="views\section\read_student_rewrite.php" />
+    <Compile Include="views\section\read_student_v3.php" />
+    <Compile Include="views\session\read_all_for_student.php" />
     <Compile Include="views\shared\CodeMirror.php" />
     <Compile Include="views\shared\create.php" />
     <Compile Include="views\shared\html_helper.php" />
@@ -241,6 +245,7 @@
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
     <Folder Include="views\grades\" />
+    <Folder Include="views\session\" />
     <Folder Include="views\question\" />
     <Folder Include="views\not_in_use\lesson" />
     <Folder Include="views\not_in_use\posts" />
@@ -258,5 +263,6 @@
   <ItemGroup>
     <Content Include="js\code_editor_view.js" />
     <Content Include="js\question_editor.js" />
+    <Content Include="js\sessions_handler.js" />
   </ItemGroup>
 </Project>

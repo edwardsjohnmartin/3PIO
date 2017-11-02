@@ -1,5 +1,19 @@
 -------------------------------------------------------------------------------
 
+(LOW)
+	there is an issue right now where if a concept contains a lesson that doesn't have any exercises
+	and it is the only lesson in that concept, the student will have automatic 100% completion and the 
+	concept header in section read_student view will be green
+
+	(FIX)
+		only allow a concept to be viewed as complete(green) if all previous concepts are complete(green)
+
+(LOW)
+	prevent site caching so when a change is uploaded to the server, the cache doesn't need to 
+	be cleared for the user to access the changes
+	http://securityevaluators.com/knowledge/case_studies/caching/
+	http://www.i18nguy.com/markup/metatags.html
+
 Include an index to the lessons. Each lesson could be a link to 
 
 (HIGH) 

@@ -2,8 +2,8 @@
 	require_once('models/model.php');
 	class Concept extends Model
 	{
-	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'section' => Type::SECTION, 
-	'open_date' => Type::DATETIME, 'project' => Type::PROJECT, 'project_open_date' => Type::DATETIME, 
+	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'section' => Type::SECTION,
+	'open_date' => Type::DATETIME, 'project' => Type::PROJECT, 'project_open_date' => Type::DATETIME,
 	'project_due_date' => Type::DATETIME, 'lessons' => Type::LIST_LESSON); //use the enum
 		protected $name;
 		protected $section;
@@ -55,7 +55,7 @@
 
 		public static function get_pairs_for_owner($owner_id)
 		{
-			$db = Db::getReader(); 
+			$db = Db::getReader();
 			$owner_id = intval($owner_id);
 
 			$function_name = 'sproc_read_concept_get_pairs_for_owner';
@@ -67,7 +67,7 @@
 
 		public static function get_progress($id)
 		{
-			$db = Db::getReader(); 
+			$db = Db::getReader();
 			$id = intval($id);
 
 			$function_name = 'sproc_read_concept_get_progress';
@@ -82,6 +82,20 @@
 
 			}
 			return $ret;
+		}
+
+		//Returns an array of project completion for every student in the section the passed in concept belongs to
+		//Each element of the array will be an array with keys [student_id]=>integer, [student_name]=>string, and [project_completed]=>boolean
+		public static function get_project_completion($concept_id)
+		{
+			$db = Db::getReader();
+			$concept_id = intval($concept_id);
+
+			$function_name = 'sproc_read_concept_get_project_completion';
+			$req = $db->prepare(static::build_query($function_name, array('concept_id')));
+			$req->execute(array('concept_id' => $concept_id));
+
+			return $req->fetchAll(PDO::FETCH_ASSOC);
 		}
 
 		public static function is_owner($id, $user_id)

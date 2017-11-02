@@ -23,35 +23,37 @@ class Type extends Enum
 	const SECTION =		15;
 	const CONCEPT =		16;
 	const EXAM =        17;
-	const QESTION =     18;
-	const STUDENTFUNCTION =	19;
-	const COURSE =		20;
-	const PARTICIPATION_TYPE =	21;
-	const ROLE = 22;
-	const TAG = 23;
-	const PERMISSION = 24;
+	const QUESTION =     18;
+	const SESSION =      19;
+	const STUDENTFUNCTION =	20;
+	const COURSE =		21;
+	const PARTICIPATION_TYPE =	22;
+	const ROLE = 23;
+	const TAG = 24;
+	const PERMISSION = 25;
 
-	const LIST_TAG = 25;
-	const LIST_EXERCISE = 26;
-	const LIST_LANGUAGE = 27;
-	const LIST_PROBLEM = 28;
-	const LIST_USER = 29;
-	const LIST_LESSON = 30;
-	const LIST_PROJECT = 31;
-	const LIST_SECTION = 32;
-	const LIST_CONCEPT = 33;
-	const LIST_EXAM = 34;
-	const LIST_QUESTION = 35;
-	const LIST_STUDENTFUNCTION = 36;
-	const LIST_COURSE =	37;
-	const LIST_PARTICIPATION_TYPE =	38;
-	const LIST_ROLE = 39;
-	const LIST_PERMISSION = 40;
+	const LIST_TAG = 26;
+	const LIST_EXERCISE = 27;
+	const LIST_LANGUAGE = 28;
+	const LIST_PROBLEM = 29;
+	const LIST_USER = 30;
+	const LIST_LESSON = 31;
+	const LIST_PROJECT = 32;
+	const LIST_SECTION = 33;
+	const LIST_CONCEPT = 34;
+	const LIST_EXAM = 35;
+	const LIST_QUESTION = 36;
+	const LIST_SESSION = 37;
+	const LIST_STUDENTFUNCTION = 38;
+	const LIST_COURSE =	39;
+	const LIST_PARTICIPATION_TYPE =	40;
+	const LIST_ROLE = 41;
+	const LIST_PERMISSION = 42;
 
 
 	public static function is_model($type)
 	{
-		return ($type >= static::LANGUAGE && $type < static::LIST_TAG);
+		return ($type >= static::LANGUAGE && $type <= static::LIST_TAG);
 	}
 
 	public static function is_list_model($type)

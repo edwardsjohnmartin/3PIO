@@ -34,7 +34,7 @@
 								{
 									$lessons_belong_to_user = false;
 									break;
-								}						
+								}
 							}
 							if($lessons_belong_to_user)
 							{
@@ -106,7 +106,7 @@
 							{
 								$lessons_belong_to_user = false;
 								break;
-							}						
+							}
 						}
 						if($lessons_belong_to_user)
 						{
@@ -129,7 +129,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -146,6 +146,42 @@
 				$types = $model::get_types();
 				$properties = $model->get_properties();
 				require_once('views/shared/layout.php');
+			}
+		}
+
+		public function read()
+		{
+			if (!isset($_GET['id']))
+			{
+				return call('pages', 'error');
+			}
+			else
+			{
+				$model = ($this->model_name)::get($_GET['id']);
+				if($model == null)
+				{
+					add_alert('The item you are trying to access doesn\'t exist.', Alert_Type::DANGER);
+					return call('pages', 'error');
+				}
+				else
+				{
+					$is_owner = concept::is_owner($model->get_id(), $_SESSION['user']->get_id());
+					$is_ta = concept::is_teaching_assistant($model->get_id(), $_SESSION['user']->get_id());
+
+					//Because these return arrays, they are destroyed before the program gets to the view
+					//By storing it in the session, we can make sure it gets to the view
+					$_SESSION['progress'] = concept::get_progress($model->get_id());
+					$_SESSION['project_completion'] = Concept::get_project_completion($model->get_id());
+
+					$view_to_show = 'views/' . strtolower($this->model_name) . '/read.php';
+					if(!file_exists($view_to_show))
+					{
+						$view_to_show = 'views/shared/read.php';
+					}
+					$types = $model::get_types();
+					$properties = $model->get_properties();
+					require_once('views/shared/layout.php');
+				}
 			}
 		}
 	}
