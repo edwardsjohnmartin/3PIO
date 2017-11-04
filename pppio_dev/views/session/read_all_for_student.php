@@ -86,10 +86,22 @@
 				<td></td>
 				<td></td>
 				<td>Average</td>
-                <td><?php echo Session::get_length(round($total_session_length / count($sessions)));?></td>
-				<td><?php echo round($total_mouse_clicks / count($sessions)); ?></td>
-				<td><?php echo round($total_key_presses / count($sessions)); ?></td>
-				<td><?php echo round($total_times_ran / count($sessions)); ?></td>
+				<?php
+				if (count($sessions) > 0)
+				{
+					echo '<td>' .  Session::get_length(round($total_session_length / count($sessions))) . '</td>';
+					echo '<td>' .  round($total_mouse_clicks / count($sessions)) . '</td>';
+					echo '<td>' .  round($total_key_presses / count($sessions)) . '</td>';
+					echo '<td>' .  round($total_times_ran / count($sessions)) . '</td>';
+				}
+				else
+				{
+					echo '<td>00:00:00</td>';
+					echo '<td>0</td>';
+					echo '<td>0</td>';
+					echo '<td>0</td>';
+				}
+				?>
             </tr>
 		</tbody>
 	</table>

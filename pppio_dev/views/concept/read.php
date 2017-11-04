@@ -1,8 +1,8 @@
 <?php
 	//This view is used for seeing the information about a concept
 	//If the user is a ta or the owner then they will see additional information
-	//including: a list of students, each students progress for each lesson in the concept, 
-	//and a link to the students project if the student has saved code on it
+	//including a list of students, each students progress for each lesson in the concept, 
+	//and a link to the students project if the student has saved code on it.
 
 	require_once('views/shared/html_helper.php');
 	echo '<h2>' . $this->model_name . '</h2>';
@@ -33,46 +33,55 @@
 			<tr>
 				<th>Students</th>
 				<?php
-		foreach ($properties['lessons'] as $lesson)
-		{
-			echo '<th><a href="?controller=lesson&action=read&id=' . $lesson->key . '">' . $lesson->value . '</a></th>';
-		}
-		echo '<th><a href="?controller=project&action=read&id=' . $properties['project']->key . '">' . $properties['project']->value . '</a></th>';
+					//Create a column header for each lesson in the concept
+					foreach ($properties['lessons'] as $lesson)
+					{
+						echo '<th><a href="?controller=lesson&action=read&id=' . $lesson->key . '">' . $lesson->value . '</a></th>';
+					}
+
+					//Create a column header for the project in the concept
+					echo '<th><a href="?controller=project&action=read&id=' . $properties['project']->key . '">' . $properties['project']->value . '</a></th>';
                 ?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php
-		foreach ($project_completion as $key => $completion_value)
-		{
-			echo '<tr>';
-			echo '<td>' . $completion_value['user_name'] . '</td>';
-			foreach ($progress[$key]['lesson_completion'] as $lesson_completion)
-			{
-				echo '<td';
-				if($lesson_completion->value == 1)
+				//Each element of $project_completion will be for a unique student in the section the concept belongs to
+				foreach ($project_completion as $student_id => $students_project_completion)
 				{
-					echo ' class="success">';
-				}
-				else
-				{
-					echo ' class="danger">';
-				}
-				echo number_format((float)$lesson_completion->value, 4, '.', '') * 100 . '%';
-				echo '</td>';
-			}
+					echo '<tr>';
+					echo '<td>' . $students_project_completion['user_name'] . '</td>';
+					if(count($progress) > 0)
+					{
+						//Each element of $progress[$student_id]['lesson_completion'] will be a lesson in the concept
+						foreach ($progress[$student_id]['lesson_completion'] as $lesson_completion)
+						{
+							echo '<td';
+							if($lesson_completion->value == 1)
+							{
+								echo ' class="success">';
+							}
+							else
+							{
+								echo ' class="danger">';
+							}
+							//$lesson_completion->value is the amount of the lesson completed in the range of 0-1. Multiply by 100 to get it as a percentage
+							echo number_format((float)$lesson_completion->value, 4, '.', '') * 100 . '%';
+							echo '</td>';
+						}
+					}
 
-			if($completion_value['project_completed'])
-			{
-				echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $completion_value['user_id'] . '">View code</a></td>';
-			}
-			else
-			{
-				echo '<td class="danger"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></td>';
-			}
-			echo '</tr>';
-		}
-            ?>
+					if($students_project_completion['project_completed'])
+					{
+						echo '<td class="success"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="?controller=project&action=check&concept_id=' . $model->get_id() . '&user_id=' . $students_project_completion['user_id'] . '">View code</a></td>';
+					}
+					else
+					{
+						echo '<td class="danger"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></td>';
+					}
+					echo '</tr>';
+				}
+			?>
 		</tbody>
 	</table>
 </div>
