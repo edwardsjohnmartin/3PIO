@@ -29,10 +29,10 @@ window.onload = function () {
 function timerIncrement() {
     sessionIdleTime += 1;
 
-    console.log("timer incremented to " + sessionIdleTime);
+    //console.log("timer incremented to " + sessionIdleTime);
 
     if (sessionIdleTime === sessionExpireTime) {
-        console.log("sessionIdleTime is equal to sessionExpireTime so save was called");
+        //console.log("sessionIdleTime is equal to sessionExpireTime so save was called");
         saveSession();
         resetSession();
     }
@@ -83,10 +83,10 @@ $(window).keydown(function (event) {
     }
 
     //adds ctrl+. shortcut to save the session (used for testing)
-    if (event.ctrlKey && event.keyCode === 190) {
-        saveSession();
-        resetSession();
-    }
+    //if (event.ctrlKey && event.keyCode === 190) {
+    //    saveSession();
+    //    resetSession();
+    //}
 });
 
 //currently captures any mouse button; left, right, or middle
@@ -99,17 +99,31 @@ window.onmousedown = function () {
 //ajax call to save the session to the database
 function saveSession() {
     if (mouseclicks === 0 && keypresses === 0 && timesran === 0) {
-        console.log("no activity was detected so not saved");
+        //console.log("no activity was detected so not saved");
     }
-    else{
-        console.log("activity was detected and save was called");
-        //console.log("mouseclicks: " + mouseclicks);
-        //console.log("keypresses: " + keypresses);
-        //console.log("timesran: " + timesran);
+    else {
+
+        //console.log("activity was detected and save was called");
+
         if (typeof exercise_id !== "undefined") {
             var activity_name = "exercise";
             var activity_id = exercise_id;
         }
+        else if (typeof project_id !== "undefined") {
+            var activity_name = "project";
+            var activity_id = project_id;
+        }
+        else if (typeof current_question_id !== "undefined") {
+            var activity_name = "question";
+            var activity_id = current_question_id;
+        }
+
+        //Used for debugging
+        //console.log("activity_name: " + activity_name);
+        //console.log("activity_id: " + activity_id);
+        //console.log("mouseclicks: " + mouseclicks);
+        //console.log("keypresses: " + keypresses);
+        //console.log("timesran: " + timesran);
 
         $.ajax({
             method: "POST",
@@ -122,7 +136,7 @@ function saveSession() {
 
 //reset sessionIdleTime since there was activity
 function resetSessionIdleTime() {
-    console.log("session idle time was reset");
+    //console.log("session idle time was reset");
     sessionIdleTime = 0;
     activityOccurred = true;
 }
@@ -136,5 +150,5 @@ function resetSession() {
     sessionIdleTime = 0;
     start = new Date().getTime() / 1000;
 
-    console.log("resetSession occurred and the new start time is " + start);
+    //console.log("resetSession occurred and the new start time is " + start);
 }

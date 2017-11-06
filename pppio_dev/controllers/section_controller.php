@@ -135,7 +135,7 @@
 					$concepts = concept::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
 					$exams = exam::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
 					
-					$view_to_show = 'views/section/read_student_rewrite.php';
+					$view_to_show = 'views/section/read_student_v3.php';
 					require_once('views/shared/layout.php');
 				}
 			}

@@ -262,6 +262,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="js\code_editor_view.js" />
+    <Content Include="js\code_windows.js" />
     <Content Include="js\question_editor.js" />
     <Content Include="js\sessions_handler.js" />
   </ItemGroup>

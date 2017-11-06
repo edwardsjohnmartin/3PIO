@@ -38,6 +38,7 @@ class Session extends Model
 		return $req->fetchALL(PDO::FETCH_CLASS, 'session');
 	}
 
+	//Save a session to the database, works no matter what the activity was
 	public static function write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran)
 	{
 		$db = Db::getWriter();

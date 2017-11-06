@@ -23,6 +23,7 @@
 			}
 		}
 
+		//Get all sessions for a specific student and pass them into session/read_all_for_student view to show them in tabular format
 		public function read_all_for_student()
 		{
 			//Checks for the user to access a route for getting session info from the db
@@ -38,7 +39,10 @@
 
 			require_once('models/session.php');
 
-			$sessions = Session::get_all_for_student($_GET['user_id']);
+			//$sessions = Session::get_all_for_student($_GET['user_id']);
+			$exercise_sessions = Session::get_all_of_type_for_student(Securable::EXERCISE, $_GET['user_id']);
+			$project_sessions = Session::get_all_of_type_for_student(Securable::PROJECT, $_GET['user_id']);
+			$question_sessions = Session::get_all_of_type_for_student(Securable::QUESTION, $_GET['user_id']);
 			$view_to_show = 'views/session/read_all_for_student.php';
 			require_once('views/shared/layout.php');
 		}

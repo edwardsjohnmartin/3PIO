@@ -28,6 +28,10 @@ class Securable extends Enum
 		{
 			case 'exercise':
 				return Securable::EXERCISE;
+			case 'project':
+				return Securable::PROJECT;
+			case 'question':
+				return Securable::QUESTION;
 			default:
 				return false;
 		}
@@ -39,6 +43,10 @@ class Securable extends Enum
 		{
 			case Securable::EXERCISE:
 				return 'Exercise';
+			case Securable::PROJECT:
+				return 'Project';
+			case Securable::QUESTION:
+				return 'Question';
 			default:
 				return 'none';
 		}

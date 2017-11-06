@@ -148,5 +148,6 @@
 	echo '<script>var trying_last = "' . $trying_last . '";</script>';
 	echo '<script>var link = ' . $link . ';</script>';
 	echo '<script src="js/question_editor.js"></script>';
+	echo '<script src="js/sessions_handler.js"></script>';
 	?>
 </div>
