@@ -60,12 +60,12 @@ foreach($questions as $q_key => $q_value)
 			{
 			    //Show question weight as a number out of 100
 				$score_var = $s_value->score * round($q_value->weight/$exam_weight*100);
+				$student_score += $s_value->score * $q_value->weight;
 				break;
 			}
 		}
 	}
 
-	$student_score += $score_var;
 	$question_cells .= '<td class="warning">' . $score_var . '</td>';
 }
 ?>
@@ -84,7 +84,7 @@ foreach($questions as $q_key => $q_value)
 	<tbody>
 		<tr>
 			<?php echo $question_cells;?>
-			<td class="warning"><?php echo $student_score;?></td>
+			<td class="warning"><?php echo round($student_score/$exam_weight*100);?></td>
 		</tr>
 	</tbody>
 </table>
