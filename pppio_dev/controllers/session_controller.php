@@ -37,6 +37,18 @@
 				return call('pages', 'error');
 			}
 
+			//user associated with user_id has to exist
+			$user = User::get($_GET['user_id']);
+			if(!$user)
+			{
+				add_alert('User does not exist.', Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+			else
+			{
+				$name = $user->get_properties()['name'];
+			}
+
 			require_once('models/session.php');
 
 			//$sessions = Session::get_all_for_student($_GET['user_id']);

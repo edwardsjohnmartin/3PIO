@@ -156,7 +156,6 @@ CREATE OR REPLACE FUNCTION public.sproc_write_session(
 
     COST 100
     VOLATILE SECURITY DEFINER 
-    ROWS 0
 AS $BODY$
 
 INSERT INTO sessions AS s 
@@ -174,6 +173,8 @@ $BODY$;
 
 ALTER FUNCTION public.sproc_write_session(integer, integer, integer, timestamp without time zone, timestamp without time zone, integer, integer, integer)
     OWNER TO postgres;
+
+
 
 
 

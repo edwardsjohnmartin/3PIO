@@ -23,15 +23,21 @@ $keys = array(
 	"times_ran"
 );
 
+if(isset($name) and $name != null)
+{
+	echo '<h2>' . $name . '</h2>';
+}
+
 if(isset($exercise_sessions) and count($exercise_sessions) > 0)
 {
+	require_once("models/exercise.php");
+	echo '<h3>Exercises</h3>';
 ?>
 <div class="force-x-scroll">
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Activity Type</th>
-				<th>Activity ID</th>
+				<th>Activity</th>
 				<th>Session Start</th>
 				<th>Session End</th>
 				<th>Session Length</th>
@@ -64,22 +70,34 @@ if(isset($exercise_sessions) and count($exercise_sessions) > 0)
 				$total_session_length += $session->get_prop("elapsed");
 			}
 
-			echo "<td>";
+			
 			if($session_key == 'securable_id')
 			{
-				echo Securable::get_string_from_id($session->get_prop($session_key));
+				//echo Securable::get_string_from_id($session->get_prop($session_key));
+			}
+			else if($session_key == 'activity_id')
+			{
+				echo "<td>";
+				$activity_id = $session->get_prop($session_key);
+				$exercise_name = Exercise::get($activity_id)->get_properties()['name'];
+				if($exercise_name == "" or $exercise_name == null)
+				{
+					$exercise_name = "Exercise";
+				}
+				echo '<a href="?controller=exercise&action=read&id=' . $activity_id . '">' . $exercise_name . '</a>';
+				echo "</td>";
 			}
 			else
 			{
+				echo "<td>";
 				echo $session->get_prop($session_key);
-			}
-			echo "</td>";
+				echo "</td>";
+			}			
 		}
 		echo "</tr>";
 	}
             ?>
 			<tr>
-				<td></td>
 				<td></td>
 				<td></td>
 				<td>Total</td>
@@ -98,8 +116,7 @@ if(isset($exercise_sessions) and count($exercise_sessions) > 0)
 			</tr>
 			<tr>
 				<td></td>
-				<td></td>
-				<td></td>
+                <td></td>
 				<td>Average</td>
 				<?php
 	if (count($exercise_sessions) > 0)
@@ -134,13 +151,14 @@ if(isset($exercise_sessions) and count($exercise_sessions) > 0)
 }
 if(isset($project_sessions) and count($project_sessions) > 0)
 {
+	require_once("models/project.php");
+	echo '<h3>Projects</h3>';
 ?>
 <div class="force-x-scroll">
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Activity Type</th>
-				<th>Activity ID</th>
+				<th>Activity</th>
 				<th>Session Start</th>
 				<th>Session End</th>
 				<th>Session Length</th>
@@ -172,23 +190,34 @@ if(isset($project_sessions) and count($project_sessions) > 0)
 			{
 				$total_session_length += $session->get_prop("elapsed");
 			}
-
-			echo "<td>";
+			
 			if($session_key == 'securable_id')
 			{
-				echo Securable::get_string_from_id($session->get_prop($session_key));
+				//echo Securable::get_string_from_id($session->get_prop($session_key));
+			}
+			else if($session_key == 'activity_id')
+			{
+				echo "<td>";
+				$activity_id = $session->get_prop($session_key);
+				$project_name = Project::get($activity_id)->get_properties()['name'];
+				if($project_name == "" or $project_name == null)
+				{
+					$project_name = "Project " . $activity_id;
+				}
+				echo '<a href="?controller=project&action=read&id=' . $activity_id . '">' . $project_name . '</a>';
+				echo "</td>";
 			}
 			else
 			{
+				echo "<td>";
 				echo $session->get_prop($session_key);
-			}
-			echo "</td>";
+				echo "</td>";
+			}	
 		}
 		echo "</tr>";
 	}
             ?>
 			<tr>
-				<td></td>
 				<td></td>
 				<td></td>
 				<td>Total</td>
@@ -206,7 +235,6 @@ if(isset($project_sessions) and count($project_sessions) > 0)
 				</td>
 			</tr>
 			<tr>
-				<td></td>
 				<td></td>
 				<td></td>
 				<td>Average</td>
@@ -243,13 +271,14 @@ if(isset($project_sessions) and count($project_sessions) > 0)
 }
 if(isset($question_sessions) and count($question_sessions) > 0)
 {
+	require_once("models/question.php");
+	echo '<h3>Questions</h3>';
 ?>
 <div class="force-x-scroll">
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Activity Type</th>
-				<th>Activity ID</th>
+				<th>Activity</th>
 				<th>Session Start</th>
 				<th>Session End</th>
 				<th>Session Length</th>
@@ -282,22 +311,35 @@ if(isset($question_sessions) and count($question_sessions) > 0)
 				$total_session_length += $session->get_prop("elapsed");
 			}
 
-			echo "<td>";
+			
 			if($session_key == 'securable_id')
 			{
-				echo Securable::get_string_from_id($session->get_prop($session_key));
+				//echo Securable::get_string_from_id($session->get_prop($session_key));
+			}
+			else if($session_key == 'activity_id')
+			{
+				echo "<td>";
+				$activity_id = $session->get_prop($session_key);
+				$question_name = Question::get($activity_id)->get_properties()['name'];
+				if($question_name == "" or $question_name == null)
+				{
+					$question_name = "Question " . $activity_id;
+				}
+				echo '<a href="?controller=question&action=read&id=' . $activity_id . '">' . $question_name . '</a>';
+				//echo Securable::get_string_from_id($session->get_prop($session_key));
+				echo "</td>";
 			}
 			else
 			{
+				echo "<td>";
 				echo $session->get_prop($session_key);
+				echo "</td>";
 			}
-			echo "</td>";
 		}
 		echo "</tr>";
 	}
             ?>
 			<tr>
-				<td></td>
 				<td></td>
 				<td></td>
 				<td>Total</td>
@@ -315,7 +357,6 @@ if(isset($question_sessions) and count($question_sessions) > 0)
 				</td>
 			</tr>
 			<tr>
-				<td></td>
 				<td></td>
 				<td></td>
 				<td>Average</td>
@@ -395,5 +436,9 @@ if(count($exercise_sessions) > 0 or count($project_sessions) > 0 or count($quest
 	</table>
 </div>
 <?php
+}
+if($grand_total_session_length === 0)
+{
+	echo '<h3>This user has not logged any sessions.</h3>';
 }
 ?>
