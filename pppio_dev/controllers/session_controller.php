@@ -10,6 +10,11 @@
 				$start_time = date("Y-m-d H:i:s", intval($_POST['start']));
 				$end_time = date("Y-m-d H:i:s");
 
+				if($end_time < $start_time)
+				{
+					$start_time = $end_time;
+				}
+
 				$user_id = intval($_SESSION['user']->get_id());
 
 				$securable_id = Securable::get_id_from_string($_POST['activity_name']);

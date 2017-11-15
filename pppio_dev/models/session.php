@@ -60,7 +60,14 @@ class Session extends Model
 		$start = strtotime($this->start_time);
 		$end = strtotime($this->end_time);
 
-		return $end - $start;
+		if($end - $start < 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return $end - $start;
+		}
 	}
 
 	//Acts as a getter for any property name passed in
