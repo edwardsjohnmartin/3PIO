@@ -26,14 +26,23 @@
 		//Get all sessions for a specific student and pass them into session/read_all_for_student view to show them in tabular format
 		public function read_all_for_student()
 		{
-			//Checks for the user to access a route for getting session info from the db
-			//logged in user has to be a teacher
-			//logged in user has to be a ta
+			require_once("enums/role.php");
+			require_once("enums/participation_type.php");
+
+			$cur_user = $_SESSION['user'];
+			$ta_sections = $cur_user->get_sections_by_participation_type(Participation_Type::TEACHING_ASSISTANT);
+
+			//user has to either be an admin, teacher, or a ta for at least 1 section
+			if($ta_sections === false and $cur_user->get_properties()['role'] !== Role::ADMIN and $cur_user->get_properties()['role'] !== Role::TEACHER)
+			{
+				add_alert('You do not have permission to access this.', Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 
 			//user_id has to be in GET
 			if(!isset($_GET['user_id']))
 			{
-				add_alert('Please try again.', Alert_Type::DANGER);
+				add_alert('A user was not specified.', Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
 
@@ -50,8 +59,6 @@
 			}
 
 			require_once('models/session.php');
-
-			//$sessions = Session::get_all_for_student($_GET['user_id']);
 			$exercise_sessions = Session::get_all_of_type_for_student(Securable::EXERCISE, $_GET['user_id']);
 			$project_sessions = Session::get_all_of_type_for_student(Securable::PROJECT, $_GET['user_id']);
 			$question_sessions = Session::get_all_of_type_for_student(Securable::QUESTION, $_GET['user_id']);
@@ -59,5 +66,23 @@
 			require_once('views/shared/layout.php');
 		}
 
+		public function index(){
+			require_once("enums/role.php");
+			require_once("enums/participation_type.php");
+
+			$cur_user = $_SESSION['user'];
+			$ta_sections = $cur_user->get_sections_by_participation_type(Participation_Type::TEACHING_ASSISTANT);
+
+			//user has to either be an admin, teacher, or a ta for at least 1 section
+			if($ta_sections === false and $cur_user->get_properties()['role'] !== Role::ADMIN and $cur_user->get_properties()['role'] !== Role::TEACHER)
+			{
+				add_alert('You do not have permission to access this.', Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
+
+			$users = User::get_all();
+			$view_to_show = 'views/session/index.php';
+			require_once('views/shared/layout.php');
+		}
 	}
 ?>

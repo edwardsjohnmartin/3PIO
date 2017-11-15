@@ -1,5 +1,6 @@
 <?php
 //Creates a table of all sessions belonging to a single student
+//TODO: Clean up this mess so it isn't repeating the same thing over and over
 
 $total_mouse_clicks = 0;
 $total_key_presses = 0;
@@ -82,7 +83,7 @@ if(isset($exercise_sessions) and count($exercise_sessions) > 0)
 				$exercise_name = Exercise::get($activity_id)->get_properties()['name'];
 				if($exercise_name == "" or $exercise_name == null)
 				{
-					$exercise_name = "Exercise";
+					$exercise_name = "Exercise " . $activity_id;
 				}
 				echo '<a href="?controller=exercise&action=read&id=' . $activity_id . '">' . $exercise_name . '</a>';
 				echo "</td>";
@@ -158,13 +159,13 @@ if(isset($project_sessions) and count($project_sessions) > 0)
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Activity</th>
-				<th>Session Start</th>
-				<th>Session End</th>
-				<th>Session Length</th>
-				<th>Mouse Clicks</th>
-				<th>Key Presses</th>
-				<th>Times Ran</th>
+                <th>Activity</th>
+                <th>Session Start</th>
+                <th>Session End</th>
+                <th>Session Length</th>
+                <th>Mouse Clicks</th>
+                <th>Key Presses</th>
+                <th>Times Ran</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -278,13 +279,13 @@ if(isset($question_sessions) and count($question_sessions) > 0)
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Activity</th>
-				<th>Session Start</th>
-				<th>Session End</th>
-				<th>Session Length</th>
-				<th>Mouse Clicks</th>
-				<th>Key Presses</th>
-				<th>Times Ran</th>
+                <th>Activity</th>
+                <th>Session Start</th>
+                <th>Session End</th>
+                <th>Session Length</th>
+                <th>Mouse Clicks</th>
+                <th>Key Presses</th>
+                <th>Times Ran</th>
 			</tr>
 		</thead>
 		<tbody>

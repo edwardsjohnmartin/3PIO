@@ -8,6 +8,11 @@
 		protected $role;
 		protected $password; //the return ones will never get this. but it's needed for the create... hmm.
 
+		public function get_name()
+		{
+			return $this->name;
+		}
+
 		public function get_grades_for_exam($user_id, $exam_id)
 		{
 			$db = Db::getReader();
@@ -79,6 +84,20 @@
 
 			$this->set_id($req->fetchColumn());
 			$this->password = null;
+		}
+
+		//Get a list of all sections the user has the participation type for
+		public function get_sections_by_participation_type($participation_type_id)
+		{
+			$user_id = $_SESSION['user']->get_id();
+			$user_id = intval($user_id);
+
+			$db = Db::getReader();
+			$function_name = 'sproc_read_user_get_sections_by_participation_type';
+			$req = $db->prepare(static::build_query($function_name, array('user_id', 'participation_type_id')));
+			$req->execute(array('user_id' => $user_id, 'participation_type_id' => $participation_type_id));
+
+			return $req->fetch(PDO::FETCH_ASSOC);
 		}
 	}
 ?>

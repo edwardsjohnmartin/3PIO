@@ -259,10 +259,12 @@
 									   'create_occurrence' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'read_occurrences' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)]),
 									   'save_code' =>new Authorization_Requirements(true, [new Permission(Securable::QUESTION, Permission_Type::READ)])],
+									   //Permissions have not been created or added to the database yet. Once they are, these will use those securables instead of section.
 						'grades' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 									 'get_section_grades' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])],
-						'session' => ['save' => new Authorization_Requirements(true, []),
+						'session' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+									  'save' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 									  'read_all_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
