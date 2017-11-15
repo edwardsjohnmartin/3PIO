@@ -1,6 +1,7 @@
 ﻿var mouseclicks = 0;
 var keypresses = 0;
 var timesran = 0;
+var errorCount = 0;
 var start;
 var sessionIdleTime = 0;
 var activityOccurred = false;
@@ -38,20 +39,20 @@ function timerIncrement() {
     }
 }
 
-//track when a key was pressed even if the code editor is not focused
-//only tracks enter key when the code editor does not have focus
-//does not track windows key, ctrl, alt, or shift at all
+/*track when a key was pressed even if the code editor is not focused
+only tracks enter key when the code editor does not have focus
+does not track windows key, ctrl, alt, or shift at all*/
 window.onkeypress = function () {
     //console.log("keypress occurred");
     keypresses += 1;
     resetSessionIdleTime();
 };
 
-//called when a tab is closed or when the browser closes
-//need to test if it happens when the browswer is force closed
-//this will make the ajax call to save the session to the database
-//i have read that sometimes there isnt enough time to finish the ajax call and data could be lost
-//will need to test this
+/*called when a tab is closed or when the browser closes
+need to test if it happens when the browswer is force closed
+this will make the ajax call to save the session to the database
+i have read that sometimes there isnt enough time to finish the ajax call and data could be lost
+will need to test this*/
 window.onbeforeunload = function () {
     saveSession();
     resetSession();
@@ -124,12 +125,13 @@ function saveSession() {
         //console.log("mouseclicks: " + mouseclicks);
         //console.log("keypresses: " + keypresses);
         //console.log("timesran: " + timesran);
+        //console.log("errorCount: " + errorCount);
 
         $.ajax({
             method: "POST",
             url: "?controller=session&action=save",
             async:false,
-            data: { start: start, mouseclicks: mouseclicks, keypresses: keypresses, timesran: timesran, activity_name: activity_name, activity_id: activity_id }
+            data: { start: start, mouseclicks: mouseclicks, keypresses: keypresses, timesran: timesran, activity_name: activity_name, activity_id: activity_id, errorCount: errorCount }
         });
     }
 }
@@ -146,6 +148,7 @@ function resetSession() {
     mouseclicks = 0;
     keypresses = 0;
     timesran = 0;
+    errorCount = 0;
     activityOccurred = false;
     sessionIdleTime = 0;
     start = new Date().getTime() / 1000;

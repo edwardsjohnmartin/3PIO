@@ -18,8 +18,9 @@
 				$mouse_clicks = intval($_POST['mouseclicks']);
 				$key_presses = intval($_POST['keypresses']);
 				$times_ran = intval($_POST['timesran']);
+				$error_count = intval($_POST['errorCount']);
 
-				Session::write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran);
+				Session::write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count);
 			}
 		}
 

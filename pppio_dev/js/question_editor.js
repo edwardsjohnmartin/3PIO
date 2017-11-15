@@ -135,6 +135,9 @@ function clearAlerts() {
 }
 
 function markError(errorMessage) {
+    if (typeof errorCount !== "undefined") {
+        errorCount += 1;
+    }
     codeAlerts.innerHTML += '<div class="alert alert-danger alert-dismissible mar-0" role="alert" id="infoAlert">' + errorMessage + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
 

@@ -10,6 +10,7 @@ class Session extends Model
 	protected $mouse_clicks;
 	protected $key_presses;
 	protected $times_ran;
+	protected $error_count;
 
 	//Get all exercise, project, and question sessions for a single student
 	public static function get_all_for_student($user_id)
@@ -39,18 +40,18 @@ class Session extends Model
 	}
 
 	//Save a session to the database, works no matter what the activity was
-	public static function write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran)
+	public static function write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count)
 	{
 		$db = Db::getWriter();
 		$function_name = 'sproc_write_session';
 		$req = $db->prepare(static::build_query($function_name,
 			array('user_id', 'securable_id', 'activity_id', 'start_time',
-			'end_time', 'mouse_clicks', 'key_presses', 'times_ran')));
+			'end_time', 'mouse_clicks', 'key_presses', 'times_ran', 'error_count')));
 		$req->execute
 			(array('user_id' => $user_id, 'securable_id' => $securable_id,
 			'activity_id' => $activity_id, 'start_time' => $start_time,
 			'end_time' => $end_time, 'mouse_clicks' => $mouse_clicks,
-			'key_presses' => $key_presses, 'times_ran' => $times_ran));
+			'key_presses' => $key_presses, 'times_ran' => $times_ran, 'error_count' => $error_count));
 	}
 
 	//Get the elapsed time of the session object in seconds (end - start)
@@ -72,6 +73,17 @@ class Session extends Model
 		else if($prop_name == "elapsed")
 		{
 			return $this->get_elapsed();
+		}
+		else if($prop_name == "error_count")
+		{
+			if($this->error_count == -1)
+			{
+				return 0;
+			}
+			else
+			{
+				return $this->$prop_name;
+			}
 		}
 		else
 		{

@@ -121,11 +121,18 @@
 				}
 				else
 				{
-					if(strtolower($this->model_name) == "exercise")
+					if(strtolower($this->model_name) == "exercise" or strtolower($this->model_name) == "question")
 					{
-						if(!$this->model_name::is_owner($_GET['id'], $_SESSION['user']->get_id()))
+						require_once("enums/role.php");
+						require_once("enums/participation_type.php");
+
+						$cur_user = $_SESSION['user'];
+						$ta_sections = $cur_user->get_sections_by_participation_type(Participation_Type::TEACHING_ASSISTANT);
+
+						//user has to either be an admin, teacher, or a ta for at least 1 section
+						if($ta_sections === false and $cur_user->get_properties()['role'] !== Role::ADMIN and $cur_user->get_properties()['role'] !== Role::TEACHER)
 						{
-							add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
+							add_alert('You do not have permission to access this.', Alert_Type::DANGER);
 							return call('pages', 'error');
 						}
 					}

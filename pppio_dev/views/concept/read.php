@@ -1,7 +1,7 @@
 <?php
 	//This view is used for seeing the information about a concept
 	//If the user is a ta or the owner then they will see additional information
-	//including a list of students, each students progress for each lesson in the concept, 
+	//including a list of students, each students progress for each lesson in the concept,
 	//and a link to the students project if the student has saved code on it.
 
 	require_once('views/shared/html_helper.php');
@@ -23,6 +23,7 @@
 
 	//Nothing below will be seen for students
 	if($is_ta || $is_owner)
+		echo '<div><a class="btn btn-primary" href="?controller=lesson&action=read_for_concept_for_student&concept_id='.$model->get_id().'">Preview</a></div>';
 	{
 ?>
 

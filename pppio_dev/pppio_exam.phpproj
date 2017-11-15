@@ -267,6 +267,5 @@
     <Content Include="js\code_windows.js" />
     <Content Include="js\question_editor.js" />
     <Content Include="js\sessions_handler.js" />
-    <Content Include="js\sort_table.js" />
   </ItemGroup>
 </Project>
