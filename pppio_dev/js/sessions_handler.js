@@ -131,7 +131,7 @@ function saveSession() {
             method: "POST",
             url: "?controller=session&action=save",
             async:false,
-            data: { start: start, mouseclicks: mouseclicks, keypresses: keypresses, timesran: timesran, activity_name: activity_name, activity_id: activity_id, errorCount: errorCount }
+            data: { start: start, end: new Date().getTime() / 1000, mouseclicks: mouseclicks, keypresses: keypresses, timesran: timesran, activity_name: activity_name, activity_id: activity_id, errorCount: errorCount }
         });
     }
 }

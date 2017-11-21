@@ -24,16 +24,17 @@ foreach($models as $k => $v)
 	if($can_read)
 	{ ?>
         <td>
-            <a href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View</a>
+            <a title="View and edit exam times assigned to students" href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View Times</a>
         </td><?php }
 	if($can_edit)
 	{ ?>
         <td>
-            <a href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
+            <a title="Update exam properties" href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
         </td>
-		<td>
-			<a href="<?php echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this exam?');">Delete</a>
-		</td>
+		<!--This is commented out until exam deletion gets implemented in the database-->
+		<!--<td>
+			<a href="<?php //echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this exam?');">Delete</a>
+		</td>-->
 		<?php } ?>
 	</tr>
 	<?php

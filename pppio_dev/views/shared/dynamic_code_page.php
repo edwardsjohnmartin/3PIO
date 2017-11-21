@@ -1,4 +1,5 @@
 <?php
+//TODO: Setting the parameters in functions in controllers takes a lot of lines of code. Streamlining it at all would nice so it's easier to use.
 //This will create a view with a code editor based around the parameters passed in. Any parameter not passed in will be set to a default.
 function create_code_editor_view($params = array())
 {
@@ -53,13 +54,13 @@ function create_code_editor_view($params = array())
 				<?php echo $properties['left_subtitle'];?>
             </p>
 
-			<!--Buttons-->
+			<!--Button Tiles-->
 			<div class="row">
 				<?php
 				foreach($properties['buttons'] as $b)
 				{
 					echo '<div class="col-xs-4 text-center left-pad-7 right-pad-7">';
-						echo '<a href=' . $b->get_link() . '><button type="button" id="' . $b->get_id() . '" class="tile btn btn-primary">';
+						echo '<a href=' . $b->get_link() . '><button type="button" id="' . $b->get_id() . '" class="tile btn ' . $b->get_color() . '">';
 							echo '<span class="tile-number">' . $b->get_text() . '</span>';
 						echo '</button></a>';
 					echo '</div>';

@@ -54,7 +54,6 @@
 
 	//end stuff that doesn't belong here
 
-
 	function redirect($controller, $action) //i'm using 'return' when calling to be consistent with call but it's not necessary
 	{
 		header('Location: ' . '?controller=' . $controller . '&action=' . $action);

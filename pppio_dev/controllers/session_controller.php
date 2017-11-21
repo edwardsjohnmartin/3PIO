@@ -5,15 +5,24 @@
 		//Save the session with the attributes in POST to the database for the logged in user
 		public function save()
 		{
-			if(isset($_POST['start']))
+			//The start and end time of the session has to be in the post
+			if(isset($_POST['start']) and isset($_POST['end']))
 			{
-				$start_time = date("Y-m-d H:i:s", intval($_POST['start']));
-				$end_time = date("Y-m-d H:i:s");
+				//Convert the times to seconds
+				$start_time = intval($_POST['start']);
+				$end_time = intval($_POST['end']);
 
+				//This shouldn't ever happen anymore since both times are created in JS 
+				//If the end time is before the start time, change the end time to be the start time
+				//This will result in a 0 session length
 				if($end_time < $start_time)
 				{
-					$start_time = $end_time;
+					$end_time = $start_time;
 				}
+
+				//Convert the times to a date format
+				$start_time = date("Y-m-d H:i:s", intval($_POST['start']));
+				$end_time = date("Y-m-d H:i:s", intval($_POST['end']));
 
 				$user_id = intval($_SESSION['user']->get_id());
 

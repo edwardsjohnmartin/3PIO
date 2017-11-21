@@ -1,4 +1,7 @@
 <?php
+	//TODO: Clean up create and read occurrences actions
+	//TODO: Modify read_occurrences to allow for a ta to access it
+
 	require_once('controllers/base_controller.php');
 	class QuestionController extends BaseController
 	{
@@ -128,6 +131,7 @@
 			require_once('views/shared/layout.php');
 		}
 
+		//Called from AJAX. Saves the student code to the database when they press run while completing a question.
 		public function save_code()
 		{
 			$success = false;
@@ -189,6 +193,7 @@
 			require_once('views/shared/json_wrapper.php');
 		}
 
+		//Action for saving a new occurrence to the database
 		public function create_occurrence()
 		{
 			$success = false;
@@ -211,6 +216,7 @@
 			require_once('views/shared/json_wrapper.php');
 		}
 
+		//Action for viewing occurrences of leaving the page during the exam
 		public function read_occurrences()
 		{
 			require_once('models/section.php');
@@ -265,6 +271,7 @@
 
 			$_SESSION['arr'] = $finished_array;
 
+			//Remove extraneous variables from memory
 			unset($data_arr);
 			unset($e_key);
 			unset($e_value);

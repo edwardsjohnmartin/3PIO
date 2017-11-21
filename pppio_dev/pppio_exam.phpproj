@@ -96,8 +96,8 @@
     <Compile Include="lib\codemirror.js" />
     <Compile Include="models\exam.php" />
     <Compile Include="models\grades.php" />
-    <Compile Include="models\html_objects\button.php" />
-    <Compile Include="models\html_objects\dropdown_item.php" />
+    <Compile Include="models\dynamic_view_objects\button.php" />
+    <Compile Include="models\dynamic_view_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
     <Compile Include="models\session.php" />
     <Compile Include="mode\python\python.js" />
@@ -186,7 +186,7 @@
     <Compile Include="views\shared\layout.php" />
     <Compile Include="views\shared\MultiSelect.php" />
     <Compile Include="views\shared\read.php" />
-    <Compile Include="views\shared\site_functions.php" />
+    <Compile Include="views\shared\dynamic_code_page.php" />
     <Compile Include="views\shared\Skulpt.php" />
     <Compile Include="views\shared\update.php" />
     <Compile Include="views\user\create.php" />
@@ -228,7 +228,7 @@
     <Folder Include="js\skulpt" />
     <Folder Include="js" />
     <Folder Include="lib" />
-    <Folder Include="models\html_objects\" />
+    <Folder Include="models\dynamic_view_objects\" />
     <Folder Include="mode\python" />
     <Folder Include="mode" />
     <Folder Include="models\not_in_use" />

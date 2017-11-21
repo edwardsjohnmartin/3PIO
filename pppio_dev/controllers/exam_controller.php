@@ -1,14 +1,28 @@
 <?php
+	/*The controller for exams.
+	Actions:
+		index: List of all owned exams and links to view the exam times and updating the exam
+		update_times: List of exam properties and table of current exam times and controls to change it
+		create: Create a new exam by inputting its name, instruction, and section
+		create_file: Create a new exam from a text file as well as the questions defined in the text file.
+		review_exam: View for a ta/teacher to review a students answer for the question on the exam. Utilizes the dynamic view.
+	*/
+	//TODO: The review_exam action contains a lot more information than is required. Trimming it down would be a good idea.
 	require_once('controllers/base_controller.php');
 	class ExamController extends BaseController
 	{
+		/*This doesn't do anything much different from the index in the base controller, but it needs to be here
+		because if the index in the base controller is used, it will return all existing exams instead of
+		just the exams belonging to (created by) the current logged in user*/
         public function index()
 		{
-			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
+			$models = $this->model_name::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/exam/index.php';
 			require_once('views/shared/layout.php');
         }
 
+		/*Action for viewing the exam properties and the table of currently assigned exam times for the student.
+		Also contains controls for selecting students to update their start and close times.*/
 		public function update_times()
 		{
 			//if a exam id wasn't passed in, throw error
@@ -122,6 +136,7 @@
             }
         }
 
+		//Create exam and questions from a text file
 		public function create_file()
 		{
 			$success = false;
@@ -207,11 +222,6 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public static function is_valid_date($date, $format = 'm/d/Y g:i A')
-		{
-			return date($format, strtotime($date)) == $date;
-		}
-
 		/*Requires stud_id, exam_id, question_id in $_GET
 		Allows a ta or teacher to review a students answers on a question on an exam
 		Gathers information about the exam pertaining to the student and displays it
@@ -261,9 +271,9 @@
 					}
 				}
 
-				include('views/shared/site_functions.php');
-				include('models/html_objects/button.php');
-				include('models/html_objects/dropdown_item.php');
+				include('views/shared/dynamic_code_page.php');
+				include('models/dynamic_view_objects/button.php');
+				include('models/dynamic_view_objects/dropdown_item.php');
 
 				//If there is no answer saved for the student on this question, set some defaults
 				if(!isset($current_question_results))
@@ -298,13 +308,39 @@
 					$left_subtitle = '';
 				}
 
-				//Nav buttons on the left
-				//Here they will be a link to each question on an exam
-				$index = 1;
+				//Fill $buttons with the info for the tiles on the left navbar, they will be a link to review questions on the exam
+				//They will be colored by the students completion_status and the current one will have a border
+				$index = 0;
 				$buttons = array();
 				foreach($exam_props['questions'] as $q_key => $q_value)
 				{
-					array_push($buttons, new button('btn_' . $q_key, $index, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"'));
+					$btn_color = 'btn-default';
+
+					//$exam_results has to be populated
+					if(count($exam_results) > 0)
+					{
+						//check if there is an entry for the question
+						if(array_key_exists($index, $exam_results) and $exam_results[$index]['id'] === $q_key)
+						{
+							//set $btn_color based on the completion_status
+							if($exam_results[$index]['completion_status_id'] === 1)
+							{
+								$btn_color = 'btn-success';
+							}
+							else if($exam_results[$index]['completion_status_id'] === 2)
+							{
+								$btn_color = 'btn-started';
+							}
+						}
+					}
+
+					//add a class to the tile for the current question to it has a border
+					if($q_key === intval($current_question_id))
+					{
+						$btn_color .= ' btn-current';
+					}
+
+					array_push($buttons, new button('btn_' . $q_key, $index + 1, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"', $btn_color));
 					$index++;
 				}
 
@@ -342,6 +378,12 @@
 				add_alert("You do not have access to this section.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
+		}
+
+		//Takes in a date and format string to check the validity of the date
+		public static function is_valid_date($date, $format = 'm/d/Y g:i A')
+		{
+			return date($format, strtotime($date)) == $date;
 		}
 	}
 ?>

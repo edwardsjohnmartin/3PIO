@@ -217,3 +217,8 @@ span.code {
 .dd-text-output {
     overflow:auto;
 }
+
+.btn-current {
+    border-color: #000;
+    border-width: 2px;
+}
