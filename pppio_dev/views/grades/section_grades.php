@@ -77,7 +77,6 @@ if(count($exams) > 0)
 				$q_index++;
 
 			}
-			//If 
 			if(!$header_filled)
 			{
 				$head_string .= '<th>Total Weight (' . $total_weight . ')</th>';
@@ -93,6 +92,7 @@ if(count($exams) > 0)
 		$html_string .= $body_string;
 	}
 	echo $html_string;
+	echo '<script src="js/drag_drop_table.js"></script>';
 }
 else
 {

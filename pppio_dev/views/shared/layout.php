@@ -25,6 +25,7 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/moment.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
+  	<script src="js/jquery-ui.js"></script>
   </head>
   <body>
 	<nav class="navbar navbar-default">

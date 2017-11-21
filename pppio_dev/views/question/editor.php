@@ -1,4 +1,7 @@
-
+<?php
+//This is the view that is used when a student does a question on an exam
+//TODO: Rewrite this to be in html instead of php so the code sections will be collapsible in Visual Studio
+?>
 <div id="test-form">
 	<?php
 	require_once('enums/completion_status.php');
@@ -26,9 +29,9 @@
 
 	echo '
 	<div class="row height-100 overflow-hidden">
-		<div class="col-xs-3 height-100 overflow-auto right-pad-0 test-sidebar">
-			<div class="container-fluid">
-				<div class="row"><h2>' . $exam_props['name'] . '</h2></div>
+		<div class="col-xs-3 height-100  right-pad-0 test-sidebar">
+			<div class="row text-center"><h3>' . $exam_props['name'] . '</h3></div>
+			<div class="scrollable-div container-fluid">
 				<div class="row">';
 
 				$i = 1;
@@ -67,13 +70,13 @@
 					$i++;
 				}
 			echo '</div>
-					<div class="row">
-                      <h4>Legend</h4>
-                      <h5>Blue = Current Question</h5>
-					  <h5>White = Not Started</h5>
-					  <h5>Yellow = Started</h5>
-				      <h5>Green = Completed</h5>
-			        </div>
+			</div>
+			<div class="row text-center">
+				<h4>Legend</h4>
+                <h5>Blue = Current Question</h5>
+				<h5>White = Not Started</h5>
+				<h5>Yellow = Started</h5>
+				<h5>Green = Completed</h5>
 			</div>
 		</div>
 		<div class="col-xs-9 height-100 flex-columns">
@@ -116,7 +119,7 @@
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
 					<textarea id="code" name="code">' . $start_area_code . '</textarea>
 				</div>
-				<div class="col-xs-6 height-100">
+				<div class="col-xs-6 height-100 overflow-auto">
 					<div id="mycanvas" class="graphicalOutput"></div>
 					<div class="textOutput">
       					<pre id="output"></pre>

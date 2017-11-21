@@ -64,6 +64,7 @@
 			}
 		}
 
+		//this is the action that a student uses to do a question on an exam
 		public function read_for_student(){
 			$readonly = false;
 			if (!isset($_GET['id']))

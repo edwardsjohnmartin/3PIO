@@ -137,7 +137,6 @@
     <Compile Include="views\exam\create_file.php" />
     <Compile Include="views\exam\index.php" />
     <Compile Include="views\exam\exam_table.php" />
-    <Compile Include="views\exam\read_for_student.php" />
     <Compile Include="views\exam\update_times.php" />
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
@@ -264,7 +263,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="js\code_editor_view.js" />
-    <Content Include="js\code_windows.js" />
+    <Content Include="js\drag_drop_table.js" />
+    <Content Include="js\jquery-latest.js" />
+    <Content Include="js\jquery.tablesorter.js" />
     <Content Include="js\question_editor.js" />
     <Content Include="js\sessions_handler.js" />
   </ItemGroup>
