@@ -4,7 +4,6 @@
 	{
 		public function index()
 		{
-
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/shared/index.php';
 			require_once('views/shared/layout.php');

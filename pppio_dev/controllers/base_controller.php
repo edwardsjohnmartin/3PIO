@@ -59,13 +59,11 @@
 
 		public function create()
 		{
-
 			//get from post.
 			//validate, fill.
 			//$model_name = $this->model_name; //not the best way to do this.
 			//if there isn't post data, or if the data is not valid, i need to show the form.
 			//i should show errors somehow. how?
-
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$postedToken = filter_input(INPUT_POST, 'token');
 				if(!empty($postedToken) && isTokenValid($postedToken))
@@ -223,7 +221,6 @@
 		}
 
 		//create and update are almost the same view... can i just put them into one? even if so, i need different controllers.
-
 		public function delete() {
 			if (!isset($_GET['id']))
 			{

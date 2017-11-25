@@ -82,8 +82,9 @@
 				$can_list_concept = has_permission(new Permission(Securable::CONCEPT, Permission_Type::LIST));
 				$can_list_exam = has_permission(new Permission(Securable::EXAM, Permission_Type::LIST));
 				$can_list_question = has_permission(new Permission(Securable::QUESTION, Permission_Type::LIST));
+				$can_list_survey = has_permission(new Permission(Securable::SURVEY, Permission_Type::LIST));
 
-				if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_concept || $can_list_exam || $can_list_question)
+				if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_concept || $can_list_exam || $can_list_question || $can_list_survey)
 			{
 				echo '<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
@@ -95,6 +96,7 @@
 					if ($can_list_exercise) echo '<li><a href="?controller=exercise&action=index">Exercises</a></li>';
 					if ($can_list_exam) echo '<li><a href="?controller=exam&action=index">Exams</a></li>';
 					if ($can_list_question) echo '<li><a href="?controller=question&action=index">Questions</a></li>';
+					if ($can_list_survey) echo '<li><a href="?controller=survey&action=index">Surveys</a></li>';
 				  echo '</ul>
 				</li>';
 			}
@@ -112,6 +114,7 @@
 					if ($can_list_user || $is_ta) echo '<li><a href="?controller=grades&action=index">Grades</a></li>';
 					if ($can_list_user || $is_ta) echo '<li><a href="?controller=session&action=index">Sessions</a></li>';
 					if ($can_list_user || $is_ta) echo '<li><a href="?controller=question&action=read_occurrences">Occurrences</a></li>';
+					if ($can_list_user || $is_ta) echo '<li><a href="?controller=survey&action=read_responses">Survey Responses</a></li>';
 					if ($can_list_user) echo '<li><a href="?controller=user&action=index">Users</a></li>';
 					if ($can_list_role) echo '<li><a href="?controller=role&action=index">Roles</a></li>';
 					if ($can_list_course) echo '<li><a href="?controller=course&action=index">Courses</a></li>';

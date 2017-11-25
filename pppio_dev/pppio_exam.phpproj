@@ -42,6 +42,7 @@
     <Compile Include="controllers\sandbox_controller.php" />
     <Compile Include="controllers\section_controller.php" />
     <Compile Include="controllers\session_controller.php" />
+    <Compile Include="controllers\survey_controller.php" />
     <Compile Include="controllers\tag_controller.php" />
     <Compile Include="controllers\user_controller.php" />
     <Compile Include="css\bootstrap-datetimepicker.min.css" />
@@ -61,6 +62,7 @@
     <Compile Include="enums\permission_type.php" />
     <Compile Include="enums\role.php" />
     <Compile Include="enums\securable.php" />
+    <Compile Include="enums\survey_type.php" />
     <Compile Include="enums\type.php" />
     <Compile Include="fonts\glyphicons-halflings-regular.eot" />
     <Compile Include="fonts\glyphicons-halflings-regular.svg" />
@@ -100,6 +102,8 @@
     <Compile Include="models\dynamic_view_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
     <Compile Include="models\session.php" />
+    <Compile Include="models\survey.php" />
+    <Compile Include="models\survey_type.php" />
     <Compile Include="mode\python\python.js" />
     <Compile Include="models\not_in_use\completion_status.php" />
     <Compile Include="models\not_in_use\participation_type.php" />
@@ -188,17 +192,15 @@
     <Compile Include="views\shared\dynamic_code_page.php" />
     <Compile Include="views\shared\Skulpt.php" />
     <Compile Include="views\shared\update.php" />
+    <Compile Include="views\survey\index.php" />
     <Compile Include="views\user\create.php" />
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />
     <Compile Include="views\user\manage_partners.php" />
     <Compile Include="views\user\read.php" />
     <Compile Include="connection.php" />
-    <Compile Include="dbsetup" />
-    <Compile Include="importer test.txt" />
     <Compile Include="importer.php" />
     <Compile Include="index.php" />
-    <Compile Include="oldupdate" />
     <Compile Include="routes.php" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +248,7 @@
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
     <Folder Include="views\grades\" />
+    <Folder Include="views\survey\" />
     <Folder Include="views\session\" />
     <Folder Include="views\question\" />
     <Folder Include="views\not_in_use\lesson" />
@@ -264,8 +267,7 @@
   <ItemGroup>
     <Content Include="js\code_editor_view.js" />
     <Content Include="js\drag_drop_table.js" />
-    <Content Include="js\jquery-latest.js" />
-    <Content Include="js\jquery.tablesorter.js" />
+    <Content Include="js\jquery-ui.js" />
     <Content Include="js\question_editor.js" />
     <Content Include="js\sessions_handler.js" />
   </ItemGroup>

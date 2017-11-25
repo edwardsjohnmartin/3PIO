@@ -19,6 +19,7 @@ class Securable extends Enum
 	const EXAM =	        12;
 	const QUESTION =        13;
 	const SESSION =         14;
+	const SURVEY =          15;
 
 	public static function get_id_from_string($activity)
 	{

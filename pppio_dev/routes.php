@@ -159,6 +159,10 @@
 				require_once('models/session.php');
 				$controller = new SessionController;
 				break;
+			case 'survey':
+				require_once('models/survey.php');
+				$controller = new SurveyController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -264,7 +268,10 @@
 									 'get_exam_grade_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])],
 						'session' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 									  'save' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
-									  'read_all_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])]
+									  'read_all_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])],
+					    'survey' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::LIST)]),
+						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']
 						];
