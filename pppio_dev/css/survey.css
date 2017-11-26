@@ -1,0 +1,34 @@
+﻿.question {
+    border: solid 1px #000;
+    margin: 15px;
+    width: 95%;
+}
+
+.question div{
+    margin: auto;
+}
+
+.question h3{
+    text-align:center;
+    width: 80%;
+    display: inline-block;
+}
+
+.question input{
+    width: 82%;
+    margin: 5px 5% 5px 5%;
+}
+
+.del-btn {
+    margin: 5px;
+    float: right;
+}
+
+.choice-inp {
+    display: inline-block;
+}
+
+.add-btn {
+    width: 40%;
+    margin: 20px 30% 20px 30%;
+}

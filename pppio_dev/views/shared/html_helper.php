@@ -286,6 +286,10 @@ class HtmlHelper //should these return strings or print? i think they should ret
 			{
 				$select .= 'selected';
 			}
+			if($v === "")
+			{
+				$v = '[None]';
+			}
 			$select .= '>' . htmlspecialchars($v) . '</option>';
 		}
 		$select .= '</select>';

@@ -10,8 +10,8 @@ class SurveyController extends BaseController
 
 	public function create(){
 		//TODO: Make a custom create view for this action
-		//It will need to be able to set name, instructions, survey type, and concept
-		//Also needs to be able to set lesson, but only if survey type is 'Pre Lesson' or 'Post Lesson'
+		//It will need to be able to set name, instructions, survey type, concept, and lesson
+		//The lesson will only be set if the survey type is Pre- or Post-Lesson
 		//It will need:
 		// add question button
 		// add choice button
@@ -22,8 +22,13 @@ class SurveyController extends BaseController
 		//To be able to save:
 		// survey needs at least 1 question
 		// questions needs at least 2 choices
-		// lesson must be null unless survey type is 'Pre Lesson' or 'Post Lesson'
+		// lesson must be null unless survey type is Pre- or Post-Lesson
 		// if lesson is set, it must be in the concept
+		//Initial Checks:
+		// A concept has to exist
+
+		$view_to_show = 'views/survey/create.php';
+		require_once('views/shared/layout.php');
 	}
 }
 ?>

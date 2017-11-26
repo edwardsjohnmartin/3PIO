@@ -94,6 +94,7 @@
     <Compile Include="js\project_editor.js" />
     <Compile Include="js\python_ide_util.js" />
     <Compile Include="js\run_only.js" />
+    <Compile Include="js\survey_create.js" />
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
     <Compile Include="models\exam.php" />
@@ -192,6 +193,7 @@
     <Compile Include="views\shared\dynamic_code_page.php" />
     <Compile Include="views\shared\Skulpt.php" />
     <Compile Include="views\shared\update.php" />
+    <Compile Include="views\survey\create.php" />
     <Compile Include="views\survey\index.php" />
     <Compile Include="views\user\create.php" />
     <Compile Include="views\user\index.php" />
@@ -265,6 +267,7 @@
     <Folder Include="views" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\survey.css" />
     <Content Include="js\code_editor_view.js" />
     <Content Include="js\drag_drop_table.js" />
     <Content Include="js\jquery-ui.js" />
