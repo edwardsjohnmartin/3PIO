@@ -47,6 +47,20 @@
 			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents, 'completion_status_id' => $completion_status_id));
 		}
 
+		public static function get_question_with_answer_for_student($question_id, $exam_id, $student_id){
+			$db = Db::getReader();
+			$question_id = intval($question_id);
+			$exam_id = intval($exam_id);
+			$student_id = intval($student_id);
+
+			$function_name = 'sproc_read_question_with_answer_for_student';
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'student_id')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'student_id' => $student_id));
+
+			$req->setFetchMode(PDO::FETCH_CLASS, 'Question');
+			return $req->fetch(PDO::FETCH_CLASS);
+		}
+
 		public static function get_code_file($question_id, $exam_id)
 		{
 			$db = Db::getReader();
@@ -109,6 +123,16 @@
 			$function_name = 'sproc_write_user_left_page_occurrence_create';
 			$req = $db->prepare(static::build_query($function_name, array('user_id', 'question_id', 'exam_id', 'date_of_occurrence')));
 			$req->execute(array('user_id' => $user_id, 'question_id' => $question_id, 'exam_id' => $exam_id, 'date_of_occurrence' => $date_of_occurrence));
+		}
+
+		public function get_full_properties(){
+			$ret_props = array();
+			$ret_props['id'] = $this->id;
+			$ret_props['instructions'] = $this->instructions;
+			$ret_props['weight'] = $this->weight;
+			$ret_props['start_code'] = $this->start_code;
+			$ret_props['test_code'] = $this->test_code;
+			return $ret_props;
 		}
 	}
 ?>

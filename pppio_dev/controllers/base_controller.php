@@ -4,8 +4,7 @@
 	//in order to get the model name automatically
 	//otherwise, set $model_name in the constructor to use a different model name.
 	//please make sure to call the parent constructor from the child classes if writing a new constructor and you want the default model name.
-	abstract class BaseController
-	{
+	abstract class BaseController{
 		//needed... index (list), create, read, update, delete
 		//will need to check permissions
 
@@ -103,24 +102,17 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public function read()
-		{
-			if (!isset($_GET['id']))
-			{
-				return call('pages', 'error');
-			}
-			else
-			{
+		public function read(){
+			if (!isset($_GET['id'])){
+				return call('pages', 'error');}
+			else{
 				$model = ($this->model_name)::get($_GET['id']);
-				if($model == null)
-				{
+				if($model == null){
 					add_alert('The item you are trying to access doesn\'t exist.', Alert_Type::DANGER);
 					return call('pages', 'error');
 				}
-				else
-				{
-					if(strtolower($this->model_name) == "exercise" or strtolower($this->model_name) == "question")
-					{
+				else{
+					if(strtolower($this->model_name) == "exercise" or strtolower($this->model_name) == "question"){
 						require_once("enums/role.php");
 						require_once("enums/participation_type.php");
 
@@ -128,17 +120,14 @@
 						$ta_sections = $cur_user->get_sections_by_participation_type(Participation_Type::TEACHING_ASSISTANT);
 
 						//user has to either be an admin, teacher, or a ta for at least 1 section
-						if($ta_sections === false and $cur_user->get_properties()['role'] !== Role::ADMIN and $cur_user->get_properties()['role'] !== Role::TEACHER)
-						{
+						if($ta_sections === false and $cur_user->get_properties()['role'] !== Role::ADMIN and $cur_user->get_properties()['role'] !== Role::TEACHER){
 							add_alert('You do not have permission to access this.', Alert_Type::DANGER);
 							return call('pages', 'error');
 						}
 					}
 					$view_to_show = 'views/' . strtolower($this->model_name) . '/read.php';
-					if(!file_exists($view_to_show))
-					{
-						$view_to_show = 'views/shared/read.php';
-					}
+					if(!file_exists($view_to_show)){
+						$view_to_show = 'views/shared/read.php';}
 					$types = $model::get_types();
 					$properties = $model->get_properties();
 					require_once('views/shared/layout.php');

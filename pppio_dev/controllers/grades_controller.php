@@ -70,22 +70,19 @@ class GradesController extends BaseController
 		require_once('models/section.php');
 		require_once('models/exam.php');
 
-		if(!isset($_GET['exam_id']))
-		{
+		if(!isset($_GET['exam_id'])){
 			add_alert("No exam was selected to get grades for.", Alert_Type::DANGER);
 			return call('pages', 'error');
 		}
 
 		$exam = Exam::get($_GET['exam_id']);
-		if(empty(Exam::get($_GET['exam_id'])))
-		{
+		if(empty(Exam::get($_GET['exam_id']))){
 			add_alert("The exam you are trying to access doesn't exist.", Alert_Type::DANGER);
 			return call('pages', 'error');
 		}
 
-		$is_student = Section::is_student($exam->get_section_id(), $_SESSION['user']->get_id());
-		if(!$is_student)
-		{
+		//User has to be the student whom the grades are for
+		if(!Section::is_student($exam->get_section_id(), $_SESSION['user']->get_id())){
 			add_alert("You do not have access to this section.", Alert_Type::DANGER);
 			return call('pages', 'error');
 		}
@@ -94,6 +91,8 @@ class GradesController extends BaseController
 		$exams = Exam::get_all_for_section($exam->get_section_id());
 		$exam_props = $exam->get_properties();
 		$exam_scores = Grades::get_exam_scores($exam_id);
+
+		//TODO: Figure out a way to get the total weight here without this method so it can be deleted.
 		$exam_weight = $exam->get_total_weight($exam_id);
 
 		$view_to_show = 'views/grades/exam_grade_for_student.php';

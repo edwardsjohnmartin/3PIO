@@ -3,7 +3,7 @@
 require_once('php-enum/Enum.php');
 use MyCLabs\Enum\Enum;
 
-class Survey_Type extends Enum
+class survey_type_enum extends Enum
 {
     const PRE_EXERCISES =		1;
 	const POST_EXERCISES = 		2;

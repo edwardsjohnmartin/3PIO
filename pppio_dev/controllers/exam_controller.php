@@ -310,13 +310,14 @@
 
 				//Fill $buttons with the info for the tiles on the left navbar, they will be a link to review questions on the exam
 				//They will be colored by the students completion_status and the current one will have a border
-				$index = 0;
+				$index = 0; //used to index the $exam_results array
+				$q_index = 1; //used to put the question number in the tiles
 				$buttons = array();
 				foreach($exam_props['questions'] as $q_key => $q_value)
 				{
 					$btn_color = 'btn-default';
 
-					//$exam_results has to be populated
+					//$exam_results has to be populated. if a student runs the code on a question, it will have an entry in $exam_results
 					if(count($exam_results) > 0)
 					{
 						//check if there is an entry for the question
@@ -331,6 +332,8 @@
 							{
 								$btn_color = 'btn-started';
 							}
+
+							$index++;
 						}
 					}
 
@@ -340,8 +343,8 @@
 						$btn_color .= ' btn-current';
 					}
 
-					array_push($buttons, new button('btn_' . $q_key, $index + 1, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"', $btn_color));
-					$index++;
+					array_push($buttons, new button('btn_' . $q_key, $q_index, '"?controller=exam&action=review_exam&stud_id=' . $stud_id . '&exam_id=' . $exam_id . '&question_id=' . $q_key . '"', $btn_color));
+					$q_index++;
 				}
 
 				//Scrub strings so they can be output in html

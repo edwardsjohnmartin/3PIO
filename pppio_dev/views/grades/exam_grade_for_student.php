@@ -5,8 +5,7 @@
 //Fills array $scores with objects that contain the question_id and the score multiplier(based on completion_status) for the entire exam
 
 //TODO: To display final grade, dont add up percentage of weigths on each question, add the weights themselves and get percentage of that
-foreach($exam_scores as $key => $value)
-{
+foreach($exam_scores as $key => $value){
 	if($value['student'] == $_SESSION['user']->get_id()){
 		$scores = $value['scores'];
 		break;
@@ -14,10 +13,8 @@ foreach($exam_scores as $key => $value)
 }
 
 //Fills array $questions with objects that contain the question_id, name, and weight of each question on the exam
-foreach($exams as $key => $value)
-{
-	if($value['id'] == $exam_id)
-	{
+foreach($exams as $key => $value){
+	if($value['id'] == $exam_id)	{
 		$questions = $value['questions'];
 		break;
 	}
@@ -29,15 +26,12 @@ $question_headers = '';
 $question_cells = '';
 
 //Go through each question and generate an html string for the headers and cells
-foreach($questions as $q_key => $q_value)
-{
+foreach($questions as $q_key => $q_value){
 	//Use $q_index to name questions that don't have a name
-	if($q_value->name !== '')
-	{
+	if($q_value->name !== ''){
 	    $question_headers .= '<th>' . $q_value->name . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
 	}
-	else
-	{
+	else{
 	    $question_headers .= '<th>Q' . $q_index . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
 	}
 
@@ -45,19 +39,15 @@ foreach($questions as $q_key => $q_value)
 	$value_found = false;
 	$score_var = 0;
 
-	foreach($scores as $s_key => $s_value)
-	{
-		if($s_value->question_id == $q_value->id)
-		{
+	foreach($scores as $s_key => $s_value){
+		if($s_value->question_id == $q_value->id){		
 			//This is hardcoded to account for a small portion of students that got a .5 for a score on a question due to a bug
 			//The bug is now fixed so this can be deleted before the next semester 10/23/2017
-			if($s_value->score == 0.5)
-			{
+			if($s_value->score == 0.5){
 			    $score_var = 0;
 			    break;
 			}
-			else
-			{
+			else{
 			    //Show question weight as a number out of 100
 				$score_var = $s_value->score * round($q_value->weight/$exam_weight*100);
 				$student_score += $s_value->score * $q_value->weight;

@@ -217,7 +217,7 @@
 		unset($can_list_role);
 		unset($can_list_section);
 		unset($can_list_user);
-		//unset($is_ta);     //leave this for now, it is being used in controller=grades&action=index while logged in as a ta. Possible other places as well.
+		unset($can_list_survey);
 		if($view_to_show != "")
 		{
 			require_once($view_to_show);

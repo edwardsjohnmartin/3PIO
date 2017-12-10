@@ -271,6 +271,7 @@
 									  'read_all_for_student' =>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)])],
 					    'survey' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::LIST)]),
 						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])]
 						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
 						//'role' => ['index', 'read', 'create', 'update']

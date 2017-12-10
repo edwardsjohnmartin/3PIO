@@ -62,7 +62,7 @@
     <Compile Include="enums\permission_type.php" />
     <Compile Include="enums\role.php" />
     <Compile Include="enums\securable.php" />
-    <Compile Include="enums\survey_type.php" />
+    <Compile Include="enums\survey_type_enum.php" />
     <Compile Include="enums\type.php" />
     <Compile Include="fonts\glyphicons-halflings-regular.eot" />
     <Compile Include="fonts\glyphicons-halflings-regular.svg" />
@@ -94,7 +94,7 @@
     <Compile Include="js\project_editor.js" />
     <Compile Include="js\python_ide_util.js" />
     <Compile Include="js\run_only.js" />
-    <Compile Include="js\survey_create.js" />
+    <Content Include="js\survey_create.js" />
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
     <Compile Include="models\exam.php" />
@@ -171,14 +171,13 @@
     <Compile Include="views\project\check.php" />
     <Compile Include="views\project\editor.php" />
     <Compile Include="views\question\editor.php" />
+    <Compile Include="views\question\editor1.php" />
     <Compile Include="views\question\read_occurrences.php" />
     <Compile Include="views\role\index.php" />
     <Compile Include="views\role\read.php" />
     <Compile Include="views\sandbox\editor.php" />
     <Compile Include="views\section\read.php" />
     <Compile Include="views\section\read_student.php" />
-    <Compile Include="views\section\read_student_old.php" />
-    <Compile Include="views\section\read_student_rewrite.php" />
     <Compile Include="views\section\read_student_v3.php" />
     <Compile Include="views\session\index.php" />
     <Compile Include="views\session\read_all_for_student.php" />
@@ -195,6 +194,7 @@
     <Compile Include="views\shared\update.php" />
     <Compile Include="views\survey\create.php" />
     <Compile Include="views\survey\index.php" />
+    <Compile Include="views\survey\read.php" />
     <Compile Include="views\user\create.php" />
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />

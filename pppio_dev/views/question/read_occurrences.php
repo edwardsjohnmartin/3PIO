@@ -1,7 +1,6 @@
 <?php
 $finished_arr = $_SESSION['arr'];
 unset($_SESSION['arr']);
-
 if(empty($finished_arr))
 {
 	add_alert("There are no sections to show.", Alert_Type::DANGER);
@@ -11,7 +10,6 @@ else
 {
 	$wrote_section_name = false;
 	$wrote_exam_name = false;
-
 	foreach($finished_arr as $s_key => $s_value)
 	{
 		if(!empty($s_value['exams']))
@@ -20,7 +18,6 @@ else
 			{
 				if(!empty($s_value['students']))
 				{
-
 					foreach($s_value['students'] as $st_key => $st_value)
 					{
 						$occurrences = Question::read_occurrences($st_key, $e_key);

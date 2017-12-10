@@ -149,6 +149,7 @@ class Exam extends Model
 	{
 		$all_props = get_class_vars(static::class);
 		$ret_props = array();
+		$ret_props['id'] = $this->id;
 		foreach($all_props as $key => $value)
 		{
 			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])
@@ -206,6 +207,14 @@ class Exam extends Model
 		$req->execute($props);
 
 		$this->set_id($req->fetchColumn()); //something like that. i'm using the setter here but not the getter above, which should i do?
+	}
+
+	public function get_total_weight1(){
+		$ret_weight = 0;
+		foreach($this->questions as $q_id => $q){
+			$ret_weight += intval($q->value);
+		}
+		return $ret_weight;
 	}
 }
 ?>

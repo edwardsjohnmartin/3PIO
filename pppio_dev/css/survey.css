@@ -1,5 +1,5 @@
 ﻿.question {
-    border: solid 1px #000;
+    border: dashed 1px #000;
     margin: 15px;
     width: 95%;
 }
@@ -31,4 +31,16 @@
 .add-btn {
     width: 40%;
     margin: 20px 30% 20px 30%;
+}
+
+.rb_div input[type=radio]{
+    margin: 5px;
+}
+.rb_div label {
+    margin: 5px;
+}
+
+.question-container {
+    border: solid 1px #000;
+    margin: 15px;
 }
