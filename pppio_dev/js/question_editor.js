@@ -63,7 +63,7 @@ function run() {
         var runMethod = mod.tp$getattr('__TEST');
         var ret = Sk.misceval.callsim(runMethod, Sk.builtin.str(editor.getValue()), Sk.builtin.str(outputArea.innerHTML));
         //ret.v is an array of problems
-        if (ret.v.length == 0 || ret.v[0].v == null) {
+        if (ret.v.length === 0 || ret.v[0].v === null) {
             //success
             completion_status_id = 1;
             completeExercise();
@@ -82,7 +82,7 @@ function run() {
     },
     function (err) {
         var line_num = Number(err.toString().split("on line", 2)[1]);
-        if (err.args != undefined) {
+        if (err.args !== undefined) {
             if (err.args.v[0].v === "EOF in multi-line string") {
                 markError("ERROR: It looks like you have an open multi-line comment.");
             }
@@ -147,13 +147,13 @@ function markSuccess(successMessage) {
 
 function updateTiles(completion_status_id) {
     var current_tile = document.getElementById(current_tile_id);
-    if (completion_status_id == 1) {
+    if (completion_status_id === 1) {
         current_tile.classList.remove('btn-default');
         current_tile.classList.remove('btn-primary');
         current_tile.classList.remove('btn-started');
         current_tile.classList.add('btn-success');
     }
-    else if (completion_status_id == 2)
+    else if (completion_status_id === 2)
     {
         current_tile.classList.remove('btn-default');
         current_tile.classList.remove('btn-success');
@@ -195,7 +195,7 @@ function addEvent(obj, evt, fn) {
 addEvent(document, "mouseout", function (e) {
     e = e ? e : window.event;
     var from = e.relatedTarget || e.toElement;
-    if (!from || from.nodeName == "HTML") {
+    if (!from || from.nodeName === "HTML") {
         console.log("cursor left");
     }
 });

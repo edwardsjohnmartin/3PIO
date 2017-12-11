@@ -75,35 +75,6 @@
 			return $req->fetch(PDO::FETCH_COLUMN); //returns only the contents
 		}
 
-		public static function set_completion_status($question_id, $exam_id, $user_id, $completion_status_id)
-		{
-			require_once('enums/completion_status.php');
-
-			$db = Db::getReader();
-			$question_id = intval($question_id);
-			$exam_id = intval($exam_id);
-			$user_id = intval($user_id);
-			$completion_status_id = intval($completion_status_id); //please be valid
-
-			$function_name = 'sproc_write_completion_status_to_question';
-			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'completion_status_id')));
-			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'completion_status_id' => $completion_status_id));
-		}
-
-		public static function get_completion_status($question_id, $exam_id, $user_id)
-		{
-			$db = Db::getReader();
-			$question_id = intval($question_id);
-			$exam_id = intval($exam_id);
-			$user_id = intval($user_id);
-
-			$function_name = 'sproc_read_completion_status_to_question';
-			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id')));
-			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id));
-
-			return $req->fetch(PDO::FETCH_COLUMN);
-		}
-
 		public static function read_occurrences($user_id, $exam_id)
 		{
 			$db = Db::getReader();
