@@ -163,6 +163,14 @@
 				require_once('models/survey.php');
 				$controller = new SurveyController;
 				break;
+			case 'survey_question':
+				require_once('models/survey_question.php');
+				$controller = new Survey_QuestionController;
+				break;
+			case 'survey_choice':
+				require_once('models/survey_choice.php');
+				$controller = new Survey_ChoiceController;
+				break;
 		}
 		$controller->$action();
 	}
@@ -239,8 +247,7 @@
 										'log_out'=>new Authorization_Requirements(true, []),
 										'log_out_partner'=>new Authorization_Requirements(true, []),
 										'manage_partners'=>new Authorization_Requirements(true, []),
-										'create'=>new Authorization_Requirements(false, [])
-									], //['index', 'read', 'create', 'update'],
+										'create'=>new Authorization_Requirements(false, [])],
 						'role' => [
 										'index' =>new Authorization_Requirements(null, [new Permission(Securable::ROLE, Permission_Type::LIST)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::ROLE, Permission_Type::READ)])
@@ -272,9 +279,13 @@
 					    'survey' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::LIST)]),
 						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
-									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])]
-						//'function' => ['index'=>[], 'read'=>[], 'create'=>[], 'update'=>[]],
-						//'role' => ['index', 'read', 'create', 'update']
+									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])],
+						'survey_question' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::LIST)]),
+						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::CREATE)]),
+									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::READ)])],
+					    'survey_choice' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::LIST)]),
+						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::CREATE)]),
+									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::READ)])]
 						];
 
 	if(array_key_exists($controller, $controllers))

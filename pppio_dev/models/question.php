@@ -1,7 +1,6 @@
 <?php
 	require_once('models/model.php');
-	class Question extends Model
-	{
+	class Question extends Model{
 		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'instructions' => Type::STRING, 'start_code' => Type::CODE, 'test_code' => Type::CODE, 'language' => Type::LANGUAGE, 'exam' => Type::EXAM, 'weight' => TYPE::INTEGER); //use the enum
 		protected $name = '';
 		protected $instructions = '';
@@ -32,7 +31,7 @@
 			$req->execute(array('exam_id' => $exam_id));
 
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
-		}
+		}		
 
 		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id)
 		{

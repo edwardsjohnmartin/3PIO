@@ -19,7 +19,7 @@
 				//get user
 				//if good, redirect
 				//else show page again
-			
+
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				//probably i should do that isset stuff
 				//$_POST['email'];
@@ -132,12 +132,13 @@
 			$_SESSION['partners'] = null;
 			$_SESSION['sections_student'] = null;
 			$_SESSION['sections_ta'] = null;
+			$_SESSION['sections_owner'] = null;
 			$_SESSION['permissions'] = null;
 
 			add_alert('Logged out!', Alert_Type::SUCCESS);
 			//session_write_close();
 			redirect_to_index();
-			
+
 		}
 
 		public function create()
@@ -291,7 +292,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{

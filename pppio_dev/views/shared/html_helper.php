@@ -73,7 +73,10 @@ class HtmlHelper //should these return strings or print? i think they should ret
 
 	static function label($property)
 	{
-		return '<label for="' . $property . '">' .  str_replace('_', ' ', ucfirst($property)) . '</label>';
+		//return '<label for="' . $property . '">' .  str_replace('_', ' ', ucfirst($property)) . '</label>';
+
+		//Changed  this so every word will be uppercase instead of just the first letter of the first word
+		return '<label for="' . $property . '">' .  ucwords(str_replace('_', ' ', $property)) . '</label>';
 	}
 
 	static function span($type, $key, $value) //todo: would be nice to have different displays. like labels for tags.

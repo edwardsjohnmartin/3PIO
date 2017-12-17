@@ -86,8 +86,7 @@ abstract class Model
 	//please go through this
 	public function set_properties($args) //should be able to accept the return value of get_properties
 	{
-		foreach($args as $key => $value)
-		{
+		foreach($args as $key => $value){
 			if(property_exists($this, $key) && (!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])) //i could also check if it's in the types
 			{
 				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
@@ -96,7 +95,6 @@ abstract class Model
 					$this->$key = $value;
 				}
 			}
-
 		}
 	}
 

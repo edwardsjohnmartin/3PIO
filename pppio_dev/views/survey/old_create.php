@@ -15,9 +15,6 @@ echo '<input type="hidden" name="token" value="' . getToken() . '"/>';
 echo HtmlHelper::label('name');
 echo HtmlHelper::input(Type::STRING, 'name');
 
-echo HtmlHelper::label('instructions');
-echo HtmlHelper::input(Type::STRING, 'instructions');
-
 //Get all survey_types as key->value pairs and display them in a dropdown
 echo HtmlHelper::label('survey_type');
 $survey_types = survey_type::get_pairs();

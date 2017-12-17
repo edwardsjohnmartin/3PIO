@@ -16,14 +16,14 @@ function doSomething(sel)
 	//Hard coded to be the options Pre Lesson and Post Lesson
 	//If either lesson option is selected, enable the dropdown
 	//Else disable it and select the default option
-	if(sel.target.selectedIndex == 4 || sel.target.selectedIndex == 5){
+	if(sel.target.selectedIndex === 4 || sel.target.selectedIndex === 5){
 		sel_lesson.disabled = false;
 		sel_lesson.selectedIndex = 0;
 	}
 	else{
 		sel_lesson.disabled = true;
 	}
-};
+}
 
 function addQuestion(){
 	questionCount++;
@@ -63,16 +63,16 @@ function addQuestion(){
 	qAddChoice.innerText = "Add Choice";
 	qAddChoice.addEventListener("click", addChoice);
 	qDiv.appendChild(qAddChoice);
-	checkSurveyValidity()
-};
+    checkSurveyValidity();
+}
 
 function deleteQuestion(){
 	//get the index of the delete question button that was pressed
 	var question_id = this.id.match(/\d+/)[0];
 
 	document.getElementById("div_question_" + question_id).remove();
-	checkSurveyValidity()
-};
+    checkSurveyValidity();
+}
 
 function addChoice(){
 	choiceCount++;	
@@ -103,8 +103,8 @@ function addChoice(){
 	cDiv.appendChild(cDelete);
 
 	countChoices(document.getElementById("div_question_" + question_id));
-	checkSurveyValidity()
-};
+    checkSurveyValidity();
+}
 
 function deleteChoice(){
 	//get the index of the delete choice button that was pressed
@@ -117,8 +117,8 @@ function deleteChoice(){
 
 	countChoices(document.getElementById("div_question_" + q_id));
 	
-	checkSurveyValidity()
-};
+    checkSurveyValidity();
+}
 
 function countChoices(qDiv){
 	var choiceCount = qDiv.getElementsByClassName("row").length;
@@ -129,7 +129,7 @@ function countChoices(qDiv){
 	else{
 		qDiv.getElementsByTagName("h3")[0].style.color = "#F00";
 	}
-};
+}
 
 function checkSurveyValidity(){
 	var qDivs = document.getElementsByClassName("question");
@@ -149,7 +149,7 @@ function checkSurveyValidity(){
 	}
 	
 	document.getElementById("btn_frm_submit").disabled = !isValid;
-};
+}
 
 $('#frm_create_survey').submit(function () {
 

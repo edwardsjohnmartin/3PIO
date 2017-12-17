@@ -129,11 +129,7 @@
 
 			require_once('models/lesson.php');
 			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
-
-
 			$concept = concept::get($_GET['concept_id']); //all i really want is the section id for links...
-
-			//require_once('views/shared/editor.php');
 
 			$view_to_show = 'views/exercise/editor.php';
 			require_once('views/shared/layout.php');
