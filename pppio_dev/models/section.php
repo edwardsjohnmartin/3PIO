@@ -12,8 +12,8 @@ class Section extends Model{
 	protected $teaching_assistants;
 	protected $concepts;
 
-	public static function get_pairs_for_student($user_id) //expecting multiple
-	{
+	//Returns all sections where a user is listed as a student
+	public static function get_pairs_for_student($user_id){
 		$db = Db::getReader();
 		$user_id = intval($user_id);
 
@@ -22,7 +22,7 @@ class Section extends Model{
 		$req->execute(array('user_id' => $user_id));
 
 		require_once('models/key_value_pair.php');
-		return $req->fetchAll(PDO::FETCH_CLASS, 'key_value_pair');
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
 	public static function get_pairs_for_teaching_assistant($user_id){
@@ -30,6 +30,20 @@ class Section extends Model{
 		$user_id = intval($user_id);
 
 		$function_name = 'sproc_read_section_get_pairs_for_teaching_assistant';
+		$req = $db->prepare(static::build_query($function_name, array('user_id')));
+		$req->execute(array('user_id' => $user_id));
+
+		require_once('models/key_value_pair.php');
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+	//Return all sections where a user is a student and participating in the study
+	//Note: This will return sections even if the current time is outside of the section start and end time
+	public static function get_study_pairs_for_student($user_id){
+		$db = Db::getReader();
+		$user_id = intval($user_id);
+
+		$function_name = 'sproc_read_section_get_study_pairs_for_student';
 		$req = $db->prepare(static::build_query($function_name, array('user_id')));
 		$req->execute(array('user_id' => $user_id));
 

@@ -87,10 +87,8 @@
 		}
 
 		//Get a list of all sections the user has the participation type for
-		public function get_sections_by_participation_type($participation_type_id)
-		{
+		public function get_sections_by_participation_type($participation_type_id){
 			$user_id = $_SESSION['user']->get_id();
-			$user_id = intval($user_id);
 
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_get_sections_by_participation_type';

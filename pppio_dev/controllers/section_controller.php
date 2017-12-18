@@ -109,26 +109,17 @@ class SectionController extends BaseController
 
 	}
 
-	public function read_student()
-	{
-		if (!isset($_GET['id']))
-		{
-			return call('pages', 'error');
-		}
-		else if (!section::is_student($_GET['id'], $_SESSION['user']->get_id()))
-		{
+	public function read_student(){
+		if (!isset($_GET['id'])){
+			return call('pages', 'error');}
+		else if (!section::is_student($_GET['id'], $_SESSION['user']->get_id())){
 			add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
-			return call('pages', 'error');
-		}
-		else
-		{
+			return call('pages', 'error');}
+		else{
 			$section = ($this->model_name)::get($_GET['id']);
-			if ($section == null)
-			{
-				return call('pages', 'error');
-			}
-			else
-			{
+			if ($section == null){
+				return call('pages', 'error');}
+			else{
 				require_once('models/concept.php');
 				require_once('models/exam.php');
 				$concepts = concept::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());

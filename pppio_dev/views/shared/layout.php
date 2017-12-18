@@ -44,21 +44,18 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
-
-
 					<?php
-					if(isset($_SESSION['user']) && $_SESSION['user'] != null)		{
-						if(isset($_SESSION['sections_student']) && $_SESSION['sections_student'] != null && count($_SESSION['sections_student']) >0)			{
+					if(isset($_SESSION['user']) && $_SESSION['user'] != null){
+						if(isset($_SESSION['sections_student']) && $_SESSION['sections_student'] != null && count($_SESSION['sections_student']) >0){
 							echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (Student) <span class="caret"></span></a><ul class="dropdown-menu">';
-							foreach($_SESSION['sections_student'] as $kvp)				{
-								echo '<li><a href="?controller=Section&action=read_student&id=' . $kvp->key . '">' . htmlspecialchars($kvp->value) . '</a></li>';
+							foreach($_SESSION['sections_student'] as $s_id => $s_name){
+								echo '<li><a href="?controller=Section&action=read_student&id=' . $s_id . '">' . htmlspecialchars($s_name) . '</a></li>';
 							}
 							echo '</ul></li>';
 						}
 
 						$is_ta = false;
-						if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0)			{
+						if(isset($_SESSION['sections_ta']) && $_SESSION['sections_ta'] != null && count($_SESSION['sections_ta']) >0){
 							$is_ta = true;
 							echo '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Classes (TA) <span class="caret"></span></a><ul class="dropdown-menu">';
 							foreach($_SESSION['sections_ta'] as $s_id => $s_name)				{
@@ -121,53 +118,37 @@
 						}
 					}
 					echo '<li><a href="?controller=sandbox&action=index">Sandbox</a></li>';
-					?>
-
-					<!-- <li><a href="#">Users</a></li>
-
-			<li class="dropdown">
-		      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin stuff <span class="caret"></span></a>
-		      <ul class="dropdown-menu">
-		        <li><a href="#">Participation Types</a></li>
-		        <li><a href="#">Roles</a></li>
-		      </ul>
-		    </li>-->
+                    ?>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
 					<?php
 					if(isset($_SESSION['user']) && $_SESSION['user'] != null){
-						//echo '<li><a href="#">Settings</a></li>
-						echo '<li><a href="mailto:edwajohn@isu.edu,valejose@isu.edu?Subject=3PIO Website Bug" target="_top">Report a Bug</a></li>';
 						echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
 						echo '<li class="dropdown">
 		  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>
 		  <ul class="dropdown-menu">';
-						if(isset($_SESSION['partners']) && $_SESSION['partners'] != null && count($_SESSION['partners']) > 0)
-						{
-							foreach($_SESSION['partners'] as $partner)
-							{
+						if(isset($_SESSION['partners']) && $_SESSION['partners'] != null && count($_SESSION['partners']) > 0){
+							foreach($_SESSION['partners'] as $partner){
 								echo '<li><a>' . $partner->get_properties()['name'] . '</a></li>';
 							}
 							echo '<li role="separator" class="divider"></li>';
 						}
 						echo '<li><a href="?controller=user&action=log_in_partner">Add a partner</a></li>';
 						echo '<li><a href="?controller=user&action=manage_partners">Manage partners</a></li>';
-						echo '</ul>
-		</li>';
-
+						echo '</ul></li>';
 						echo '<li><a href="?controller=user&action=log_out">Log out</a></li>';
 
 					}
 					else{
-						echo '<li><a href="?controller=user&action=create">Create account</a></li>
-					<li><a href="?controller=user&action=log_in">Log in</a></li>';
+						echo '<li><a href="?controller=user&action=create">Create account</a></li>';
+						echo '<li><a href="?controller=user&action=log_in">Log in</a></li>';
 					}
 
                     ?>
 				</ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
+			</div>
+		</div>
 	</nav>
 
 	<div class="container" role="main">
@@ -188,7 +169,6 @@
 			<?php echo $alert->message; ?>
 		</div>
 		<?php
-				  //get rid of alert...
 			}
 			unset($_SESSION['alerts']);
 		}
@@ -213,7 +193,7 @@
 			require_once($view_to_show);
 			echo '</div>';
 		}
-		?>
+        ?>
 
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
