@@ -144,23 +144,19 @@
 			//for users especially, i need to be more careful.
 			//this is a basic one without permissions.
 
-			if (!isset($_GET['id']))
-			{
-				return call('pages', 'error');
-			}
+			if (!isset($_GET['id'])){
+				return call('pages', 'error');}
 
 			//if there is post data...
 			//todo: i need to check if the model actually exists on post, too!!!!
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$postedToken = filter_input(INPUT_POST, 'token');
-				if(!empty($postedToken) && isTokenValid($postedToken))
-				{
+				if(!empty($postedToken) && isTokenValid($postedToken)){
 					//probably i should do that isset stuff
 					$model = new $this->model_name();
 					$model->set_id($_GET['id']); //i should not trust that...
 					$model->set_properties($_POST);
-					if($model->is_valid())
-					{
+					if($model->is_valid()){
 						$model->update(); //do i call validate here, or in the update function?
 						//layout has already been created. can't add the alerts now
 						//but redirecting anyway
@@ -177,28 +173,23 @@
 						//exit properly first!
 						//redirect header("Location: ...");
 					}
-					else
-					{
+					else{
 						add_alert('Please try again.', Alert_Type::DANGER);
 					}
 				}
-				else
-				{
+				else{
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
 
 			$model = ($this->model_name)::get($_GET['id']);
-			if($model == null)
-			{
+			if($model == null){
 				return call('pages', 'error');
 			}
-			else
-			{
+			else{				
 				//require_once('views/shared/update.php');
 				$view_to_show = 'views/' . strtolower($this->model_name) . '/update.php';
-				if(!file_exists($view_to_show))
-				{
+				if(!file_exists($view_to_show)){
 					$view_to_show = 'views/shared/update.php';
 				}
 				$types = $model::get_types();

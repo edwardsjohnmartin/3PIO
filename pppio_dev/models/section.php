@@ -51,6 +51,19 @@ class Section extends Model{
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
+	//Returns all students who are participating in the study for the section whose id is passed in
+	public static function get_study_students($section_id){
+		$db = Db::getReader();
+		$section_id = intval($section_id);
+
+		$function_name = 'sproc_read_section_get_study_students';
+		$req = $db->prepare(static::build_query($function_name, array('section_id')));
+		$req->execute(array('section_id' => $section_id));
+
+		require_once('models/key_value_pair.php');
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
 	public static function get_students($owner_id)
 	{
 		$db = Db::getReader();
@@ -118,11 +131,27 @@ class Section extends Model{
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
+	//Overwrite the base create to allow for setting if a student will be participating in the study or not
+	public function create(){
+		$db = Db::getWriter();
+
+		$props = $this->get_db_properties();
+		unset($props['students']);
+		$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
+		$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
+
+		$function_name = 'sproc_write_section_create';
+		$req = $db->prepare(static::build_query($function_name, array_keys($props)));
+
+		$req->execute($props);
+
+		$this->set_id($req->fetchColumn());
+	}
+
 	/*This was created to be able to set if a student will participate in data collection or not
 	The create function in the section controller had to be changed and this was the only way(that I know of) to get the order the array correct
 	Also it doesn't return courses and teacher like it did before which weren't used for create*/
-	public static function get_properties_for_create()
-	{
+	public static function get_properties_for_create(){
 		$ret_props = array();
 		$ret_props['name'] = null;
 		$ret_props['course'] = null;
@@ -138,8 +167,7 @@ class Section extends Model{
 	/*This was created to be able to set if a student will participate in data collection or not
 	The create function in the section controller had to be changed and this was the only way(that I know of) to get the order the array correct
 	Also it doesn't return courses and teacher like it did before which weren't used for create*/
-	public static function get_types_for_create()
-	{
+	public static function get_types_for_create(){
 		$ret_props = array();
 		$ret_props['id'] = Type::INTEGER;
 		$ret_props['name'] = Type::STRING;
@@ -153,22 +181,42 @@ class Section extends Model{
 		return $ret_props;
 	}
 
-	//Overwrite the base create to allow for setting if a student will be participating in the study or not
-	public function create()
-	{
-		$db = Db::getWriter();
+	//Overwrite the base update to allow for updating study partipant students and non study participant students
+	public function update(){
+	    $db = Db::getWriter();
 
-		$props = $this->get_db_properties();
+	    $props = $this->get_db_properties();
+	    $props['id'] = $this->id;
 		unset($props['students']);
 		$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
 		$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
 
-		$function_name = 'sproc_write_section_create';
-		$req = $db->prepare(static::build_query($function_name, array_keys($props)));
+	    $function_name = 'sproc_write_section_update';
+	    $req = $db->prepare(static::build_query($function_name, array_keys($props)));
+	    $req->execute($props);
+	}
 
-		$req->execute($props);
-
-		$this->set_id($req->fetchColumn());
+	public function get_properties_for_update($study_students){
+		$all_props = get_class_vars(static::class);
+		$ret_props = array();
+		foreach($all_props as $key => $value){
+			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key]){
+				if($key === 'students'){
+					$ret_props['is_study_students'] = array();
+					$ret_props['not_study_students'] = array();
+					foreach($this->students as $s_key => $s_value){
+						if(array_key_exists($s_key, $study_students)){
+							$ret_props['is_study_students'][$s_key] = $s_value;}
+						else {
+							$ret_props['not_study_students'][$s_key] = $s_value;
+						}
+					}
+				} else {
+					$ret_props[$key] = $this->$key;
+				}
+			}
+		}
+		return $ret_props;
 	}
 }
 ?>

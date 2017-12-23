@@ -76,9 +76,9 @@
 						$can_list_survey_choice = has_permission(new Permission(Securable::SURVEY_CHOICE, Permission_Type::LIST));
 
 						if ($can_list_section || $can_list_project || $can_list_lesson || $can_list_exercise || $can_list_concept || $can_list_exam || $can_list_question || $can_list_survey){
-							echo '<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>
-								<ul class="dropdown-menu">';
+							echo '<li class="dropdown">';
+							echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Materials <span class="caret"></span></a>';
+							echo '<ul class="dropdown-menu">';
 							if ($can_list_section) echo '<li><a href="?controller=section&action=index">Sections</a></li>';
 							if ($can_list_concept) echo '<li><a href="?controller=concept&action=index">Concepts</a></li>';
 							if ($can_list_project) echo '<li><a href="?controller=project&action=index">Projects</a></li>';
@@ -125,9 +125,9 @@
 					<?php
 					if(isset($_SESSION['user']) && $_SESSION['user'] != null){
 						echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
-						echo '<li class="dropdown">
-		  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>
-		  <ul class="dropdown-menu">';
+						echo '<li class="dropdown">';
+		                echo '<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>';
+		                echo '<ul class="dropdown-menu">';
 						if(isset($_SESSION['partners']) && $_SESSION['partners'] != null && count($_SESSION['partners']) > 0){
 							foreach($_SESSION['partners'] as $partner){
 								echo '<li><a>' . $partner->get_properties()['name'] . '</a></li>';

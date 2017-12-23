@@ -177,5 +177,7 @@ echo $exercise_props['test_code'];
 echo '</script>';
 
 echo '<script src="js/exercise_editor.js"></script>';
+
 echo '<script src="js/sessions_handler.js"></script>';
+
 ?>

@@ -2,15 +2,13 @@
 require_once('controllers/base_controller.php');
 class SectionController extends BaseController
 {
-	public function index()
-	{
+	public function index(){
 		$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 		$view_to_show = 'views/shared/index.php';
 		require_once('views/shared/layout.php');
 	}
 
-	public function create()
-	{
+	public function create(){
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$postedToken = filter_input(INPUT_POST, 'token');
 			if(!empty($postedToken) && isTokenValid($postedToken)){
@@ -19,18 +17,20 @@ class SectionController extends BaseController
 				$intersection = array_intersect($_POST['is_study_students'], $_POST['not_study_students']);
 				if(!isset($intersection) or count($intersection) > 0){
 					unset($intersection);
-					add_alert("A user can only be placed in one of the Students boxes.", Alert_Type::DANGER);
+					add_alert("A user can only be placed in one of the students boxes.", Alert_Type::DANGER);
 				}else{
 
 					//Check to make sure a user is only being set as a student or a TA, not both
 					$ta_intersection = array_intersect($_POST['teaching_assistants'], array_merge($_POST['is_study_students'], $_POST['not_study_students']));
 					if(!isset($ta_intersection) or count($ta_intersection) > 0){
 						unset($ta_intersection);
-						add_alert("A user cannot be a Student and Teaching Assistant for a section.", Alert_Type::DANGER);
+						add_alert("A user cannot be a student and teaching assistant for a section.", Alert_Type::DANGER);
 					}else{
 						$model = new $this->model_name();
 						$model->set_properties($_POST);
 						$model->set_properties(array('teacher' => $_SESSION['user']->get_id()));
+
+						//HACK: The 'students property of the section model will not get filled here. The data will get passed through the $_POST and be filled in the create() function in the section class.
 						if($model->is_valid()){
 							$model->create();
 							add_alert('Successfully created!', Alert_Type::SUCCESS);
@@ -49,64 +49,77 @@ class SectionController extends BaseController
 		require_once('views/shared/layout.php');
 	}
 
-	public function update() {
-		//check if this lesson belongs to me
-		//check the owner!!!!!!!
-
-		//must set id and the rest too. id is separate.
-		//for users especially, i need to be more careful.
-		//this is a basic one without permissions.
-
-		if (!isset($_GET['id']) || !section::is_owner($_GET['id'], $_SESSION['user']->get_id()))
-		{
+	public function update(){
+		//If a section_id wasn't passed in or if the user isn't the owner of the section, throw an error
+		if (!isset($_GET['id']) || !section::is_owner($_GET['id'], $_SESSION['user']->get_id())){
 			return call('pages', 'error');
 		}
 
-		//if there is post data...
-		//todo: i need to check if the model actually exists on post, too!!!!
+		//Get the section associated to the section_id passed through $_GET
+		$section = Section::get($_GET['id']);
+		if($section == null){
+			add_alert("The item you are trying to access doesn't exist.", Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
+		else{
+			$section_id = $_GET['id'];
+			$study_students = Section::get_study_students($section_id);
+		}
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$postedToken = filter_input(INPUT_POST, 'token');
 			if(!empty($postedToken) && isTokenValid($postedToken)){
-				//probably i should do that isset stuff
-				$model = new $this->model_name();
-				$model->set_id($_GET['id']); //i should not trust that...
-				$model->set_properties($_POST);
-				$model->set_properties(array('teacher' => $_SESSION['user']->get_id()));
-				if($model->is_valid())
-				{
-					$model->update();
-					add_alert('Successfully updated!', Alert_Type::SUCCESS);
-					return redirect('section', 'index');
+
+				//Initialize any $_POST arrays that didn't have any entries
+				if(!isset($_POST['is_study_students'])){
+					$_POST['is_study_students'] = array();}
+				if(!isset($_POST['not_study_students'])){
+					$_POST['not_study_students'] = array();}
+				if(!isset($_POST['teaching_assistants'])){
+					$_POST['teaching_assistants'] = array();}
+
+				//Check to make sure users aren't in both is_study_students and not_study_students
+				$intersection = array_intersect($_POST['is_study_students'], $_POST['not_study_students']);
+				if(!isset($intersection) or count($intersection) > 0){
+					unset($intersection);
+					add_alert("A user can only be placed in one of the students boxes.", Alert_Type::DANGER);
 				}
-				else
-				{
-					add_alert('Please try again.', Alert_Type::DANGER);
+				else{
+					//Check to make sure a user is only being set as a student or a TA, not both
+					$ta_intersection = array_intersect($_POST['teaching_assistants'], array_merge($_POST['is_study_students'], $_POST['not_study_students']));
+					if(!isset($ta_intersection) or count($ta_intersection) > 0){
+						unset($ta_intersection);
+						add_alert("A user cannot be a student and teaching assistant for a section.", Alert_Type::DANGER);
+					}else{
+						$section = new Section();
+						$section->set_id($section_id);
+						$section->set_properties($_POST);
+						$section->set_properties(array('teacher' => $_SESSION['user']->get_id()));
+
+						//HACK: The 'students property of the section model will not get filled here. The data will get passed through the $_POST and be filled in the create() function in the section class.
+						if($section->is_valid()){
+							$section->update();
+							add_alert('Successfully updated!', Alert_Type::SUCCESS);
+							return redirect('section', 'index');
+						}
+						else{
+							add_alert('Please try again.', Alert_Type::DANGER);
+						}
+					}
 				}
-			}
-			else
-			{
-				add_alert('Please try again.', Alert_Type::DANGER);
 			}
 		}
 
-		$model = ($this->model_name)::get($_GET['id']);
-		if($model == null)
-		{
-			return call('pages', 'error');
-		}
-		else
-		{
-			$view_to_show = 'views/shared/update.php';
-			$properties = $model->get_properties();
-			$types = $model::get_types();
-			unset($properties['teacher']);
-			unset($types['teacher']);
-			unset($properties['concepts']);
-			unset($types['concepts']);
-			require_once('views/shared/layout.php');
-		}
-		//i need to be better about the order of things.
+		$view_to_show = 'views/shared/update.php';
+		$properties = $section->get_properties_for_update($study_students);
+		$types = $this->model_name::get_types_for_create();
 
+		unset($properties['teacher']);
+		unset($types['teacher']);
+		unset($properties['concepts']);
+		unset($types['concepts']);
+
+		require_once('views/shared/layout.php');
 	}
 
 	public function read_student(){
