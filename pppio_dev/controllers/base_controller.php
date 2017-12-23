@@ -186,7 +186,7 @@
 			if($model == null){
 				return call('pages', 'error');
 			}
-			else{				
+			else{
 				//require_once('views/shared/update.php');
 				$view_to_show = 'views/' . strtolower($this->model_name) . '/update.php';
 				if(!file_exists($view_to_show)){

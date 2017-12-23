@@ -64,8 +64,7 @@ class Section extends Model{
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
-	public static function get_students($owner_id)
-	{
+	public static function get_students($owner_id){
 		$db = Db::getReader();
 		$owner_id = intval($owner_id);
 
@@ -73,8 +72,7 @@ class Section extends Model{
 		$req = $db->prepare(static::build_query($function_name, array('owner_id')));
 		$req->execute(array('owner_id' => $owner_id));
 		$ret = $req->fetchAll(PDO::FETCH_ASSOC);
-		foreach($ret as $key => $val)
-		{
+		foreach($ret as $key => $val){
 			$ret[$key]['students'] = json_decode($val['students']);
 
 		}
@@ -92,8 +90,7 @@ class Section extends Model{
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);  // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 	}
 
-	public static function is_owner($id, $user_id)
-	{
+	public static function is_owner($id, $user_id){
 		$db = Db::getReader();
 		$id = intval($id);
 		$user_id = intval($user_id);
@@ -105,8 +102,7 @@ class Section extends Model{
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
-	public static function is_teaching_assistant($id, $user_id)
-	{
+	public static function is_teaching_assistant($id, $user_id){
 		$db = Db::getReader();
 		$id = intval($id);
 		$user_id = intval($user_id);
@@ -118,8 +114,7 @@ class Section extends Model{
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
-	public static function is_student($id, $user_id)
-	{
+	public static function is_student($id, $user_id){
 		$db = Db::getReader();
 		$id = intval($id);
 		$user_id = intval($user_id);
@@ -196,7 +191,9 @@ class Section extends Model{
 	    $req->execute($props);
 	}
 
-	public function get_properties_for_update($study_students){
+	public function get_properties_for_update(){
+		$study_students = Section::get_study_students($this->id);
+
 		$all_props = get_class_vars(static::class);
 		$ret_props = array();
 		foreach($all_props as $key => $value){

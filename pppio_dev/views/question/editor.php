@@ -192,6 +192,7 @@
 	<script src="js/question_editor.js"></script>
 	<?php
 	if(array_key_exists($exam_props['section']->key, $_SESSION['sections_is_study_participant'])){
-		echo '<script src="js/sessions_handler.js"></script>';}
+		echo '<script src="js/sessions_handler.js"></script>';
+	}
 	?>
 </div>

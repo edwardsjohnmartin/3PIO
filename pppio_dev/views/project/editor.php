@@ -46,5 +46,8 @@ echo '<div class="col-xs-12 height-100 flex-columns">
 echo '<script>var project_id = ' . $project->get_id() . ';</script>';
 echo '<script>var concept_id = ' . $concept->get_id() . '; var readonly = ' . ($readonly ? 'true' : 'false') . ';</script>';
 echo '<script src="js/project_editor.js"></script>';
-echo '<script src="js/sessions_handler.js"></script>';
+
+if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_is_study_participant'])){
+	echo '<script src="js/sessions_handler.js"></script>';
+}
 ?>

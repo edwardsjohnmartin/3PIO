@@ -1,7 +1,6 @@
 <?php
 require_once('controllers/base_controller.php');
-class SectionController extends BaseController
-{
+class SectionController extends BaseController{
 	public function index(){
 		$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 		$view_to_show = 'views/shared/index.php';
@@ -49,6 +48,23 @@ class SectionController extends BaseController
 		require_once('views/shared/layout.php');
 	}
 
+	public function read(){
+		$model = Section::get($_GET['id']);
+		if($model == null){
+			add_alert('The section you are trying to access doesn\'t exist.', Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
+		else{
+			$view_to_show = 'views/section/read.php';
+			if(!file_exists($view_to_show)){
+				$view_to_show = 'views/shared/read.php';
+			}
+			$types = $model::get_types_for_create();
+			$properties = $model->get_properties_for_update();
+			require_once('views/shared/layout.php');
+		}
+	}
+
 	public function update(){
 		//If a section_id wasn't passed in or if the user isn't the owner of the section, throw an error
 		if (!isset($_GET['id']) || !section::is_owner($_GET['id'], $_SESSION['user']->get_id())){
@@ -63,7 +79,6 @@ class SectionController extends BaseController
 		}
 		else{
 			$section_id = $_GET['id'];
-			$study_students = Section::get_study_students($section_id);
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -111,7 +126,7 @@ class SectionController extends BaseController
 		}
 
 		$view_to_show = 'views/shared/update.php';
-		$properties = $section->get_properties_for_update($study_students);
+		$properties = $section->get_properties_for_update();
 		$types = $this->model_name::get_types_for_create();
 
 		unset($properties['teacher']);
