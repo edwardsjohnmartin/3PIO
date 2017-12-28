@@ -1,4 +1,3 @@
-
 <?php
 	require_once('views/shared/html_helper.php'); 
 	//use a helper to make a form... or a helper to make the fields... haven't decided yet.
@@ -13,4 +12,3 @@ if(has_permission(new Permission(constant('Securable::' . strtoupper($this->mode
 	echo '<a href="?controller=' . $this->model_name . '&action=update&id=' . $model->get_id() . '" class="btn btn-primary">Update</a><br>';
 }
 ?>
-

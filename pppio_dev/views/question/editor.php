@@ -1,32 +1,30 @@
-<?php
-//This is the view that is used when a student does a question on an exam
-//TODO: Figure out how to css style better to handle scaling objects to screen resolution better and resizing with zoom.
-?>
-
 <div id="test-form">
 	<?php
-		echo '<link rel="stylesheet" href="css/editor.css">';
-		require_once('views/shared/CodeMirror.php');
-		require_once('views/shared/Skulpt.php');
-		require_once('enums/completion_status.php');
+	//This is the view that is used when a student does a question on an exam
+	//TODO: Figure out how to css style better to handle scaling objects to screen resolution better and resizing with zoom.
 
-		//HACK: Manually adding the students answer and their completion status for the current question to the props array. Needs to be added to model in a way that won't break it everywhere else.
-		$question_props = $question->get_full_properties();
-		$question_props['contents'] = $question->contents;
-		$question_props['completion_status'] = $question->completion_status;
-		$current_question_id = ($question_props['id']);
-		$exam_props = $exam->get_properties();
-		$trying_last = intval($current_question_id === end($exam_props['questions'])->key);
-		$total_weight = $exam->get_total_weight1();
-		$question_counter = 1;
+	echo '<link rel="stylesheet" href="css/editor.css">';
+	require_once('views/shared/CodeMirror.php');
+	require_once('views/shared/Skulpt.php');
+	require_once('enums/completion_status.php');
 
-		//If the student doesn't have code saved for this question, use the original start code.
-		if($question_props['contents'] ===  null){
-			$start_area_code = $question_props['start_code'];}
-		else{
-			$start_area_code = $question_props['contents'];
-		}
-	?>
+	//HACK: Manually adding the students answer and their completion status for the current question to the props array. Needs to be added to model in a way that won't break it everywhere else.
+	$question_props = $question->get_full_properties();
+	$question_props['contents'] = $question->contents;
+	$question_props['completion_status'] = $question->completion_status;
+	$current_question_id = ($question_props['id']);
+	$exam_props = $exam->get_properties();
+	$trying_last = intval($current_question_id === end($exam_props['questions'])->key);
+	$total_weight = $exam->get_total_weight1();
+	$question_counter = 1;
+
+	//If the student doesn't have code saved for this question, use the original start code.
+	if($question_props['contents'] ===  null){
+		$start_area_code = $question_props['start_code'];}
+	else{
+		$start_area_code = $question_props['contents'];
+	}
+    ?>
 
 	<!--Window Content-->
 	<div class="row height-100 overflow-hidden">
@@ -60,13 +58,17 @@
 						if($question_id == $current_question_id){
 							$set_next_question_id = true;
 							$q_pos = $question_counter;
-							$question_status = "primary";}
+							$question_status = "primary";
+						}
 						else if($question_obj->status == Completion_Status::COMPLETED){
-							$question_status = "success";}
+							$question_status = "success";
+						}
 						else if($question_obj->status == Completion_Status::STARTED){
-							$question_status = "started";}
+							$question_status = "started";
+						}
 						else{
-							$question_status = "default";}
+							$question_status = "default";
+						}
 
 						echo '<a href="?controller=question&action=read_for_student&id=' . $question_id . '&exam_id=' . $exam_props['id'] . '"';
 						echo 'class="tile btn btn-' . $question_status . '" id="question-' . $question_id . '-exam-' . $exam_props['id'] . '">';
@@ -76,7 +78,7 @@
 
 						$question_counter++;
 					}
-					?>
+                    ?>
 
 				</div>
 			</div>
@@ -101,9 +103,11 @@
 				<div class="col-xs-12">
 
 					<!--Question Index and Point Value-->
-					<h2>Q<?php echo $q_pos . ' - ' . round($question_props['weight']/$total_weight*100);?>pts</h2>
+					<h2>
+						Q<?php echo $q_pos . ' - ' . round($question_props['weight']/$total_weight*100);?>pts
+					</h2>
 
-					<!--Collapsible Instructions Area--> 
+					<!--Collapsible Instructions Area-->
 					<div>
 						<h4 class="panel-title collapse-link">
 							<a data-toggle="collapse" data-target="#instructions" href="#prompt">Instructions</a>
@@ -134,11 +138,15 @@
 
 			<!--Run Button Row-->
 			<div class="row no-shrink navbar-default navbar-form navbar-left">
-				<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>
+				<button type="button" class="btn btn-default" id="runButton">
+					<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+					<span class="sr-only">Run</span>
+				</button>
 			</div>
 
 			<!--Alert Row-->
-			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
+			<div class="row no-shrink">
+				<!--this alert needs to be filled with the error, or the next button-->
 				<div class="col-xs-12 pad-0">
 					<div id="codeAlerts"></div>
 				</div>
@@ -149,7 +157,9 @@
 
 				<!--Code Input Area-->
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
-					<textarea id="code" name="code"><?php echo $start_area_code;?></textarea>
+					<textarea id="code" name="code">
+						<?php echo $start_area_code;?>
+					</textarea>
 				</div>
 
 				<!--Code and Graphics Output Area-->
@@ -160,7 +170,7 @@
 
 					<!--Text Output-->
 					<div class="textOutput">
-      					<pre id="output"></pre>
+						<pre id="output"></pre>
 					</div>
 				</div>
 			</div>
@@ -168,18 +178,19 @@
 	</div>
 
 	<?php
-		//Set the link for the button on the alert bar that comes up when a question is answered correctly
-		if($trying_last){
-			$link = '"?controller=section&action=read_student&id=' . $exam_props['section']->key . '"';}
-		else{
-			$link = '"?controller=question&action=read_for_student&id=' . $next_question_id . '&exam_id=' . $exam_props['id'] . '"';
-		}
+	//Set the link for the button on the alert bar that comes up when a question is answered correctly
+	if($trying_last){
+		$link = '"?controller=section&action=read_student&id=' . $exam_props['section']->key . '"';
+	}
+	else{
+		$link = '"?controller=question&action=read_for_student&id=' . $next_question_id . '&exam_id=' . $exam_props['id'] . '"';
+	}
 
-		//Set test code for the question
-		echo '<script type="text/x-python" id="test_code_to_run">';
-		require('py_test/METHODS.py');
-		echo $question_props['test_code'] . '</script>';
-	?>
+	//Set test code for the question
+	echo '<script type="text/x-python" id="test_code_to_run">';
+	require('py_test/METHODS.py');
+	echo $question_props['test_code'] . '</script>';
+    ?>
 	<script>
 		var current_tile_id = "question-<?php echo $current_question_id . '-exam-' . $exam_props['id'];?>";
 		document.getElementById(current_tile_id).scrollIntoView();
@@ -194,5 +205,5 @@
 	if(array_key_exists($exam_props['section']->key, $_SESSION['sections_is_study_participant'])){
 		echo '<script src="js/sessions_handler.js"></script>';
 	}
-	?>
+    ?>
 </div>

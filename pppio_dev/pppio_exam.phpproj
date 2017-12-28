@@ -104,6 +104,7 @@
     <Compile Include="models\dynamic_view_objects\button.php" />
     <Compile Include="models\dynamic_view_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
+    <Compile Include="models\survey_question_type.php" />
     <Compile Include="models\session.php" />
     <Compile Include="models\survey.php" />
     <Compile Include="models\survey_choice.php" />
@@ -198,6 +199,7 @@
     <Compile Include="views\survey\old_create.php" />
     <Compile Include="views\survey\old_index.php" />
     <Compile Include="views\survey\old_read.php" />
+    <Compile Include="views\survey_question\create.php" />
     <Compile Include="views\user\create.php" />
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />
@@ -207,6 +209,7 @@
     <Compile Include="importer.php" />
     <Compile Include="index.php" />
     <Compile Include="routes.php" />
+    <Content Include="js\survey_question_create.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\pppio_Exam\v15" />
@@ -253,6 +256,7 @@
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
     <Folder Include="views\grades\" />
+    <Folder Include="views\survey_question\" />
     <Folder Include="views\survey\" />
     <Folder Include="views\session\" />
     <Folder Include="views\question\" />

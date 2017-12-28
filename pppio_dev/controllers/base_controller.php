@@ -56,8 +56,7 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public function create()
-		{
+		public function create(){
 			//get from post.
 			//validate, fill.
 			//$model_name = $this->model_name; //not the best way to do this.
@@ -65,13 +64,11 @@
 			//i should show errors somehow. how?
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$postedToken = filter_input(INPUT_POST, 'token');
-				if(!empty($postedToken) && isTokenValid($postedToken))
-				{
+				if(!empty($postedToken) && isTokenValid($postedToken)){
 					//probably i should do that isset stuff
 					$model = new $this->model_name();
 					$model->set_properties($_POST);
-					if($model->is_valid())
-					{
+					if($model->is_valid()){
 						//add alerts to session or something
 						//http://getbootstrap.com/components/#alerts
 						//redirect header("Location: ...");
@@ -81,20 +78,17 @@
 						//session_write_close();
 						return redirect($this->model_name, 'index');
 					}
-					else
-					{
+					else{
 						add_alert('Please try again.', Alert_Type::DANGER);
 					}
 				}
-				else
-				{
+				else{
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
 			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
 			$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
-			if(!file_exists($view_to_show))
-			{
+			if(!file_exists($view_to_show)){
 				$view_to_show = 'views/shared/create.php';
 			}
 			$properties = $this->model_name::get_available_properties();

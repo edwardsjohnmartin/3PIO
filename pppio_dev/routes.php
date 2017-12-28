@@ -285,6 +285,7 @@
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::READ)])],
 					    'survey_choice' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::LIST)]),
 						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::CREATE)]),
+						             'ajax_create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::CREATE)]),
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::READ)])]
 						];
 
