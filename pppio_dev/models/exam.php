@@ -1,7 +1,6 @@
 <?php
 require_once('models/model.php');
-class Exam extends Model
-{
+class Exam extends Model{
 	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING,'instructions' => Type::STRING, 'owner' => Type::USER, 'section' => Type::SECTION, 'questions' => Type::LIST_QUESTION);
 	protected static $hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'owner' => true, 'questions' => true);
 	protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'owner' => true, 'questions' => true);
@@ -11,8 +10,7 @@ class Exam extends Model
 	protected $section;
 	protected $questions;
 
-	public static function get_pairs_for_owner($owner_id)
-	{
+	public static function get_pairs_for_owner($owner_id){
 		$db = Db::getReader();
 		$owner_id = intval($owner_id);
 
@@ -23,8 +21,7 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 	}
 
-	public static function get_pairs_for_section($section_id)
-	{
+	public static function get_pairs_for_section($section_id){
 	    $db = Db::getReader();
 	    $section_id = intval($section_id);
 
@@ -35,8 +32,7 @@ class Exam extends Model
 	    return $req->fetchAll(PDO::FETCH_KEY_PAIR); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 	}
 
-	public static function get_all_for_section($section_id)
-	{
+	public static function get_all_for_section($section_id){
 		$db = Db::getReader();
 		$section_id = intval($section_id);
 
@@ -44,16 +40,13 @@ class Exam extends Model
 		$req = $db->prepare(static::build_query($function_name, array('section_id')));
 		$req->execute(array('section_id' => $section_id));
 		$ret = $req->fetchAll(PDO::FETCH_ASSOC);
-		foreach($ret as $key => $val)
-		{
+		foreach($ret as $key => $val){
 			$ret[$key]['questions'] = json_decode($val['questions']);
-
 		}
 		return $ret;
 	}
 
-	public static function get_all_for_section_and_student($section_id, $user_id)
-	{
+	public static function get_all_for_section_and_student($section_id, $user_id){
 		$db = Db::getReader();
 		$section_id = intval($section_id);
 		$user_id = intval($user_id);
@@ -65,14 +58,12 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_NAMED);
 	}
 
-	public static function get_for_student($exam_id)
-	{
+	public static function get_for_student($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 		$user_id = $_SESSION['user']->get_id();
 
-		if(isset($stud_id))
-		{
+		if(isset($stud_id)){
 			$user_id = $stud_id;
 		}
 
@@ -84,8 +75,7 @@ class Exam extends Model
 		return $req->fetch(PDO::FETCH_CLASS);
 	}
 
-	public static function get_exam_review_for_student($exam_id, $stud_id)
-	{
+	public static function get_exam_review_for_student($exam_id, $stud_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 		$user_id = intval($stud_id);
@@ -97,8 +87,7 @@ class Exam extends Model
 		return $req->fetchall(PDO::FETCH_NAMED);
 	}
 
-	public static function get_times($exam_id)
-	{
+	public static function get_times($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 
@@ -108,13 +97,11 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_CLASS);
 	}
 
-	public function get_section_id()
-	{
+	public function get_section_id(){
 		return $this->section->key;
 	}
 
-	public static function get_times_for_student($exam_id, $user_id)
-	{
+	public static function get_times_for_student($exam_id, $user_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 		$user_id = intval($user_id);
@@ -125,13 +112,11 @@ class Exam extends Model
 		return $req->fetchAll(PDO::FETCH_CLASS);
 	}
 
-	public function set_owner($id)
-	{
+	public function set_owner($id){
 		$this->owner = intval($id);
 	}
 
-	public static function update_times($times)
-	{
+	public static function update_times($times){
 		$db = Db::getWriter();
 		$function_name = 'sproc_write_exam_update_times';
 
@@ -141,13 +126,11 @@ class Exam extends Model
 		$req->execute($times);
 	}
 
-	public static function can_preview($id, $user_id)
-	{
+	public static function can_preview($id, $user_id){
 		return static::is_teaching_assistant($id, $user_id) || static::is_owner($id, $user_id);
 	}
 
-	public static function get_total_weight($exam_id)
-	{
+	public static function get_total_weight($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 
@@ -157,15 +140,12 @@ class Exam extends Model
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
-	public function get_properties()
-	{
+	public function get_properties(){
 		$all_props = get_class_vars(static::class);
 		$ret_props = array();
 		$ret_props['id'] = $this->id;
-		foreach($all_props as $key => $value)
-		{
-			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key])
-			{
+		foreach($all_props as $key => $value){
+			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key]){
 				$ret_props[$key] = $this->$key;
 			}
 		}
@@ -173,20 +153,16 @@ class Exam extends Model
 		return $ret_props;
 	}
 
-	public function set_properties($args) //should be able to accept the return value of get_properties
-	{
-		foreach($args as $key => $value)
-		{
-			if ($key == "questions")
-			{
+	public function set_properties($args){
+		foreach($args as $key => $value){
+			if ($key == "questions"){
 				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
 					$this->$key = true;
 				}else{
 					$this->$key = $value;
 				}
 			}
-			else if ($key == "owner")
-			{
+			else if ($key == "owner"){
 				if(key_exists($key, static::$types) && static::$types[$key] == Type::BOOLEAN){
 					$this->$key = true;
 				}else{

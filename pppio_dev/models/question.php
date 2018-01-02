@@ -10,8 +10,7 @@
 		protected $exam;
 		protected $weight = '';
 
-		public static function get_pairs_for_owner($owner_id)
-		{
+		public static function get_pairs_for_owner($owner_id){
 			$db = Db::getReader();
 			$owner_id = intval($owner_id);
 
@@ -33,8 +32,7 @@
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 		}		
 
-		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id)
-		{
+		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id){
 			$db = Db::getWriter();
 			$question_id = intval($question_id);
 			$exam_id = intval($exam_id);
@@ -60,8 +58,7 @@
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 
-		public static function get_code_file($question_id, $exam_id)
-		{
+		public static function get_code_file($question_id, $exam_id){
 			$db = Db::getReader();
 			$question_id = intval($question_id);
 			$exam_id = intval($exam_id);
@@ -74,8 +71,7 @@
 			return $req->fetch(PDO::FETCH_COLUMN); //returns only the contents
 		}
 
-		public static function read_occurrences($user_id, $exam_id)
-		{
+		public static function read_occurrences($user_id, $exam_id){
 			$db = Db::getReader();
 			$user_id = intval($user_id);
 			$exam_id = intval($exam_id);
@@ -87,8 +83,7 @@
 			return $req->fetchAll(PDO::FETCH_ASSOC);
 		}
 
-		public static function create_occurrence($user_id, $question_id, $exam_id, $date_of_occurrence)
-		{
+		public static function create_occurrence($user_id, $question_id, $exam_id, $date_of_occurrence){
 			$db = Db::getReader();
 			$function_name = 'sproc_write_user_left_page_occurrence_create';
 			$req = $db->prepare(static::build_query($function_name, array('user_id', 'question_id', 'exam_id', 'date_of_occurrence')));

@@ -8,33 +8,48 @@ class SectionController extends BaseController{
 	}
 
 	public function create(){
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 			$postedToken = filter_input(INPUT_POST, 'token');
 			if(!empty($postedToken) && isTokenValid($postedToken)){
 
-				//Check to make sure users aren't in both is_study_students and not_study_students
-				$intersection = array_intersect($_POST['is_study_students'], $_POST['not_study_students']);
-				if(!isset($intersection) or count($intersection) > 0){
-					unset($intersection);
-					add_alert("A user can only be placed in one of the students boxes.", Alert_Type::DANGER);
-				}else{
+				//Handle students and teaching assistants if any are set
+				if(isset($_POST['is_study_students']) or isset($_POST['is_study_students']) or isset($_POST['is_study_students'])){
 
-					//Check to make sure a user is only being set as a student or a TA, not both
-					$ta_intersection = array_intersect($_POST['teaching_assistants'], array_merge($_POST['is_study_students'], $_POST['not_study_students']));
-					if(!isset($ta_intersection) or count($ta_intersection) > 0){
-						unset($ta_intersection);
-						add_alert("A user cannot be a student and teaching assistant for a section.", Alert_Type::DANGER);
+					//Check to make sure users aren't in both is_study_students and not_study_students
+					$intersection = array_intersect($_POST['is_study_students'], $_POST['not_study_students']);
+					if(!isset($intersection) or count($intersection) > 0){
+						unset($intersection);
+						add_alert("A user can only be placed in one of the students boxes.", Alert_Type::DANGER);
 					}else{
-						$model = new $this->model_name();
-						$model->set_properties($_POST);
-						$model->set_properties(array('teacher' => $_SESSION['user']->get_id()));
 
-						//HACK: The 'students property of the section model will not get filled here. The data will get passed through the $_POST and be filled in the create() function in the section class.
-						if($model->is_valid()){
-							$model->create();
-							add_alert('Successfully created!', Alert_Type::SUCCESS);
-							return redirect('section', 'index');
+						//Check to make sure a user is only being set as a student or a TA, not both
+						$ta_intersection = array_intersect($_POST['teaching_assistants'], array_merge($_POST['is_study_students'], $_POST['not_study_students']));
+						if(!isset($ta_intersection) or count($ta_intersection) > 0){
+							unset($ta_intersection);
+							add_alert("A user cannot be a student and teaching assistant for a section.", Alert_Type::DANGER);
+						}else{
+							$model = new $this->model_name();
+							$model->set_properties($_POST);
+							$model->set_properties(array('teacher' => $_SESSION['user']->get_id()));
+
+							//HACK: The 'students property of the section model will not get filled here. The data will get passed through the $_POST and be filled in the create() function in the section class.
+							if($model->is_valid()){
+								$model->create();
+								add_alert('Successfully created!', Alert_Type::SUCCESS);
+								return redirect('section', 'index');
+							}
 						}
+					}
+				} else{
+					$model = new $this->model_name();
+					$model->set_properties($_POST);
+					$model->set_properties(array('teacher' => $_SESSION['user']->get_id()));
+
+					//HACK: The 'students property of the section model will not get filled here. The data will get passed through the $_POST and be filled in the create() function in the section class.
+					if($model->is_valid()){
+						$model->create();
+						add_alert('Successfully created!', Alert_Type::SUCCESS);
+						return redirect('section', 'index');
 					}
 				}
 			}

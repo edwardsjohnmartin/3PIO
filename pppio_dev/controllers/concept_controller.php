@@ -9,34 +9,27 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public function create()
-		{
+		public function create(){
 			require_once('models/section.php');
 			require_once('models/lesson.php');
 			$sections = section::get_pairs_for_owner($_SESSION['user']->get_id());
 			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());
 			$options = array('section' => $sections, 'lessons' => $lessons);
-			if(count($sections) > 0)
-			{
+			if(count($sections) > 0){
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$postedToken = filter_input(INPUT_POST, 'token');
-					if(!empty($postedToken) && isTokenValid($postedToken))
-					{
+					if(!empty($postedToken) && isTokenValid($postedToken)){
 						$model = new $this->model_name();
 						$model->set_properties($_POST);
-						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)) //must make sure the lesson selected belongs to this user.
-						{
+						if($model->is_valid() && array_key_exists($model->get_properties()['section'], $sections)){
 							$lessons_belong_to_user = true;
-							foreach($model->get_properties()['lessons'] as $lesson)
-							{
-								if(!array_key_exists($lesson, $lessons))
-								{
+							foreach($model->get_properties()['lessons'] as $lesson){
+								if(!array_key_exists($lesson, $lessons)){
 									$lessons_belong_to_user = false;
 									break;
 								}
 							}
-							if($lessons_belong_to_user)
-							{
+							if($lessons_belong_to_user){
 								//add alerts to session or something
 								//http://getbootstrap.com/components/#alerts
 								//redirect header("Location: ...");
@@ -46,25 +39,20 @@
 								//session_write_close();
 								return redirect($this->model_name, 'index');
 							}
-							else
-							{
+							else{
 								add_alert('Please try again. 1', Alert_Type::DANGER);
 							}
 						}
-						else
-						{
+						else{
 							add_alert('Please try again. 2', Alert_Type::DANGER);
 						}
 					}
-					else
-					{
+					else{
 						add_alert('Please try again. 3', Alert_Type::DANGER);
 					}
 				}
-				//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
 				$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
-				if(!file_exists($view_to_show))
-				{
+				if(!file_exists($view_to_show)){
 					$view_to_show = 'views/shared/create.php';
 				}
 
@@ -72,8 +60,7 @@
 			$types = $this->model_name::get_types();
 				require_once('views/shared/layout.php');
 			}
-			else
-			{
+			else{
 					add_alert('Oops, you don\'t have any sections. Concepts must be added to section. Please <a href="?controller=section&action=create">create a section</a> before creating an exercise!', Alert_Type::DANGER);
 					redirect('concept', 'index');
 			}

@@ -1,20 +1,20 @@
 <?php
 require_once('models/model.php');
-class Survey extends Model
-{
+class Survey extends Model{
 	protected static $types = array(
 		'id' => Type::INTEGER,
 		'name' => Type::STRING,
-		'survey_type' => Type::SURVEY_TYPE,
-		'survey_questions' => Type::LIST_SURVEY_QUESTION,
 		'concept' => Type::CONCEPT,
-		'lesson' => Type::LESSON
+		'survey_type' => Type::SURVEY_TYPE,
+		'lesson' => Type::LESSON,
+		'survey_questions' => Type::LIST_SURVEY_QUESTION
 	);
+
 	protected $name;
-	protected $survey_type;
-	protected $survey_questions;
 	protected $concept;
+	protected $survey_type;
 	protected $lesson;
+	protected $survey_questions;
 
 	//Create the survey in the database
 	//public function create(){

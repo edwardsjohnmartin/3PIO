@@ -2,8 +2,7 @@
 require_once('models/model.php');
 class Grades extends Model
 {
-	public static function get_exam_scores($exam_id)
-	{
+	public static function get_exam_scores($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 
@@ -12,10 +11,8 @@ class Grades extends Model
 		$req->execute(array('exam_id' => $exam_id));
 		$ret = $req->fetchAll(PDO::FETCH_ASSOC);
 
-		if(!empty($ret))
-		{
-			foreach($ret as $key => $val)
-			{
+		if(!empty($ret)){
+			foreach($ret as $key => $val){
 				$ret[$key]['scores'] = json_decode($val['scores'], false);
 			}
 		}
@@ -23,8 +20,7 @@ class Grades extends Model
 		return $ret;
 	}
 
-	public static function get_exam_grades($exam_id)
-	{
+	public static function get_exam_grades($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);
 
@@ -33,10 +29,8 @@ class Grades extends Model
 		$req->execute(array('exam_id' => $exam_id));
 		$ret = $req->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_UNIQUE);
 
-		if(!empty($ret))
-		{
-			foreach($ret as $ret_key => $ret_value)
-			{
+		if(!empty($ret)){
+			foreach($ret as $ret_key => $ret_value){
 				$q_arr = trim($ret_value['questions'], "{}");
 				$q_arr = explode(",",$q_arr);
 				$s_arr = trim($ret_value['scores'], "{}");
