@@ -13,8 +13,7 @@
 		//"shadowing it" could be a problem. should set in constructor.
 		protected $model_name;
 
-		public function __construct()
-		{
+		public function __construct(){
 			//cut off last "Controller" - 10 chars.
 			//not case-sensitive
 			$this->model_name = substr(static::class, 0, -10);
@@ -196,8 +195,7 @@
 
 		//create and update are almost the same view... can i just put them into one? even if so, i need different controllers.
 		public function delete() {
-			if (!isset($_GET['id']))
-			{
+			if (!isset($_GET['id'])){
 				return call('pages', 'error');
 			}
 			$model = ($this->model_name)::get($_GET['id']);

@@ -1,7 +1,6 @@
 <?php
 //i should use try/catches...
-abstract class Model
-{
+abstract class Model{
 	//hidden, db hidden, types. static.
 	//or rather, shown and db allowed
 	const MAX_BIGINT = 9223372036854775807; //this really should go somewhere else probably. should be global...
@@ -12,25 +11,21 @@ abstract class Model
 
 	protected $id = null;
 
-	public function get_id()
-	{
+	public function get_id(){
 		return $this->id;
 	}
 
-	public function set_id($id)
-	{
+	public function set_id($id){
 		$this->id = intval($id);
 	}
 
-	public function __construct() //use optional parameters to allow to use constructor when getting from db
+	public function __construct()//use optional parameters to allow to use constructor when getting from db
 	{
 		//this is probably very inefficient.. but it's convenient... what to do
 		//i really should take care of this elsewhere. leave for now.
 		//namely the db fill (set from json) and set properties (set int key)
-		foreach(static::$types as $prop => $type) //actually just having an array would be much nicer
-		{
-			if(Type::is_list_model($type))
-			{
+		foreach(static::$types as $prop => $type){
+			if(Type::is_list_model($type)){
 				if(!is_array($this->$prop)) //this will either be an array of ints or a json
 				{
 					$temp = json_decode($this->$prop); //convert the json props to array. i'd like to not have to do this in these child classes. just do them in the base classes somehow. right now i have the model name as the type... but how do i know it's a model?
@@ -58,8 +53,7 @@ abstract class Model
 	{
 		$all_props = get_class_vars(static::class);
 		$ret_props = array();
-		foreach($all_props as $key => $value)
-		{
+		foreach($all_props as $key => $value){
 			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key]) //can't just do second. should i just do first?
 			{
 				$ret_props[$key] = $this->$key; //something like that...
@@ -69,12 +63,10 @@ abstract class Model
 		return $ret_props;
 	}
 
-	public static function get_available_properties()
-	{
+	public static function get_available_properties(){
 		$all_props = get_class_vars(static::class);
 		$ret_props = array();
-		foreach($all_props as $key => $value)
-		{
+		foreach($all_props as $key => $value){
 			if(!isset(static::$hidden_props[$key]) || !static::$hidden_props[$key]) //can't just do second. should i just do first?
 			{
 				$ret_props[$key] = null;
@@ -153,8 +145,7 @@ abstract class Model
 
 	//maybe rename these
 	//i believe there is one case where this is used... in general, pairs should be used instead. some stored procedures may even be missing...
-	public static function get_all()
-	{
+	public static function get_all(){
 		$model_name = static::class;
 
 		$db = Db::getReader();
@@ -165,8 +156,7 @@ abstract class Model
 		return $req->fetchAll(PDO::FETCH_CLASS, $model_name);
 	}
 
-	public static function get_pairs()
-	{
+	public static function get_pairs(){
 		$model_name = static::class;
 
 		$db = Db::getReader();
@@ -178,8 +168,7 @@ abstract class Model
 	}
 
 	//should have pairs subset (too? only?)
-	public static function subset($offset, $limit)
-	{
+	public static function subset($offset, $limit){
 		$model_name = static::class;
 
 		//db will be happy
@@ -199,8 +188,7 @@ abstract class Model
 		return $req->fetchAll(PDO::FETCH_CLASS, $model_name);
 	}
 
-	public static function get($id)
-	{
+	public static function get($id){
 		//make sure this is in the allowed range of ids.
 		//my ids are ints right now, so that limit is 2147483647.
 		//if i make them bigints it will be 9223372036854775807
@@ -342,8 +330,7 @@ abstract class Model
 		return true;
 	}
 
-	protected static function php_array_to_pg_array($t)
-	{
+	protected static function php_array_to_pg_array($t){
 		//$t is array to be escaped. $u will be string literal.
 		$tv=array();
 		foreach($t as $key=>$val){

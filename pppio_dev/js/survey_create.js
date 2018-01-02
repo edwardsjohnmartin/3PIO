@@ -8,7 +8,9 @@ window.onload = function () {
 };
 
 function handleSectionDropdown(sel) {
+    var sel_section = document.getElementById("sel_section");
     var sel_concept = document.getElementById("sel_concept");
+    var sel_lesson = document.getElementById("sel_lesson");
 
     sel_concept.disabled = false;
     
@@ -26,16 +28,33 @@ function handleSectionDropdown(sel) {
     }
 
     sel_concept.selectedIndex = 0;
+    sel_lesson.selectedIndex = 0;
 }
 
 function handleConceptDropdown(sel) {
     var sel_survey_type = document.getElementById("sel_survey_type");
+    var sel_lesson = document.getElementById("sel_lesson");
     var index = sel_survey_type.selectedIndex;
 
+    for (var i = sel_lesson.options.length - 1; i > 0; i--) {
+        sel_lesson.remove(i);
+    }
+
+    var ndx = 1;
+    for (var key in lessons[sel_concept.selectedIndex - 1]) {
+        var option = document.createElement("option");
+        option.value = key;
+        option.text = lessons[sel_concept.selectedIndex - 1][key];
+        sel_lesson.add(option, ndx);
+        ndx++;
+    }
+
+    sel_lesson.selectedIndex = 0;
+
     if (sel_survey_type.options[index].text === "Pre-Lesson" || sel_survey_type.options[index].text === "Post-Lesson") {
-        document.getElementById("sel_lesson").disabled = false;
+        sel_lesson.disabled = false;
     } else {
-        document.getElementById("sel_lesson").disabled = true;
+        sel_lesson.disabled = true;
     }
 }
 

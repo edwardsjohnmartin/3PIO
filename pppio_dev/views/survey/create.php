@@ -15,11 +15,10 @@
 
     <label for="section">Section</label>
     <select class="form-control" name="section" id="sel_section">
-        <option value="" disabled selected>Select your option</option><?php
-        foreach($concepts as $key => $value){
+        <option value="" disabled selected>Select your option</option>
+		<?php foreach($concepts as $key => $value){
         echo '<option>' . $key . '</option>';
-        }
-        ?>
+        }?>
     </select>
 
     <label for="concept">Concept</label>
@@ -30,19 +29,14 @@
     <label for="lesson">Lesson</label>
     <select class="form-control" name="lesson" id="sel_lesson">
         <option value="" disabled selected>Select your option</option>
-        <option value="1">Test Lesson 1</option>
-        <option value="2">Test Lesson 2</option>
-        <option value="3">Test Lesson 3</option>
-        <option value="4">Test Lesson 4</option>
     </select>
 
     <label for="survey_questions">Survey Questions</label>
     <select class="form-control" name="survey_questions[]" id="survey_questions" multiple style="position: absolute; left: -9999px;">
-        <option value="1">Question 1</option>
-        <option value="2">Question 2</option>
-        <option value="3">Question 3</option>
-        <option value="4">Question 4</option>
-    </select><?php include_once('views/shared/MultiSelect.php');?>
+		<?php foreach($survey_questions as $key => $value){
+		echo '<option value=' . $key . '>' . $value . '</option>';
+		}?>
+	</select><?php include_once('views/shared/MultiSelect.php');?>
 
     <script type="text/javascript">
         $("#survey_questions").multiSelect({
@@ -66,6 +60,18 @@
 		    arr[<?php echo $val->key;?>] = '<?php echo $val->value; ?>';
 		<?php } ?>
         concepts.push(arr);
+    <?php } ?>
+</script>
+
+<script type="text/javascript" language="javascript">
+    var lessons = new Array();
+    <?php foreach($lessons as $c_id => $c_val){ ?>
+	    var arr = new Array();
+	    <?php 
+		foreach($c_val['lessons'] as $key => $val){ ?>
+		arr[<?php echo $val->key;?>] = "<?php echo str_replace("\r", "", $val->value); ?>";
+		<?php } ?>
+        lessons.push(arr);
     <?php } ?>
 </script>
 

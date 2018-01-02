@@ -4,6 +4,8 @@ class SurveyController extends BaseController{
 	public function create(){
 		require_once('models/concept.php');
 		require_once('models/survey_type.php');
+		require_once('models/lesson.php');
+		require_once('models/survey_question.php');
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$postedToken = filter_input(INPUT_POST, 'token');
@@ -15,18 +17,17 @@ class SurveyController extends BaseController{
 				}else{
 					$model = new $this->model_name();
 					$model->set_properties($_POST);
-					if($model->is_valid()){
-						$model->create();
-						add_alert('Successfully created!', Alert_Type::SUCCESS);
-						return redirect($this->model_name, 'index');
-					}
-					else{ add_alert('Please try again.', Alert_Type::DANGER);}
+					$model->create();
+					add_alert('Successfully created!', Alert_Type::SUCCESS);
+					return redirect($this->model_name, 'index');
 				}
 			}
 			else{ add_alert('Please try again.', Alert_Type::DANGER);}
 		}
 		$concepts = Concept::get_by_section($_SESSION['user']->get_id());
 		$survey_types = Survey_Type::get_pairs();
+		$lessons = Lesson::get_by_concept($_SESSION['user']->get_id());
+		$survey_questions = Survey_Question::get_pairs();
 
 		$view_to_show = 'views/survey/create.php';
 		require_once('views/shared/layout.php');
