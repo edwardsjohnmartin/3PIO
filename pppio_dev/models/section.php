@@ -1,7 +1,9 @@
 <?php
 require_once('models/model.php');
 class Section extends Model{
-	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'course' => Type::COURSE, 'teacher' => Type::USER, 'start_date' => Type::DATETIME, 'end_date' => Type::DATETIME, 'students' => Type::LIST_USER, 'teaching_assistants' => Type::LIST_USER, 'concepts' => Type::LIST_CONCEPT); //use the enum
+	protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'course' => Type::COURSE,
+		'teacher' => Type::USER, 'start_date' => Type::DATETIME, 'end_date' => Type::DATETIME,
+		'students' => Type::LIST_USER, 'teaching_assistants' => Type::LIST_USER, 'concepts' => Type::LIST_CONCEPT);
 	protected static $db_hidden_props = array('id' => true, 'hidden_props' => true, 'db_hidden_props' => true, 'types' => true, 'concepts' => true);
 	protected $name;
 	protected $course;
@@ -172,6 +174,21 @@ class Section extends Model{
 		$ret_props['is_study_students'] = Type::LIST_USER;
 		$ret_props['not_study_students'] = Type::LIST_USER;
 		$ret_props['teaching_assistants'] = Type::LIST_USER;
+
+		return $ret_props;
+	}
+
+	public static function get_types_for_read(){
+		$ret_props = array();
+		$ret_props['id'] = Type::INTEGER;
+		$ret_props['name'] = Type::STRING;
+		$ret_props['course'] = Type::COURSE;
+		$ret_props['start_date'] = Type::DATETIME;
+		$ret_props['end_date'] = Type::DATETIME;
+		$ret_props['is_study_students'] = Type::LIST_USER;
+		$ret_props['not_study_students'] = Type::LIST_USER;
+		$ret_props['teaching_assistants'] = Type::LIST_USER;
+		$ret_props['concepts'] = Type::LIST_CONCEPT;
 
 		return $ret_props;
 	}

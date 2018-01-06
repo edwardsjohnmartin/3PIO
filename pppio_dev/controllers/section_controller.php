@@ -74,7 +74,7 @@ class SectionController extends BaseController{
 			if(!file_exists($view_to_show)){
 				$view_to_show = 'views/shared/read.php';
 			}
-			$types = $model::get_types_for_create();
+			$types = $model::get_types_for_read();
 			$properties = $model->get_properties_for_update();
 			require_once('views/shared/layout.php');
 		}
