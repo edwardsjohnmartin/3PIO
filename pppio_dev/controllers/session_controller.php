@@ -9,7 +9,7 @@
 				$start_time = intval($_POST['start']);
 				$end_time = intval($_POST['end']);
 
-				//This shouldn't ever happen anymore since both times are created in JS 
+				//This shouldn't ever happen anymore since both times are created in JS
 				//If the end time is before the start time, change the end time to be the start time
 				//This will result in a 0 session length
 				if($end_time < $start_time){

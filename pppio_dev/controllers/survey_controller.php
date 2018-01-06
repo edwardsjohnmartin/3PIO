@@ -82,12 +82,37 @@ class SurveyController extends BaseController{
 
 	public function do_survey(){
 		require_once('models/survey.php');
+		require_once('models/concept.php');
+		require_once('models/assigned_survey.php');
 		require_once('models/survey_question.php');
 		require_once('models/survey_question_type.php');
+		require_once('enums/role.php');
 
 		if(!isset($_GET['survey_id'])){
 			add_alert('The survey to take was not set.', Alert_Type::DANGER);
 			return call('pages', 'error');
+		}
+
+		$assigned_survey = Assigned_Survey::get($_GET['survey_id']);
+		if(is_null($assigned_survey)){
+			add_alert('The survey you are trying to access does not exist.', Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
+
+		//If a teacher or admin tries to access this action prevent them from saving the survey
+		if($_SESSION['user']->get_role() == Role::ADMIN or $_SESSION['user']->get_role() == Role::TEACHER){
+			$can_save = false;
+		} else {
+			//Only students who have opted into the study for the section the survey is in, can access it
+			$concept = Concept::get($assigned_survey->concept->key);
+			if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_is_study_participant'])){
+				$can_save = true;
+			} else if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_ta'])){
+				$can_save = false;
+			} else {
+				add_alert('You do not have permission to access this survey.', Alert_Type::DANGER);
+				return call('pages', 'error');
+			}
 		}
 
 		//Make sure the survey exists and has questions
@@ -111,7 +136,7 @@ class SurveyController extends BaseController{
 			}
 		}
 
-		if($_SERVER['REQUEST_METHOD'] === 'POST'){
+		if($_SERVER['REQUEST_METHOD'] === 'POST' and $can_save){
 			if(count($_POST) < count($survey_questions)){
 				add_alert('Please answer every question.', Alert_Type::DANGER);
 			} else {
@@ -140,12 +165,29 @@ class SurveyController extends BaseController{
 	}
 
 	public function read_responses(){
-		require_once('models/survey.php');
+		require_once('models/user.php');
+		require_once('enums/role.php');
 
-		$surveys = Survey::get_pairs();
+		$can_access = false;
 
-		$view_to_show = 'views/survey/read_responses.php';
-		require_once('views/shared/layout.php');
+		//Only a student who is a teacher assistant will be able to access the survey responses
+		if($_SESSION['user']->get_role() == Role::STUDENT){
+			if(count($_SESSION['sections_ta']) > 0){
+				$can_access = true;
+			}
+		} else if($_SESSION['user']->get_role() == Role::ADMIN or $_SESSION['user']->get_role() == Role::TEACHER){
+			$can_access = true;
+		}
+
+		if($can_access){
+			$surveys = Survey::get_pairs();
+
+			$view_to_show = 'views/survey/read_responses.php';
+			require_once('views/shared/layout.php');
+		} else {
+			add_alert('You do not have permission to access this.', Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
 	}
 }
 ?>

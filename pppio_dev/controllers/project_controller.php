@@ -149,12 +149,16 @@
 			//if user doesn't have code, use the project starter code
 			$code = project::get_code_file($concept->get_id(), $_SESSION['user']->get_id());
 
-			$concept_id = $concept->get_id();
-
-			require_once('models/survey.php');
-			require_once('models/survey_type.php');
-			$pre_survey = Survey::check_for_project(Survey_Type_Enum::PRE_PROJECT, $concept_id);
-			$post_survey = Survey::check_for_project(Survey_Type_Enum::POST_PROJECT, $concept_id);
+			//Only check for the project surveys if the student is participating in the study for the current section
+			if(array_key_exists($concept_props['section']->key, $_SESSION['sections_is_study_participant'])){
+				require_once('models/survey.php');
+				require_once('models/survey_type.php');
+				$pre_survey = Survey::check_for_project(Survey_Type_Enum::PRE_PROJECT, $concept->get_id());
+				$post_survey = Survey::check_for_project(Survey_Type_Enum::POST_PROJECT, $concept->get_id());
+			} else {
+				$pre_survey = false;
+				$post_survey = false;
+			}
 
 			$view_to_show = 'views/project/editor.php';
 			require_once('views/shared/layout.php');

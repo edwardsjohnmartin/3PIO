@@ -1,20 +1,22 @@
 <?php
 	require_once('models/model.php');
-	class User extends Model
-	{
+	class User extends Model{
 		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'email' => Type::EMAIL, 'password' => Type::PASSWORD, 'role' => Type::ROLE); //use the enum
 		protected $email;
 		protected $name;
 		protected $role;
 		protected $password; //the return ones will never get this. but it's needed for the create... hmm.
 
-		public function get_name()
-		{
+		public function get_name(){
 			return $this->name;
 		}
 
-		public function get_grades_for_exam($user_id, $exam_id)
-		{
+		public function get_role(){
+			return $this->role;
+		}
+
+	    //TODO: Move this to the grades or exam model or almost anywhere but here
+		public function get_grades_for_exam($user_id, $exam_id){
 			$db = Db::getReader();
 			$user_id = intval($user_id);
 			$exam_id = intval($exam_id);
@@ -25,8 +27,7 @@
 			return $req->fetchAll(PDO::FETCH_CLASS);
 		}
 
-		public static function get_for_login($email, $password)
-		{
+		public static function get_for_login($email, $password){
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_get_for_login';
 			$req = $db->prepare(static::build_query($function_name, array('email', 'password')));
@@ -36,14 +37,12 @@
 			return $req->fetch(PDO::FETCH_CLASS);
 		}
 
-		public function email_is_available($email, $id = null)
-		{
+		public function email_is_available($email, $id = null){
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_email_is_available';
 			$keys = array('email');
 			$params = array('email' => $email);
-			if($id != null)
-			{
+			if($id != null){
 				$keys[] = 'id';
 				$params['id'] = $id;
 			}
@@ -54,8 +53,7 @@
 			return $req->fetch(PDO::FETCH_COLUMN);
 		}
 
-		public function create() //sproc_write_user_create(email text, name text, password text, role_id int)
-		{
+		public function create(){
 			$model_name = static::class;
 			$db = Db::getWriter();
 
@@ -69,8 +67,7 @@
 			$this->password = null;
 		}
 
-		public function update() //sproc_write_user_create(email text, name text, password text, role_id int)
-		{
+		public function update(){
 			$model_name = static::class;
 			$db = Db::getWriter();
 
@@ -86,6 +83,7 @@
 			$this->password = null;
 		}
 
+		//TODO: Move this to the section controller
 		//Get a list of all sections the user has the participation type for
 		public function get_sections_by_participation_type($participation_type_id){
 			$user_id = $_SESSION['user']->get_id();

@@ -98,12 +98,12 @@
     <Content Include="js\survey_create.js" />
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
+    <Compile Include="models\assigned_survey.php" />
     <Compile Include="models\exam.php" />
     <Compile Include="models\grades.php" />
     <Compile Include="models\dynamic_view_objects\button.php" />
     <Compile Include="models\dynamic_view_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
-    <Compile Include="models\return_survey.php" />
     <Compile Include="models\survey_question_type.php" />
     <Compile Include="models\session.php" />
     <Compile Include="models\survey.php" />

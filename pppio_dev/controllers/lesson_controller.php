@@ -33,9 +33,16 @@
 			$concept = concept::get($_GET['concept_id']);
 			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
 
-			require_once('models/survey.php');
-			require_once('models/survey_type.php');
-			$post_ex_survey = Survey::check_for_project(Survey_Type_Enum::POST_EXERCISES, $_GET['concept_id']);
+			$concept_props = $concept->get_properties();
+
+			//Only check for the project surveys if the student is participating in the study for the current section
+			if(array_key_exists($concept_props['section']->key, $_SESSION['sections_is_study_participant'])){
+				require_once('models/survey.php');
+				require_once('models/survey_type.php');
+				$post_ex_survey = Survey::check_for_project(Survey_Type_Enum::POST_EXERCISES, $_GET['concept_id']);
+			} else {
+				$post_ex_survey = false;
+			}
 
 			$view_to_show = 'views/lesson/read_for_concept_for_student.php';
 			require_once('views/shared/layout.php');

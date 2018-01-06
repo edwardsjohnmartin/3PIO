@@ -42,6 +42,10 @@ $questions = $survey_questions;
 		echo '</div>';
 		$question_index++;
 	}
-	echo '<input type="submit" class="form-control" value="Submit"/>';
+	if($can_save){
+		echo '<input type="submit" class="form-control" value="Submit"/>';
+	} else {
+		echo '<label class="input-md alert-danger">You cannot save the answers to the survey.</label>';
+	}
 	?>
 </form>

@@ -1,7 +1,6 @@
 <?<?php
   require_once('controllers/base_controller.php');
-  class Survey_ChoiceController extends BaseController
-  {
+  class Survey_ChoiceController extends BaseController{
 	  public function ajax_create(){
 		  $survey_choice = new Survey_Choice();
 		  $survey_choice->set_properties($_POST);
