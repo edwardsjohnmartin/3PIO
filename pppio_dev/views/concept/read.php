@@ -9,14 +9,12 @@
 	echo HtmlHelper::view($types, $properties);
 
 	//Get the data out of the session and remove it from the session
-	if(isset($_SESSION['progress']))
-	{
+	if(isset($_SESSION['progress'])){
 		$progress = $_SESSION['progress'];
 		unset($_SESSION['progress']);
 	}
 
-	if(isset($_SESSION['project_completion']))
-	{
+	if(isset($_SESSION['project_completion'])){
 		$project_completion = $_SESSION['project_completion'];
 		unset($_SESSION['project_completion']);
 	}

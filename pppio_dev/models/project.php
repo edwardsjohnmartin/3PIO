@@ -1,7 +1,6 @@
 <?php
 	require_once('models/model.php');
-	class Project extends Model
-	{
+	class Project extends Model{
 		protected static $types = array('id' => Type::INTEGER, 'name' => Type::STRING, 'description' => Type::STRING, 'starter_code'=> Type::CODE, 'language' => Type::LANGUAGE, 'owner' => Type::USER, 'max_grade' => Type::DOUBLE);
 		protected $name;
 		protected $description;
@@ -12,11 +11,9 @@
 
 	//this is incomplete. will need to take into account teams.
 	//may also need to check if the concept has a project at all
-		public static function can_access($concept_id, $user_id)
-		{
+		public static function can_access($concept_id, $user_id){
 			//If multiple users are logged in
-			if(is_array($user_id))
-			{
+			if(is_array($user_id)){
 				$db = Db::getReader();
 				$concept_id = intval($concept_id);
 				$user_id = static::php_array_to_pg_array($user_id); 

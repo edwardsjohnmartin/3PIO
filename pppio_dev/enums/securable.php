@@ -1,10 +1,8 @@
 <?php
-
 require_once('php-enum/Enum.php');
 use MyCLabs\Enum\Enum;
 
-class Securable extends Enum
-{
+class Securable extends Enum{
     const CONCEPT =	         1;
 	const COURSE = 	         2;
     const EXERCISE =         3;
@@ -23,12 +21,10 @@ class Securable extends Enum
 	const SURVEY_QUESTION = 16;
 	const SURVEY_CHOICE =   17;
 
-	public static function get_id_from_string($activity)
-	{
+	public static function get_id_from_string($activity){
 		$activity = strtolower($activity);
 
-		switch ($activity)
-		{
+		switch ($activity){
 			case 'exercise':
 				return Securable::EXERCISE;
 			case 'project':
@@ -40,10 +36,8 @@ class Securable extends Enum
 		}
 	}
 
-	public static function get_string_from_id($securable_id)
-	{
-		switch ($securable_id)
-		{
+	public static function get_string_from_id($securable_id){
+		switch ($securable_id){
 			case Securable::EXERCISE:
 				return 'Exercise';
 			case Securable::PROJECT:

@@ -1,9 +1,7 @@
 <?php
 	require_once('controllers/base_controller.php');
-	class LessonController extends BaseController
-	{
-		public function index()
-		{
+	class LessonController extends BaseController{
+		public function index(){
 
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/lesson/index.php';
@@ -19,31 +17,31 @@
 			$lesson = lesson::get_for_concept_and_student($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id());
 			$view_to_show = 'views/lesson/read_student.php';
 			require_once('views/shared/layout.php');
-
 		}
 
-		public function read_for_concept_for_student() //the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
-		{
+		public function read_for_concept_for_student(){
 			require_once('models/concept.php');
 
 			if (!isset($_GET['concept_id'])) {
-				return call('pages', 'error');				
-			} 
+				return call('pages', 'error');
+			}
 			$can_preview = concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id());
-			
-			if(!(lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id()) || $can_preview))
-			{
+
+			if(!(lesson::can_access_for_concept($_GET['concept_id'], $_SESSION['user']->get_id()) || $can_preview)){
 				return call('pages', 'error');
 			}
 			$concept = concept::get($_GET['concept_id']);
 			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
+
+			require_once('models/survey.php');
+			require_once('models/survey_type.php');
+			$post_ex_survey = Survey::check_for_project(Survey_Type_Enum::POST_EXERCISES, $_GET['concept_id']);
+
 			$view_to_show = 'views/lesson/read_for_concept_for_student.php';
 			require_once('views/shared/layout.php');
-
 		}
 
-		public function create()
-		{
+		public function create(){
 			//get from post.
 			//validate, fill.
 			//$model_name = $this->model_name; //not the best way to do this.
@@ -65,18 +63,13 @@
 						$model->create();
 						add_alert('Successfully created!', Alert_Type::SUCCESS);
 						return redirect('lesson', 'index');
-					}
-					else
-					{
+					} else {
 							add_alert('Please try again.', Alert_Type::DANGER);
 					}
-				}
-				else
-				{
+				} else {
 						add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			//require_once('views/shared/create.php'); //will this be a problem? i think i will know what model by what controller is called...
 			$view_to_show = 'views/shared/create.php';
 			$properties = lesson::get_available_properties();
 			$types = lesson::get_types();
@@ -87,8 +80,7 @@
 			require_once('views/shared/layout.php');
 		}
 
-		public function create_file()
-		{
+		public function create_file(){
 			$success = false;
 			//need to check permissions
 
@@ -97,14 +89,12 @@
 					if(!empty($postedToken) && isTokenValid($postedToken)){
 						$failed = false;
 
-						if(!isset($_FILES['file']['error']) || is_array($_FILES['file']['error']))
-						{
+						if(!isset($_FILES['file']['error']) || is_array($_FILES['file']['error'])){
 							add_alert('Invalid file.', Alert_Type::DANGER);
 							$failed = true;
 						}
 
-						if(!$failed)
-						{
+						if(!$failed){
 						switch ($_FILES['file']['error']) {
 								case UPLOAD_ERR_OK:
 									break;
@@ -213,7 +203,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -275,7 +265,7 @@
 					// add_alert('Please try again.', Alert_Type::DANGER);
 				// }
 			// }
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{

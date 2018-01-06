@@ -152,7 +152,9 @@
 			$concept_id = $concept->get_id();
 
 			require_once('models/survey.php');
-			$surveys = Survey::get_surveys_for_project($concept_id);
+			require_once('models/survey_type.php');
+			$pre_survey = Survey::check_for_project(Survey_Type_Enum::PRE_PROJECT, $concept_id);
+			$post_survey = Survey::check_for_project(Survey_Type_Enum::POST_PROJECT, $concept_id);
 
 			$view_to_show = 'views/project/editor.php';
 			require_once('views/shared/layout.php');

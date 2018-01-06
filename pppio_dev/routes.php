@@ -1,33 +1,25 @@
 <?php
 
 	//stuff that doesn't belong here
-	function validate_date($date)
-	{
+	function validate_date($date){
 		$d = DateTime::createFromFormat('m/d/Y g:i A', $date);
 		return $d && $d->format('m/d/Y g:i A') === $date;
 	}
 
-	function add_alert($message, $alert_type)
-	{
+	function add_alert($message, $alert_type){
 		$_SESSION['alerts'][] = new alert($message, $alert_type);
 	}
 
-	function has_permission($permission)
-	{
+	function has_permission($permission){
 		$has_permission = false;
-		if(array_key_exists('permissions', $_SESSION) && $_SESSION['permissions'] != null && array_key_exists($permission->securable, $_SESSION['permissions']) && array_key_exists($permission->permission_type, $_SESSION['permissions'][$permission->securable]))
-		{
+		if(array_key_exists('permissions', $_SESSION) && $_SESSION['permissions'] != null && array_key_exists($permission->securable, $_SESSION['permissions']) && array_key_exists($permission->permission_type, $_SESSION['permissions'][$permission->securable])){
 			$has_permission = $_SESSION['permissions'][$permission->securable][$permission->permission_type];
 		}
 		return $has_permission; //probably need to check
-
 	}
 
 	//https://stackoverflow.com/questions/4614052/how-to-prevent-multiple-form-submission-on-multiple-clicks-in-php
-	/**
-	 * Creates a token usable in a form
-	 * @return string
-	 */
+	//Creates a token usable in a form
 	function getToken(){
 	  $token = sha1(mt_rand());
 	  if(!isset($_SESSION['tokens'])){
@@ -54,24 +46,22 @@
 
 	//end stuff that doesn't belong here
 
-	function redirect($controller, $action) //i'm using 'return' when calling to be consistent with call but it's not necessary
-	{
+	//i'm using 'return' when calling to be consistent with call but it's not necessary
+	function redirect($controller, $action){
 		header('Location: ' . '?controller=' . $controller . '&action=' . $action);
 	}
 
-	function redirect_to_index() //i'm using 'return' when calling to be consistent with call but it's not necessary
-	{
+    //i'm using 'return' when calling to be consistent with call but it's not necessary
+	function redirect_to_index(){
 		header('Location: ' . '?');
 	}
 
-	function call($controller, $action)
-	{
+	function call($controller, $action){
 		require_once('controllers/' . $controller . '_controller.php');
 		//do with string. make it static.
 
 		//if i want to keep plural in the routing, i could use the switch statement...
-		switch($controller)
-		{
+		switch($controller){
 			//why am i using this instead of just creating with the string? any benefits?
 			//i could set the model name here... that way the controller will know...
 			//i already check the array for what is valid before calling, so it should be safe?
@@ -279,6 +269,10 @@
 					    'survey' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::LIST)]),
 						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
+									 'assign' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'assign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'get_assigned_surveys' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
+									 'do_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])],
 						'survey_question' => ['index' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::LIST)]),
 						             'create' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_QUESTION, Permission_Type::CREATE)]),
@@ -289,34 +283,25 @@
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY_CHOICE, Permission_Type::READ)])]
 						];
 
-	if(array_key_exists($controller, $controllers))
-	{
-		if(array_key_exists($action, $controllers[$controller]))
-		{
+	if(array_key_exists($controller, $controllers)){
+		if(array_key_exists($action, $controllers[$controller])){
 			$can_access = true;
-			if($controllers[$controller][$action]->login_state === true)
-			{
-				if(!(isset($_SESSION['user']) && $_SESSION['user'] != null))
-				{
+			if($controllers[$controller][$action]->login_state === true){
+				if(!(isset($_SESSION['user']) && $_SESSION['user'] != null)){
 					$can_access = false;
 					add_alert("Please log in and try again.", Alert_Type::DANGER);
 				}
 			}
-			else if($controllers[$controller][$action]->login_state === false)
-			{
-				if(isset($_SESSION['user']) && $_SESSION['user'] != null)
-				{
+			else if($controllers[$controller][$action]->login_state === false){
+				if(isset($_SESSION['user']) && $_SESSION['user'] != null){
 					$can_access = false;
 					add_alert("Please log out and try again.", Alert_Type::DANGER);
 				}
 			}
 
-			if($can_access)
-			{
-				foreach($controllers[$controller][$action]->permissions as $permission)
-				{
-					if(!has_permission($permission))
-					{
+			if($can_access){
+				foreach($controllers[$controller][$action]->permissions as $permission){
+					if(!has_permission($permission)){
 						$can_access = false;
 						add_alert("Sorry, you don't have permission to access this page.", Alert_Type::DANGER);
 						break;
@@ -324,24 +309,15 @@
 				}
 			}
 
-			if($can_access)
-			{
+			if($can_access){
 				call($controller, $action);
-			}
-			else
-			{
+			}else{
 				call('pages', 'error'); //todo: i should set the status code
 			}
-
-		}
-		else
-		{
+		}else{
 			call('pages', 'error');
 		}
-	}
-	else
-	{
+	}else{
 		call('pages', 'error');
 	}
-
 ?>
