@@ -47,6 +47,16 @@ class Lesson extends Model{
 		return $req->fetchAll(PDO::FETCH_CLASS, 'Lesson');
 	}
 
+	public static function get_all_check_for_exercises(){
+		$db = Db::getReader();
+
+		$function_name = 'sproc_read_lesson_check_all_for_exercises';
+		$req = $db->prepare(static::build_query($function_name, array()));
+		$req->execute(array());
+
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
 	public static function get_by_concept($owner_id){
 		$db = Db::getReader();
 		$owner_id = intval($owner_id);

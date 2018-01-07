@@ -183,6 +183,7 @@
     <Compile Include="views\section\read.php" />
     <Compile Include="views\section\read_student.php" />
     <Compile Include="views\section\read_student_v3.php" />
+    <Compile Include="views\section\read_student_v4.php" />
     <Compile Include="views\session\index.php" />
     <Compile Include="views\session\read_all_for_student.php" />
     <Compile Include="views\shared\CodeMirror.php" />

@@ -1,9 +1,7 @@
 <?php
 	require_once('controllers/base_controller.php');
-	class ConceptController extends BaseController
-	{
-		public function index()
-		{
+	class ConceptController extends BaseController{
+		public function index(){
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/shared/index.php';
 			require_once('views/shared/layout.php');
@@ -38,16 +36,13 @@
 								add_alert('Successfully created!', Alert_Type::SUCCESS);
 								//session_write_close();
 								return redirect($this->model_name, 'index');
-							}
-							else{
+							} else {
 								add_alert('Please try again. 1', Alert_Type::DANGER);
 							}
-						}
-						else{
+						} else {
 							add_alert('Please try again. 2', Alert_Type::DANGER);
 						}
-					}
-					else{
+					} else {
 						add_alert('Please try again. 3', Alert_Type::DANGER);
 					}
 				}
@@ -59,8 +54,7 @@
 			$properties = $this->model_name::get_available_properties();
 			$types = $this->model_name::get_types();
 				require_once('views/shared/layout.php');
-			}
-			else{
+			} else {
 					add_alert('Oops, you don\'t have any sections. Concepts must be added to section. Please <a href="?controller=section&action=create">create a section</a> before creating an exercise!', Alert_Type::DANGER);
 					redirect('concept', 'index');
 			}

@@ -20,6 +20,8 @@ if($is_teacher or $is_ta){
 		$types['exams'] = Type::LIST_EXAM;
 		$properties['exams'] = $exam_ret;
 	}
+
+	echo '<div><a class="btn btn-primary" href="?controller=section&action=update_students&id='.$model->get_id().'">Update Students</a></div>';
 }
 
 echo HtmlHelper::view($types, $properties);

@@ -180,6 +180,7 @@
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 										'create'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::CREATE)]),
 										'update'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::EDIT)]),
+										'update_students'=>new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 										'read_student'=>new Authorization_Requirements(true, [])
 									],
 						'course' =>  [
