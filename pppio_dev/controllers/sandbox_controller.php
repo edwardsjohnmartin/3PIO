@@ -3,9 +3,9 @@
 	{
 		public function index()
 		{
-			include('views/shared/site_functions.php');
-			include('models/html_objects/button.php');
-			include('models/html_objects/dropdown_item.php');
+			include('views/shared/dynamic_code_page.php');
+			include('models/dynamic_view_objects/button.php');
+			include('models/dynamic_view_objects/dropdown_item.php');
 
 			$title = 'Sandbox Mode';
 			$default_code = 'for i in range(50):\n    print(\"Sandbox Mode \" + str(i))';

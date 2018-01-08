@@ -1,0 +1,55 @@
+---Metric Tracking---
+
+Item Definitions:
+Exercises - An exercise is a short problem that consists of instructions and test code.
+            The student will not know what the test code is.
+            The student may be given some starting code to work off of.
+            Every time the student runs the code, it is checked against the test code to see if it is correct.
+            The student types in code and runs it until the requirements stated in the instructions are fulfilled.
+            They must be completed in order and a student cannot move on until the current one is completed.
+            These are not graded by the content of the students answer, but by completion.
+            Exercises can take anywhere from 1 minute to 10 minutes, but there is no time limit. 
+
+Projects - A project is a bigger, more complex problem where the student is given instructions and sometimes start code. 
+           A student cannot access a project until any related exercises(if any exist) are completed.
+           Projects do not contain test code therefore they are manually graded after its due date.
+	   A project can be a solo assignment or a group assignment. 
+           Projects can take anywhere from 30 minutes to a week depending on the scope of what the professor asks for in the instructions.           
+     
+Exam Questions - An exam question is very similar to an exercise, however they are part of a timed exam.
+                 Questions can take anywhere from 1 minute to 10 minutes as well, but the exam will be have a specified duration. 
+                 Unlike exercises, they have a point value shown to the student while taking the exam.
+                 Student's answers are not awarded any partial credit.
+                 Students are free to do questions in whatever order they want.
+
+Session Definition:
+Sessions - A session is a slice of time that consists of a start and end time. 
+           It also keeps a count of how many times each activity defined below occurred between the start and end time.
+           A session will start as soon as the student arrives to any of the 3 items listed above.
+           A session will end after 5 minutes of inactivity or when the student leaves the page.
+           As soon as any activity is detected, the 5 minutes will reset.
+           A new session will begin as soon as the previous one ends.
+           A session is saved to the database when it ends and only if it contained any amount of activity in it. 
+
+Activity Definitions:
+Keystrokes - Any key press, excluding modifiers such as ctrl, shift, etc... 
+             It does not keep track of which key was pressed.
+Mouse Clicks - Whenever any mouse button was pressed. 
+             It does not keep track of which mouse button was pressed.
+Times Ran - The number of times the student pressed the run button to test their code. 
+Times Ran With Errors - The number of times the student pressed the run button and an error occurred.
+                        An error can occur during any of the 3 items listed above. 
+                        During any of them, the error count will be incremented when there was a bug in the code (incorrect syntax, variable didn't exist, etc...).
+                        During exercises and exam questions, an error can also occur if the students code does not meet the requirements when checked against the test code.
+                        It does not track what kind of error occurred.
+
+Occurrence Definition:
+Occurrences only occur while a student is completing a question on an exam.
+If the website loses focus in any way, it will be recorded in the database. 
+This includes, but is not limited to,  opening a new tab, opening a new browser window, or interacting with any other program on their computer. 
+The specific type of occurrence is not recorded.
+Only the students name, what question it happened during, and the date and time it occurred is recorded.
+The date and time of when the website regains focus is not recorded.
+
+
+

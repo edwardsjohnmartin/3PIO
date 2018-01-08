@@ -41,6 +41,10 @@
     <Compile Include="controllers\role_controller.php" />
     <Compile Include="controllers\sandbox_controller.php" />
     <Compile Include="controllers\section_controller.php" />
+    <Compile Include="controllers\session_controller.php" />
+    <Compile Include="controllers\survey_choice_controller.php" />
+    <Compile Include="controllers\survey_controller.php" />
+    <Compile Include="controllers\survey_question_controller.php" />
     <Compile Include="controllers\tag_controller.php" />
     <Compile Include="controllers\user_controller.php" />
     <Compile Include="css\bootstrap-datetimepicker.min.css" />
@@ -58,6 +62,7 @@
     <Compile Include="enums\completion_status.php" />
     <Compile Include="enums\participation_type.php" />
     <Compile Include="enums\permission_type.php" />
+    <Compile Include="enums\role.php" />
     <Compile Include="enums\securable.php" />
     <Compile Include="enums\type.php" />
     <Compile Include="fonts\glyphicons-halflings-regular.eot" />
@@ -90,13 +95,21 @@
     <Compile Include="js\project_editor.js" />
     <Compile Include="js\python_ide_util.js" />
     <Compile Include="js\run_only.js" />
+    <Content Include="js\survey_create.js" />
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
+    <Compile Include="models\assigned_survey.php" />
     <Compile Include="models\exam.php" />
     <Compile Include="models\grades.php" />
-    <Compile Include="models\html_objects\button.php" />
-    <Compile Include="models\html_objects\dropdown_item.php" />
+    <Compile Include="models\dynamic_view_objects\button.php" />
+    <Compile Include="models\dynamic_view_objects\dropdown_item.php" />
     <Compile Include="models\question.php" />
+    <Compile Include="models\survey_question_type.php" />
+    <Compile Include="models\session.php" />
+    <Compile Include="models\survey.php" />
+    <Compile Include="models\survey_choice.php" />
+    <Compile Include="models\survey_question.php" />
+    <Compile Include="models\survey_type.php" />
     <Compile Include="mode\python\python.js" />
     <Compile Include="models\not_in_use\completion_status.php" />
     <Compile Include="models\not_in_use\participation_type.php" />
@@ -134,7 +147,6 @@
     <Compile Include="views\exam\create_file.php" />
     <Compile Include="views\exam\index.php" />
     <Compile Include="views\exam\exam_table.php" />
-    <Compile Include="views\exam\read_for_student.php" />
     <Compile Include="views\exam\update_times.php" />
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />
@@ -170,8 +182,10 @@
     <Compile Include="views\sandbox\editor.php" />
     <Compile Include="views\section\read.php" />
     <Compile Include="views\section\read_student.php" />
-    <Compile Include="views\section\read_student_old.php" />
-    <Compile Include="views\section\read_student_rewrite.php" />
+    <Compile Include="views\section\read_student_v3.php" />
+    <Compile Include="views\section\read_student_v4.php" />
+    <Compile Include="views\session\index.php" />
+    <Compile Include="views\session\read_all_for_student.php" />
     <Compile Include="views\shared\CodeMirror.php" />
     <Compile Include="views\shared\create.php" />
     <Compile Include="views\shared\html_helper.php" />
@@ -180,21 +194,25 @@
     <Compile Include="views\shared\layout.php" />
     <Compile Include="views\shared\MultiSelect.php" />
     <Compile Include="views\shared\read.php" />
-    <Compile Include="views\shared\site_functions.php" />
+    <Compile Include="views\shared\dynamic_code_page.php" />
     <Compile Include="views\shared\Skulpt.php" />
     <Compile Include="views\shared\update.php" />
+    <Compile Include="views\survey\assign.php" />
+    <Compile Include="views\survey\create.php" />
+    <Compile Include="views\survey\old_v2_create.php" />
+    <Compile Include="views\survey\read_responses.php" />
+    <Compile Include="views\survey\take.php" />
+    <Compile Include="views\survey_question\create.php" />
     <Compile Include="views\user\create.php" />
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />
     <Compile Include="views\user\manage_partners.php" />
     <Compile Include="views\user\read.php" />
     <Compile Include="connection.php" />
-    <Compile Include="dbsetup" />
-    <Compile Include="importer test.txt" />
     <Compile Include="importer.php" />
     <Compile Include="index.php" />
-    <Compile Include="oldupdate" />
     <Compile Include="routes.php" />
+    <Content Include="js\survey_question_create.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\pppio_Exam\v15" />
@@ -222,7 +240,7 @@
     <Folder Include="js\skulpt" />
     <Folder Include="js" />
     <Folder Include="lib" />
-    <Folder Include="models\html_objects\" />
+    <Folder Include="models\dynamic_view_objects\" />
     <Folder Include="mode\python" />
     <Folder Include="mode" />
     <Folder Include="models\not_in_use" />
@@ -241,6 +259,9 @@
     <Folder Include="views\lesson" />
     <Folder Include="views\exam\" />
     <Folder Include="views\grades\" />
+    <Folder Include="views\survey_question\" />
+    <Folder Include="views\survey\" />
+    <Folder Include="views\session\" />
     <Folder Include="views\question\" />
     <Folder Include="views\not_in_use\lesson" />
     <Folder Include="views\not_in_use\posts" />
@@ -256,7 +277,11 @@
     <Folder Include="views" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\survey.css" />
     <Content Include="js\code_editor_view.js" />
+    <Content Include="js\drag_drop_table.js" />
+    <Content Include="js\jquery-ui.js" />
     <Content Include="js\question_editor.js" />
+    <Content Include="js\sessions_handler.js" />
   </ItemGroup>
 </Project>

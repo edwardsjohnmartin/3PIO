@@ -1,6 +1,6 @@
 <?php
 
-	require_once('enums/completion_status.php');
+require_once('enums/completion_status.php');
 //	this expects either a problem or a project.
 //id, name, description, starter code
 $exercise_props = $exercise->get_properties();
@@ -21,79 +21,80 @@ echo '<div class="row">'; //abusing row...
 if doing latest, open the next
 otherwise don't bother
 either way, show the link for the next exercise, or the section if this one is the last
-*/
-	$trying_latest = false;
-	$trying_last = ($lesson_id == end($lessons)->get_id()) && (end(end($lessons)->get_properties()['exercises'])->key == $exercise->get_id()); // i need to check the lesson id
-	$i = 1;
-	$found_latest = false;
-	$found_current = false;
-	$next_exercise_id = null;
-	$next_lesson_id = null;
-	$next_index = null;
-	$lesson_name = '';
-foreach($lessons as $lesson)
-{
-$lesson_props = $lesson->get_properties();
-$exercises = $lesson_props['exercises'];
-if ($lesson_id == $lesson->get_id()) $lesson_name = $lesson_props['name'];
+ */
+$trying_latest = false;
+$trying_last = ($lesson_id == end($lessons)->get_id()) && (end(end($lessons)->get_properties()['exercises'])->key == $exercise->get_id()); // i need to check the lesson id
+$i = 1;
+$found_latest = false;
+$found_current = false;
+$next_exercise_id = null;
+$next_lesson_id = null;
+$next_index = null;
+$lesson_name = '';
+foreach($lessons as $lesson){
+	$lesson_props = $lesson->get_properties();
+	$exercises = $lesson_props['exercises'];
+	if ($lesson_id == $lesson->get_id()){
+		$lesson_name = $lesson_props['name'];
+	}
 
-	foreach($exercises as $exercise_id => $exercise_obj)
-	{
+	foreach($exercises as $exercise_id => $exercise_obj){
 		echo '<div class="col-xs-4 text-center">';
 		$is_current = false;
-		if(!$trying_last)
-		{
-			if($found_current && !isset($next_exercise_id))
-			{
+		if(!$trying_last){
+			if($found_current && !isset($next_exercise_id)){
 				$next_exercise_id = $exercise_id;
 				$next_lesson_id = $lesson->get_id();
 				$next_index = $i;
 			}
-			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
-			{
+			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id()){
 				$found_current = true;
 				$is_current = true;
 			}
 		}
 
 
-		if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview)
-		{
-			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
-			{
+		if($exercise_obj->status == Completion_Status::COMPLETED || $can_preview){
+			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id()){
 				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
-			}
-			else
-			{
+			} else {
 				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-success" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 		}
-		elseif (!$found_latest)
-		{
-			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id())
-			{
+		else if (!$found_latest){
+			if($exercise_id == $exercise->get_id() && $lesson_id == $lesson->get_id()){
 				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-primary" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
-			}
-			else
-			{
+			} else {
 				echo '<a href="?controller=exercise&action=try_it&id=' . $exercise_id . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept->get_id() . '" class="tile btn btn-default" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . $i . '</span></a>';
 			}
 			$found_latest = true;
-			if($exercise_id == $exercise->get_id())
-			{
+			if($exercise_id == $exercise->get_id()){
 				$trying_latest = true;
 			}
-		}
-		else
-		{
+		} else {
 			echo '<a class="tile btn btn-default disabled" id="exercise-' . $exercise_id . '-lesson-' . $lesson->get_id() . '"><span class="tile-number">' . '<span class="glyphicon glyphicon-lock" aria-hidden="true"></span><span class="sr-only">Locked</span>' . '</span></a>';
 		}
 
 		echo '</div>';
 		$i++;
 	}
+
+	if($post_ex_survey){
+		$survey_not_completed = is_null($post_ex_survey['date_completed']);
+
+		if($survey_not_completed){
+			$class = 'default';
+			$href = '"?controller=survey&action=do_survey&survey_id=' . $post_ex_survey['assigned_survey_id'] . '"';
+		} else {
+			$class = 'success';
+			$href = '"?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '"';
+		}
+		echo '<div class="col-xs-4 text-center">';
+		echo '<a href=' . $href . ' class="tile btn btn-' . $class . '"><span class="tile-number">' . $i . '</span><span class="tile-label">Survey</span></a>';
+		echo '</div>';
+	}
 }
-	echo '</div>';
+echo '</div>';
 
 echo '</div></div>';
 echo '<div class="col-xs-9 height-100 flex-columns">';
@@ -101,19 +102,21 @@ echo '<div class="col-xs-9 height-100 flex-columns">';
 echo '<div class="row no-shrink">
 		<div class="col-xs-12">
 			<h3>' . htmlspecialchars($lesson_name) . '</h3>'; //$exercise_props['lesson']->value); //bugs leftover from switching to only one lesson per project
-			//check if empty
-			if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
+//check if empty
+if($exercise_props['name'] !== '') echo '<h4>' . htmlspecialchars($exercise_props['name']). '</h4>';
 
-			echo '</h3>
+echo '</h3>
 			<p id="prompt">' . htmlspecialchars($exercise_props['description']) . '</p>
 		</div>
 	</div>';
 
-echo '<div class="row no-shrink navbar-default navbar-form navbar-left">
-					<button type="button" class="btn btn-default" id="runButton"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="sr-only">Run</span></button>';
-			//<span>Choose a test file:</span><input type="file"  class="form-control" id="fileInput">
-			echo '</div>
-			<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
+echo '<div class="row no-shrink navbar-default navbar-form navbar-left">';
+echo '<button type="button" class="btn btn-default" id="runButton">';
+echo '<span class="glyphicon glyphicon-play" aria-hidden="true"></span>';
+echo '<span class="sr-only">Run</span>';
+echo '</button>';
+echo '</div>';
+echo '<div class="row no-shrink"> <!--this alert needs to be filled with the error, or the next button-->
 			<div class="col-xs-12 pad-0">
 				<div id="codeAlerts"></div>
 			</div>
@@ -149,24 +152,21 @@ echo	'var current_tile_id = "exercise-' . $exercise->get_id() . '-lesson-' . $le
 echo 'var can_preview = ' . ($can_preview ? 'true' : 'false') . ';';
 echo	'var trying_latest = ' . ($trying_latest ? 'true' : 'false') . ';';
 echo	'var trying_last = ' . ($trying_last ? 'true' : 'false') . ';';
-	if($trying_last)
-	{
-		if($can_preview){
-echo	'var link = "' . '?controller=Concept&action=read&id=' . $concept->get_id().'";';
-		}
-		else {
-echo	'var link = "' . '?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '";';
-
+if($trying_last){
+	if($can_preview){
+		echo	'var link = "' . '?controller=Concept&action=read&id=' . $concept->get_id().'";';
+	} else {
+		if(isset($survey_not_completed) and $survey_not_completed){
+			echo 'var link = ' . $href . ';';
+		} else {
+			echo 'var link = "' . '?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '";';
 		}
 	}
-	else
-	{
-//echo	'var next_exercise_id = ' . $next_exercise_id . ';';
-//echo	'var next_exercise_id = ' . $next_lesson_id . ';';
-echo	'var next_tile_id = "exercise-' . $next_exercise_id . '-lesson-' . $next_lesson_id . '";'; //use to color tile
-echo	'var next_index = ' . $next_index . ';';
-echo	'var link = "' . '?controller=exercise&action=try_it&id=' . $next_exercise_id . '&lesson_id=' . $next_lesson_id . '&concept_id=' . $concept->get_id() . '";';
-	}
+} else {
+	echo	'var next_tile_id = "exercise-' . $next_exercise_id . '-lesson-' . $next_lesson_id . '";'; //use to color tile
+	echo	'var next_index = ' . $next_index . ';';
+	echo	'var link = "' . '?controller=exercise&action=try_it&id=' . $next_exercise_id . '&lesson_id=' . $next_lesson_id . '&concept_id=' . $concept->get_id() . '";';
+}
 //echo	'var completion_link = "' . '?controller=exercise&action=mark_as_completed&id=' . $exercise->get_id() . '&lesson_id=' . $lesson->get_id() . '&concept_id=' . $concept_id . '";';
 echo 'document.getElementById("exercise-' . $exercise->get_id() . '-lesson-' . $lesson_id . '").scrollIntoView();';
 echo	'</script>';
@@ -177,4 +177,8 @@ echo $exercise_props['test_code'];
 echo '</script>';
 
 echo '<script src="js/exercise_editor.js"></script>';
+
+if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_is_study_participant'])){
+	echo '<script src="js/sessions_handler.js"></script>';
+}
 ?>

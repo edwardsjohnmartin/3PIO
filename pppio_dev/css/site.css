@@ -64,7 +64,10 @@ span.code {
     color: #FFF;
 }
 #test-form {
-    border: 10vh solid #5cb85c;
+    border-top: 3vh solid #5cb85c;
+    border-bottom: 3vh solid #5cb85c;
+    border-right: 11vh solid #5cb85c;
+    border-left: 11vh solid #5cb85c;
     height: 100%;
 }
 
@@ -74,7 +77,6 @@ span.code {
 }
 
 .collapse-link {
-    text-decoration:underline;
     color: #2b5bf6;
 }
 
@@ -215,5 +217,15 @@ span.code {
 }
 
 .dd-text-output {
+    overflow:auto;
+}
+
+.btn-current {
+    border-color: #000;
+    border-width: 2px;
+}
+
+.scrollable-div {
+    height:67%;
     overflow:auto;
 }

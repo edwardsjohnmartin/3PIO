@@ -1,25 +1,20 @@
 <?php
 	require_once('controllers/base_controller.php');
-	class ExerciseController extends BaseController
-	{
-		public function index()
-		{
+	class ExerciseController extends BaseController{
+		public function index(){
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/shared/index.php';
 			require_once('views/shared/layout.php');
 		}
 
-		public function create()
-		{
+		public function create(){
 			require_once('models/lesson.php');
 			$lessons = lesson::get_pairs_for_owner($_SESSION['user']->get_id());
 			$options = array('lesson' => $lessons);
-			if(count($lessons) > 0)
-			{
+			if(count($lessons) > 0){
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$postedToken = filter_input(INPUT_POST, 'token');
-					if(!empty($postedToken) && isTokenValid($postedToken))
-					{
+					if(!empty($postedToken) && isTokenValid($postedToken)){
 						//probably i should do that isset stuff
 						$model = new $this->model_name();
 						$model->set_properties($_POST);
@@ -29,19 +24,16 @@
 							add_alert('Successfully created!', Alert_Type::SUCCESS);
 							return redirect($this->model_name, 'index');
 						}
-						else
-						{
+						else{
 							add_alert('Please try again.', Alert_Type::DANGER);
 						}
 					}
-					else
-					{
+					else{
 						add_alert('Please try again.', Alert_Type::DANGER);
 					}
 				}
 				$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
-				if(!file_exists($view_to_show))
-				{
+				if(!file_exists($view_to_show)){
 					$view_to_show = 'views/shared/create.php';
 				}
 
@@ -49,8 +41,7 @@
 			$types = $this->model_name::get_types();
 				require_once('views/shared/layout.php');
 			}
-			else
-			{
+			else{
 					add_alert('Oops, you don\'t have any lessons. Exercises must be added to lessons. Please <a href="?controller=lesson&action=create">create a lesson</a> before creating an exercise!', Alert_Type::DANGER);
 					redirect('exercise', 'index');
 			}
@@ -87,7 +78,7 @@
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
-			
+
 			$model = ($this->model_name)::get($_GET['id']);
 			if($model == null)
 			{
@@ -107,21 +98,17 @@
 		}
 
 		// This is where the student completes the exercise
-		public function try_it() //check if can access!!
-		{
-			//requires exercise id, lesson id, concept id in query sting
-			//at this point, i don't need to pass in the lesson id because it's on the exercise, but it will be needed if we decide to go back to having a pool of exercises, so i'm keeping it here
-			if (!isset($_GET['id']) || !isset($_GET['lesson_id']) || !isset($_GET['concept_id']))
-			{
+		public function try_it(){
+			if (!isset($_GET['id']) || !isset($_GET['lesson_id']) || !isset($_GET['concept_id'])){
 				return call('pages', 'error'); //or even call a blank editor for playing around in
 			}
-			
+
 			require_once('models/concept.php');
 			$can_preview = concept::can_preview($_GET['concept_id'], $_SESSION['user']->get_id());
 
 			if(!(exercise::can_access($_GET['id'], $_GET['lesson_id'], $_GET['concept_id'], $_SESSION['user']->get_id())
 			|| $can_preview)){
-				return call('pages', 'error'); //or even call a blank editor for playing around in
+				return call('pages', 'error');
 			}
 
 			$exercise = exercise::get($_GET['id']); //what if it's null? don't want that.. need to be careful of that in base, too
@@ -129,18 +116,23 @@
 
 			require_once('models/lesson.php');
 			$lessons = lesson::get_all_for_concept_and_student($_GET['concept_id'], $_SESSION['user']->get_id());
-
-
 			$concept = concept::get($_GET['concept_id']); //all i really want is the section id for links...
+			$concept_props = $concept->get_properties();
 
-			//require_once('views/shared/editor.php');
+			//Only check for the post-exercise survey if the student is participating in the study for the current section 
+			if(array_key_exists($concept_props['section']->key, $_SESSION['sections_is_study_participant'])){
+				require_once('models/survey.php');
+				require_once('models/survey_type.php');
+				$post_ex_survey = Survey::check_for_project(Survey_Type_Enum::POST_EXERCISES, $_GET['concept_id']);
+			} else {
+				$post_ex_survey = false;
+			}
 
 			$view_to_show = 'views/exercise/editor.php';
 			require_once('views/shared/layout.php');
 		}
 
-		public function mark_as_completed() //
-		{
+		public function mark_as_completed(){
 			require_once('enums/completion_status.php');
 
 			/*
@@ -150,19 +142,15 @@
 			*/
 			$success = false;
 
-			
 			//return success true/false
-			if (isset($_POST['id']) && isset($_POST['lesson_id']) && isset($_POST['concept_id']) && exercise::can_access($_POST['id'], $_POST['lesson_id'], $_POST['concept_id'], $_SESSION['user']->get_id()))
-			{
+			if (isset($_POST['id']) && isset($_POST['lesson_id']) && isset($_POST['concept_id']) && exercise::can_access($_POST['id'], $_POST['lesson_id'], $_POST['concept_id'], $_SESSION['user']->get_id())){
 				//if it accidentally gets marked twice somehow, it's not a problem, but let's try to avoid
-				if(exercise::get_completion_status($_POST['id'], $_POST['lesson_id'], $_POST['concept_id'], $_SESSION['user']->get_id()) != Completion_Status::COMPLETED)
-				{
+				if(exercise::get_completion_status($_POST['id'], $_POST['lesson_id'], $_POST['concept_id'], $_SESSION['user']->get_id()) != Completion_Status::COMPLETED){
 					exercise::set_completion_status($_POST['id'], $_POST['lesson_id'], $_POST['concept_id'], $_SESSION['user']->get_id(), Completion_Status::COMPLETED);
 				}
 				$success = true;
 			}
-			
-			
+
 			$json_data = array('success' => $success);
 			require_once('views/shared/json_wrapper.php');
 
