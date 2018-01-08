@@ -32,11 +32,13 @@ class SurveyController extends BaseController{
 		require_once('models/survey.php');
 		require_once('models/survey_type.php');
 		require_once('models/concept.php');
+		require_once('models/section.php');
 
 		$assigned_surveys = Survey::get_all_assigned();
 		$concepts = Concept::get_by_section($_SESSION['user']->get_id());
 		$surveys = Survey::get_pairs();
 		$survey_types = Survey_Type::get_pairs();
+		$sections = Section::get_pairs_for_owner($_SESSION['user']->get_id());
 
 		$view_to_show = 'views/survey/assign.php';
 		require_once('views/shared/layout.php');

@@ -30,7 +30,7 @@
                     <select class="form-control" name="section" id="sel_section">
                         <option value="" disabled selected>Select a section</option>                        
 						<?php 
-						foreach($_SESSION['sections_owner'] as $key => $value){
+						foreach($sections as $key => $value){
 							echo '<option value="' . $key . '">' . $value . '</option>';
                         }
 						?>
