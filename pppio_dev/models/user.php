@@ -27,6 +27,7 @@
 			return $req->fetchAll(PDO::FETCH_CLASS);
 		}
 
+		//Function for logging in a user. Takes in email and password and passes to db function 'sproc_read_user_get_for_login'.
 		public static function get_for_login($email, $password){
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_get_for_login';

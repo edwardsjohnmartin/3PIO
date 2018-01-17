@@ -68,10 +68,13 @@ function run() {
         inputfun: inf,
         inputfunTakesPrompt: true
     });
+
     (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
+
     var myPromise = Sk.misceval.asyncToPromise(function () {
         return Sk.importMainWithBody("<stdin>", false, program, true);
     });
+
     myPromise.then(function (mod) { },
         function (err) {
             markError(err.toString());

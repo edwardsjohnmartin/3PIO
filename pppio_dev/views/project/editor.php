@@ -18,19 +18,36 @@ require_once('views/shared/Skulpt.php');
             </div>
         </div>
 		<?php
+		//Create a div for the survey buttons if either survey exists
         if($pre_survey or $post_survey){
 			echo '<div class="col-xs-3">';
 			echo '<div class="row height-100">';
-			if($pre_survey and is_null($pre_survey['date_completed'])){
-				echo '<a id="btn_pre_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $pre_survey['assigned_survey_id'] . '">Pre-Survey</a>';
-			} else if($pre_survey and !is_null($pre_survey['date_completed'])){
-				echo '<a id="btn_pre_survey" class="btn btn-default" role="button" disabled="disabled">Pre-Survey Completed</a>';
+
+			if($pre_survey and !$post_survey){
+				if(is_null($pre_survey['date_completed'])){
+					echo '<a id="btn_pre_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $pre_survey['assigned_survey_id'] . '">Pre-Project Survey</a>';
+				} else{
+					echo '<a id="btn_pre_survey" class="btn btn-default" role="button" disabled="disabled">Pre-Project Survey Completed</a>';
+				}
+			} else if(!$pre_survey and $post_survey){
+				if(is_null($post_survey['date_completed'])){
+					echo '<a id="btn_post_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $post_survey['assigned_survey_id'] . '">Post-Project Survey</a>';
+				} else{
+					echo '<a id="btn_post_survey" class="btn btn-default" role="button" disabled="disabled">Post-Project Survey Completed</a>';
+				}
+			} else if($pre_survey and $post_survey){
+				if(is_null($pre_survey['date_completed'])){
+					echo '<a id="btn_pre_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $pre_survey['assigned_survey_id'] . '">Pre-Project Survey</a>';
+					echo '<a id="btn_post_survey" class="btn btn-default" role="button" disabled="disabled">Complete Pre-Project Survey First</a>';
+				} else if(!is_null($pre_survey['date_completed']) and is_null($post_survey['date_completed'])){
+					echo '<a id="btn_pre_survey" class="btn btn-default" role="button" disabled="disabled">Pre-Project Survey Completed</a>';
+					echo '<a id="btn_post_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $post_survey['assigned_survey_id'] . '">Post-Project Survey</a>';
+				} else if(!is_null($pre_survey['date_completed']) and !is_null($post_survey['date_completed'])){
+					echo '<a id="btn_pre_survey" class="btn btn-default" role="button" disabled="disabled">Pre-Project Survey Completed</a>';
+					echo '<a id="btn_post_survey" class="btn btn-default" role="button" disabled="disabled">Post-Project Survey Completed</a>';
+				}
 			}
-			if($post_survey and is_null($post_survey['date_completed'])){
-				echo '<a id="btn_post_survey" class="btn btn-default" role="button" href="?controller=survey&action=do_survey&survey_id=' . $post_survey['assigned_survey_id'] . '">Post-Survey</a>';
-			} else if($post_survey and !is_null($post_survey['date_completed'])){
-				echo '<a id="btn_post_survey" class="btn btn-default" role="button" disabled="disabled">Post-Survey Completed</a>';
-			}
+
 			echo '</div>';
 			echo '</div>';
 		}

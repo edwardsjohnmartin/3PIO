@@ -39,8 +39,7 @@ class Section extends Model{
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
-	//Return all sections where a user is a student and participating in the study
-	//Note: This will return sections even if the current time is outside of the section start and end time
+	//Return all sections a student is participating in the study for. Ignores the start and end time of the section.
 	public static function get_study_pairs_for_student($user_id){
 		$db = Db::getReader();
 		$user_id = intval($user_id);
@@ -53,7 +52,7 @@ class Section extends Model{
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
-	//Returns all students who are participating in the study for the section whose id is passed in
+	//Returns all students who are participating in the study for a section
 	public static function get_study_students($section_id){
 		$db = Db::getReader();
 		$section_id = intval($section_id);

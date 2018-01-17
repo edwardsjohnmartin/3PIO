@@ -35,6 +35,7 @@ class SurveyController extends BaseController{
 		require_once('models/section.php');
 
 		$assigned_surveys = Survey::get_all_assigned();
+		$unassigned_surveys = Survey::get_all_unassigned();
 		$concepts = Concept::get_by_section($_SESSION['user']->get_id());
 		$surveys = Survey::get_pairs();
 		$survey_types = Survey_Type::get_pairs();
@@ -44,7 +45,7 @@ class SurveyController extends BaseController{
 		require_once('views/shared/layout.php');
 	}
 
-	//This will be used by the ajax call to save the assigned survey to the database
+	//Ajax Call
 	public function assign_survey(){
 		require_once('models/survey_type.php');
 		require_once('models/survey.php');
@@ -75,6 +76,65 @@ class SurveyController extends BaseController{
 		require_once('views/shared/json_wrapper.php');
 	}
 
+	//Ajax Call
+	public function unassign_survey(){
+		require_once('models/survey_type.php');
+		require_once('models/survey.php');
+
+		$success = true;
+
+		if ($_POST['assigned_survey_id'] != ""){
+			$assigned_survey_id = intval($_POST['assigned_survey_id']);
+		}
+		else{
+			$message = 'Not all the required information was set.';
+			$success = false;
+		}
+
+		if($success){
+			$ret = Survey::unassign_survey($assigned_survey_id);
+			if(is_null($ret)){
+				$message = 'There was an error.';
+				$success = false;
+			} else {
+				$message = 'A survey was successfully unassigned.';
+			}
+		}
+
+		$json_data = array('message' => $message, 'success' => $success);
+		require_once('views/shared/json_wrapper.php');
+	}
+
+	//Ajax Call
+	public function reassign_survey(){
+		require_once('models/survey_type.php');
+		require_once('models/survey.php');
+
+		$success = true;
+
+		if ($_POST['assigned_survey_id'] != ""){
+			$assigned_survey_id = intval($_POST['assigned_survey_id']);
+		}
+		else{
+			$message = 'Not all the required information was set.';
+			$success = false;
+		}
+
+		if($success){
+			$ret = Survey::reassign_survey($assigned_survey_id);
+			if(is_null($ret)){
+				$message = 'There is a survey of the same type assigned to that concept.';
+				$success = false;
+			} else {
+				$message = 'A survey was successfully reassigned.';
+			}
+		}
+
+		$json_data = array('message' => $message, 'success' => $success);
+		require_once('views/shared/json_wrapper.php');
+	}
+
+	//Ajax Call
 	public function get_assigned_surveys(){
 		require_once('models/survey.php');
 
@@ -119,6 +179,7 @@ class SurveyController extends BaseController{
 
 		//Make sure the survey exists and has questions
 		$survey_questions = Survey::get_to_take($_GET['survey_id']);
+
 		if(count($survey_questions) == 0){
 			add_alert('The survey you are trying to access does not exist.', Alert_Type::DANGER);
 			return call('pages', 'error');

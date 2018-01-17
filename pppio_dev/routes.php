@@ -272,6 +272,8 @@
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'assign' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'assign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'unassign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'reassign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'get_assigned_surveys' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'do_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])],

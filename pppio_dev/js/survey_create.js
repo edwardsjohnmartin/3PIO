@@ -5,6 +5,54 @@ window.onload = function () {
     document.getElementById("btn_assign").addEventListener("click", assignSurvey);
 };
 
+function unassignSurvey(assigned_survey_id, row_id){
+    var row = document.getElementById("row_unassign_" + row_id).parentNode.parentNode;
+
+    clearAlerts();
+    var html_class;
+
+    //call unassign db func
+    $.ajax({
+        method: "POST",
+        url: "?controller=survey&action=unassign_survey",
+        data: { assigned_survey_id: assigned_survey_id },
+        success: function (data) {
+            if (data.success) {
+                html_class = "success";
+                deleteTableRow(row, "tbl_surveys");
+                addRowToUnassignedTable(row);
+            } else {
+                html_class = "danger";
+            }
+            showAlert(data.message, html_class);
+        }
+    });
+}
+
+function reassignSurvey(assigned_survey_id, row_id) {
+    var row = document.getElementById("row_reassign_" + row_id).parentNode.parentNode;
+
+    clearAlerts();
+    var html_class;
+
+    //call reassign db func
+    $.ajax({
+        method: "POST",
+        url: "?controller=survey&action=reassign_survey",
+        data: { assigned_survey_id: assigned_survey_id },
+        success: function (data) {
+            if (data.success) {
+                html_class = "success";
+                deleteTableRow(row, "tbl_unassigned_surveys");
+                addRowToAssignedTable(row);
+            } else {
+                html_class = "danger";
+            }
+            showAlert(data.message, html_class);
+        }
+    });
+}
+
 var div_alert = document.getElementById('div_alert')
 
 function handleSectionDropdown(sel) {
@@ -35,6 +83,7 @@ function assignSurvey() {
     var survey_id = document.getElementById("sel_survey").value;
     var concept_id = document.getElementById("sel_concept").value;
     var survey_type_id = document.getElementById("sel_survey_type").value;
+    var html_class;
 
     $.ajax({
         method: "POST",
@@ -42,10 +91,10 @@ function assignSurvey() {
         data: { survey_id: survey_id, concept_id: concept_id, survey_type_id: survey_type_id },
         success: function (data) {
             if (data.success) {
-                var html_class = "success";
+                html_class = "success";
                 insert_row();
             } else {
-                var html_class = "danger";
+                html_class = "danger";
             }
             showAlert(data.message, html_class);
         }
@@ -84,11 +133,33 @@ function insert_row() {
     td_survey_type.value = sel_survey_type[sel_survey_type.selectedIndex].value;
     td_survey_type.appendChild(document.createTextNode(sel_survey_type[sel_survey_type.selectedIndex].text));
 
-    var td_actions = new_row.insertCell(5);
+    var td_date = new_row.insertCell(5);
+    td_date.appendChild(document.createTextNode("-----"));
+
+    var td_actions = new_row.insertCell(6);
     var new_btn = td_actions.appendChild(document.createElement("button"));
     new_btn.appendChild(document.createTextNode("Unassign"));
 
     resetSelection();
+}
+
+function deleteTableRow(r, tableName){
+    var i = r.rowIndex;
+    document.getElementById(tableName).deleteRow(i);
+}
+
+function addRowToUnassignedTable(r) {
+    r.deleteCell(-1);
+    r.insertCell(-1);
+    var newRow = $(r).clone();
+    $('#tbl_unassigned_surveys tbody').append(newRow);
+}
+
+function addRowToAssignedTable(r) {
+    r.deleteCell(-1);
+    r.insertCell(-1);
+    var newRow = $(r).clone();
+    $('#tbl_surveys tbody tr').eq(-1).before(newRow);
 }
 
 function resetSelection() {
