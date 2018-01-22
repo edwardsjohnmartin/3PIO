@@ -15,7 +15,12 @@ class UserController extends BaseController{
 	public function log_in(){
 		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-			$model = User::get_for_login($_POST['email'], $_POST['password']);
+			//This will pass the correct values to get_for_login depending on if a salt exists or not
+			if(defined(salt)){
+				$model = User::get_for_login($_POST['email'], salt . $_POST['password']);
+			}else{
+				$model = User::get_for_login($_POST['email'], $_POST['password']);
+			}
 
 			if ($model->get_id() != null){
 				require_once('models/section.php');
@@ -51,7 +56,12 @@ class UserController extends BaseController{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 			//should make sure email and password aren't null...
 
-			$model = User::get_for_login($_POST['email'], $_POST['password']);
+			//This will pass the correct values to get_for_login depending on if a salt exists or not
+			if(defined(salt)){
+				$model = User::get_for_login($_POST['email'], salt . $_POST['password']);
+			}else{
+				$model = User::get_for_login($_POST['email'], $_POST['password']);
+			}
 
 			if ($model->get_id() == null){
 				add_alert('Email and password do not match.', Alert_Type::DANGER);
@@ -119,13 +129,12 @@ class UserController extends BaseController{
 		redirect_to_index();
 	}
 
+	//Create a new user. A user created with this function will always be a student
 	public function create(){
 		//user won't have any sections yet, so no need to fill.
 		//get from post.
 		//validate, fill.
-		//$model_name = $this->model_name; //not the best way to do this.
-		//if there isn't post data, or if the data is not valid, i need to show the form.
-		//i should show errors somehow. how?
+
 		$model = new $this->model_name();
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -138,24 +147,26 @@ class UserController extends BaseController{
 				-email is available
 				-email is an email (added to model validation. don't need to check again)
 				 */
-				$model = new $this->model_name();
-				$model->set_properties($_POST); //i need to add the server salt to the password!
-				$model->set_properties(array('role'=>3)); //HARD CODED STUDENT!!
 
 				$is_valid = true;
 				if(!isset($_POST['email']) || !isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['confirm_password']) || ($_POST['email'] == null) || ($_POST['name'] == null) || ($_POST['password'] == null) || ($_POST['confirm_password'] == null)){
 					$is_valid = false;
 					add_alert('Please complete all fields.', Alert_Type::DANGER);
 				} else{
+					//make email lower-case
+					$_POST['email'] = strtolower($_POST['email']);
+
+					//php built-in way of checking if a string is a valid email address
 					if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
 						$is_valid = false;
 						add_alert('Please enter a valid email address.', Alert_Type::DANGER);
-
 					}
+					//email isnt already used
 					if(!$model::email_is_available($_POST['email'])){
 						$is_valid = false;
 						add_alert('An account is already associated with that email address.', Alert_Type::DANGER);
 					}
+					//passwords match
 					if($_POST['password'] != $_POST['confirm_password']){
 						$is_valid = false;
 						add_alert('The passwords entered do not match.', Alert_Type::DANGER);
@@ -166,13 +177,24 @@ class UserController extends BaseController{
 						add_alert('Please use at least 8 characters in your password.', Alert_Type::DANGER);
 
 					}
+
+					//create the new user with the validated properties
+					$model = new $this->model_name();
+					$model->set_properties($_POST); //i need to add the server salt to the password!
+					$model->set_properties(array('role'=>3)); //HARD CODED STUDENT!!
+
 					if($is_valid && !$model->is_valid()){
 						$is_valid = false;
 						add_alert('This user is not valid.', Alert_Type::DANGER);
 					}
 				}
 
-				$model->set_properties(array('password'=> $_POST['password'])); //add salt here
+				//This will pass the correct values to set_properties depending on if a salt exists or not
+				if(defined(salt)){
+					$model->set_properties(array('password'=>(salt . $model->get_properties()['password'])));
+				}else{
+					$model->set_properties(array('password'=> $_POST['password']));
+				}
 
 				if($is_valid){
 					$model->create(); //this could fail on the email still...
@@ -194,72 +216,72 @@ class UserController extends BaseController{
 		require_once('views/shared/layout.php');
 	}
 
+	//Update an existing users email, name, or role
+	//Only teachers and admins can access this
+	//Cannot update password from here
 	public function update() {
-		//must set id and the rest too. id is separate.
-		//for users especially, i need to be more careful.
-		//this is a basic one without permissions.
-
+		//user id has to be in $_GET
 		if (!isset($_GET['id'])){
 			return call('pages', 'error');
 		}
 
-		//if there is post data...
-		//todo: i need to check if the model actually exists on post, too!!!!
+		//get user to update
+		$model = User::get($_GET['id']);
+
+		//validate that one existed to for the id
+		if(!$model or is_null($model)){
+			add_alert('The user you are trying to update does not exist.', Alert_Type::DANGER);
+			return call('pages', 'error');
+		}
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$postedToken = filter_input(INPUT_POST, 'token');
 			if(!empty($postedToken) && isTokenValid($postedToken)){
-				//probably i should do that isset stuff
-				$model = new $this->model_name();
-				$model->set_id($_GET['id']); //i should not trust that...
-				$model->set_properties($_POST);
-				$model->set_properties(array('password' => ''));
-				if($model->is_valid()){
-					$is_valid = true;
+
+				$is_valid = true;
+				if(!isset($_POST['email']) || !isset($_POST['name']) || !isset($_POST['role'])){
+					$is_valid = false;
+					add_alert('Please complete all fields.', Alert_Type::DANGER);
+				}else{
+					//make email lower-case
+					$_POST['email'] = strtolower($_POST['email']);
+
+					//php built-in way of checking if a string is a valid email address
 					if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
 						$is_valid = false;
 						add_alert('Please enter a valid email address.', Alert_Type::DANGER);
-
 					}
+					//email isnt already used
 					if(!$model::email_is_available($_POST['email'], $_GET['id'])){
 						$is_valid = false;
 						add_alert('An account is already associated with that email address.', Alert_Type::DANGER);
 					}
+
+					//update the existing user with the values in $_POST
 					if($is_valid){
-						$model->update(); //do i call validate here, or in the update function?
-						//layout has already been created. can't add the alerts now
-						//but redirecting anyway
-						//could use ajax instead
-						//for now, i'll stick to a redirect
-						//add alerts to session or something
-						//i want to redirect, but it doesn't seem like the php way...
-						//$_SESSION['alerts'][] = 'Successfully updated!';
-						add_alert('Successfully updated!', Alert_Type::SUCCESS);
-						//session_write_close();
-						return redirect($this->model_name, 'index');
+						$model->set_properties($_POST);
+						$model->set_properties(array('password' => ''));
 					}
-					//http://getbootstrap.com/components/#alerts
-					//exit properly first!
-					//redirect header("Location: ...");
-				} else{
-					add_alert('Please try again.', Alert_Type::DANGER);
+
+					if($is_valid and $model->is_valid()){
+						$model->update();
+						add_alert('Successfully updated!', Alert_Type::SUCCESS);
+						return redirect($this->model_name, 'index');
+					} else{
+						add_alert('Please try again.', Alert_Type::DANGER);
+					}
 				}
 			} else{
 				add_alert('Please try again.', Alert_Type::DANGER);
 			}
 		}
 
-		$model = ($this->model_name)::get($_GET['id']);
-		if($model == null){
-			return call('pages', 'error');
-		} else{
-			//require_once('views/shared/update.php');
-			$view_to_show = 'views/shared/update.php';
-			$types = $model::get_types();
-			$properties = $model->get_properties();
-			unset($properties['password']);
-			unset($types['password']);
-			require_once('views/shared/layout.php');
-		}
+		$view_to_show = 'views/shared/update.php';
+		$types = $model::get_types();
+		$properties = $model->get_properties();
+		unset($properties['password']);
+		unset($types['password']);
+		require_once('views/shared/layout.php');
 	}
 
 	public function delete(){
@@ -289,6 +311,58 @@ class UserController extends BaseController{
 
 		$model->delete($_GET['id']);
 		return redirect($this->model_name, 'index');
+	}
+
+	//Page for a user to see their account details
+	public function profile(){
+		//Make sure user is logged in
+		$user_id = $_SESSION['user']->get_id();
+
+		//Get user model for user that is logged in
+		$user = User::get($user_id);
+		$properties = $user->get_properties();
+
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$postedToken = filter_input(INPUT_POST, 'token');
+			if(!empty($postedToken) && isTokenValid($postedToken)){
+
+				//current password has to be correct
+				//This will pass the correct values to get_for_login depending on if a salt exists or not
+				if(defined(salt)){
+					$model = User::get_for_login($properties['email'], salt . $_POST['cur_password']);
+				}else{
+					$model = User::get_for_login($properties['email'], $_POST['cur_password']);
+				}
+
+				if($model->get_id() == null){
+					add_alert('The current password was not entered correctly.', Alert_Type::DANGER);
+				}else{
+					//new and conf password must be over 8 characters
+					if(strlen($_POST['new_password']) < 8 or strlen($_POST['conf_password']) < 8){
+						add_alert('The new password has to be at least 8 characters.', Alert_Type::DANGER);
+					}else{
+						//new and conf password must match
+						if($_POST['new_password'] != $_POST['conf_password']){
+							add_alert('The passwords entered do not match.', Alert_Type::DANGER);
+						}else{
+							//This will pass the correct values to get_for_login depending on if a salt exists or not
+							if(defined(salt)){
+								$model->update_password(salt . $_POST['new_password']);
+							}else{
+								$model->update_password($_POST['new_password']);
+							}
+							add_alert('Your password was successfully changed.', Alert_Type::SUCCESS);
+						}
+					}
+				}
+			}
+		}
+
+		$view_to_show = 'views/user/profile.php';
+		$types = $user::get_types();
+		unset($properties['password']);
+		unset($types['password']);
+		require_once('views/shared/layout.php');
 	}
 }
 ?>

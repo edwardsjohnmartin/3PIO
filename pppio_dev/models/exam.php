@@ -181,8 +181,7 @@ class Exam extends Model{
 		}
 	}
 
-	public function create()
-	{
+	public function create(){
 		$model_name = static::class;
 		$db = Db::getWriter();
 
@@ -191,9 +190,7 @@ class Exam extends Model{
 
 		$function_name = 'sproc_write_' . $model_name . '_create';
 		$req = $db->prepare(static::build_query($function_name, array_keys($props)));
-
 		$req->execute($props);
-
 		$this->set_id($req->fetchColumn()); //something like that. i'm using the setter here but not the getter above, which should i do?
 	}
 

@@ -21,6 +21,8 @@ class SurveyController extends BaseController{
 			}
 			else{ add_alert('Please try again.', Alert_Type::DANGER);}
 		}
+
+		//Used to fill the click-over boxes with the possible questions they can put on the survey
 		$survey_questions = Survey_Question::get_pairs();
 
 		$view_to_show = 'views/survey/create.php';
@@ -34,12 +36,17 @@ class SurveyController extends BaseController{
 		require_once('models/concept.php');
 		require_once('models/section.php');
 
+		//Used to fill the table with all currently assigned surveys
 		$assigned_surveys = Survey::get_all_assigned();
+
+		//Used to fill the table with all surveys that have been unassigned
 		$unassigned_surveys = Survey::get_all_unassigned();
+
+		//Used to fill dropdowns with possible options to pick from
+		$sections = Section::get_pairs_for_owner($_SESSION['user']->get_id());
 		$concepts = Concept::get_by_section($_SESSION['user']->get_id());
 		$surveys = Survey::get_pairs();
 		$survey_types = Survey_Type::get_pairs();
-		$sections = Section::get_pairs_for_owner($_SESSION['user']->get_id());
 
 		$view_to_show = 'views/survey/assign.php';
 		require_once('views/shared/layout.php');
@@ -142,6 +149,7 @@ class SurveyController extends BaseController{
 		require_once('views/shared/json_wrapper.php');
 	}
 
+	//This is used for a student to take a survey or a ta/teacher/admin to preview the survey
 	public function do_survey(){
 		require_once('models/survey.php');
 		require_once('models/concept.php');
@@ -155,7 +163,9 @@ class SurveyController extends BaseController{
 			return call('pages', 'error');
 		}
 
+		//Used to store the assigned_survey the user is attempting to take
 		$assigned_survey = Assigned_Survey::get($_GET['survey_id']);
+
 		if(is_null($assigned_survey)){
 			add_alert('The survey you are trying to access does not exist.', Alert_Type::DANGER);
 			return call('pages', 'error');
@@ -165,8 +175,10 @@ class SurveyController extends BaseController{
 		if($_SESSION['user']->get_role() == Role::ADMIN or $_SESSION['user']->get_role() == Role::TEACHER){
 			$can_save = false;
 		} else {
-			//Only students who have opted into the study for the section the survey is in, can access it
+
+			//Used to store the concept the assigned_survey belongs to
 			$concept = Concept::get($assigned_survey->concept->key);
+
 			if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_is_study_participant'])){
 				$can_save = true;
 			} else if(array_key_exists($concept->get_properties()['section']->key, $_SESSION['sections_ta'])){
@@ -177,9 +189,10 @@ class SurveyController extends BaseController{
 			}
 		}
 
-		//Make sure the survey exists and has questions
+		//Used to store all the survey questions that are attached to the survey the user is trying to take 
 		$survey_questions = Survey::get_to_take($_GET['survey_id']);
 
+		//Make sure the survey exists and has questions
 		if(count($survey_questions) == 0){
 			add_alert('The survey you are trying to access does not exist.', Alert_Type::DANGER);
 			return call('pages', 'error');
@@ -191,6 +204,7 @@ class SurveyController extends BaseController{
 		    return call('pages', 'error');
 		}
 
+		//Multiple_Choice and Range type questions have additional, unique information about the possible answers that question can have
 		foreach($survey_questions as $key => $value){
 			if($value->get_survey_question_type() == Question_Type_Enum::MULTIPLE_CHOICE){
 				$survey_questions[$key]->set_choices_from_db();

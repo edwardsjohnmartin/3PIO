@@ -230,6 +230,8 @@
 									],
 						'user' => [
 										'index' => new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::LIST)]),
+										//This is using section read permission so any user can access it
+										'profile' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'update'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'delete'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::EDIT)]),

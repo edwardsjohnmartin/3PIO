@@ -125,7 +125,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<?php
 					if(isset($_SESSION['user']) && $_SESSION['user'] != null){
-						echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
+						echo '<li><a href="?controller=user&action=profile">' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
 						echo '<li class="dropdown">';
 		                echo '<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>';
 		                echo '<ul class="dropdown-menu">';

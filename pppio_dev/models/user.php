@@ -29,6 +29,9 @@
 
 		//Function for logging in a user. Takes in email and password and passes to db function 'sproc_read_user_get_for_login'.
 		public static function get_for_login($email, $password){
+			//make email lower-case
+			$email = strtolower($email);
+
 			$db = Db::getReader();
 			$function_name = 'sproc_read_user_get_for_login';
 			$req = $db->prepare(static::build_query($function_name, array('email', 'password')));
@@ -95,6 +98,16 @@
 			$req->execute(array('user_id' => $user_id, 'participation_type_id' => $participation_type_id));
 
 			return $req->fetch(PDO::FETCH_ASSOC);
+		}
+
+		public function update_password($password){
+			$db = Db::getWriter();
+
+			$user_id = $_SESSION['user']->get_id();
+
+			$function_name = 'sproc_write_user_update_password';
+			$req = $db->prepare(static::build_query($function_name, array('user_id', 'password')));
+			$req->execute(array('user_id' => $user_id, 'password' => $password));
 		}
 	}
 ?>

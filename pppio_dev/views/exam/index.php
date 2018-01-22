@@ -1,8 +1,7 @@
 <?php
-if(has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::CREATE)))
-{
-echo '<a href="?controller=' . $this->model_name . '&action=create" class="btn btn-primary">Create</a>';
-echo '<a href="?controller=' . $this->model_name . '&action=create_file" class="btn btn-primary">Create from file</a><br>';
+if(has_permission(new Permission(constant('Securable::' . strtoupper($this->model_name)), Permission_Type::CREATE))){
+	echo '<a href="?controller=' . $this->model_name . '&action=create" class="btn btn-primary">Create</a>';
+	echo '<a href="?controller=' . $this->model_name . '&action=create_file" class="btn btn-primary">Create from file</a><br>';
 }
 	echo '<h2>' . $this->model_name . ' List</h2>';
 ?>
@@ -15,19 +14,17 @@ echo '<a href="?controller=' . $this->model_name . '&action=create_file" class="
 $can_read = has_permission(new Permission(Securable::EXAM, Permission_Type::READ));
 $can_edit = has_permission(new Permission(Securable::EXAM, Permission_Type::EDIT));
 
-foreach($models as $k => $v)
-{
+foreach($models as $k => $v){
     ?>
     <tr>
         <td><?php echo htmlspecialchars($v); ?>
         </td><?php
-	if($can_read)
-	{ ?>
+	if($can_read){ ?>
         <td>
             <a title="View and edit exam times assigned to students" href="<?php echo '?controller=' . $this->model_name . '&action=update_times&id=' . $k;?>">View Times</a>
-        </td><?php }
-	if($can_edit)
-	{ ?>
+        </td><?php 
+	}
+	if($can_edit){ ?>
         <td>
             <a title="Update exam properties" href="<?php echo '?controller=' . $this->model_name . '&action=update&id=' . $k;?>">Update</a>
         </td>
@@ -35,7 +32,8 @@ foreach($models as $k => $v)
 		<!--<td>
 			<a href="<?php //echo '?controller=' . $this->model_name . '&action=delete&id=' . $k;?>" onclick="return confirm('Do you want to delete this exam?');">Delete</a>
 		</td>-->
-		<?php } ?>
+		<?php 
+	} ?>
 	</tr>
 	<?php
 }

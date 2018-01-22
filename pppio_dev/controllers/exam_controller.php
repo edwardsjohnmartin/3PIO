@@ -8,7 +8,9 @@
 		review_exam: View for a ta/teacher to review a students answer for the question on the exam. Utilizes the dynamic view.
 	*/
 	//TODO: The review_exam action contains a lot more information than is required. Trimming it down would be a good idea.
+
 	require_once('controllers/base_controller.php');
+
 	class ExamController extends BaseController{
 		/*This doesn't do anything much different from the index in the base controller, but it needs to be here
 		because if the index in the base controller is used, it will return all existing exams instead of
@@ -69,39 +71,36 @@
 
         public function create(){
             require_once('models/section.php');
+
             $sections = section::get_pairs_for_owner($_SESSION['user']->get_id());
             $options = array('section' => $sections);
+
             if(count($sections) > 0){
-                if ($_SERVER['REQUEST_METHOD'] === 'POST')
-                {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 					$postedToken = filter_input(INPUT_POST, 'token');
-					if(!empty($postedToken) && isTokenValid($postedToken))
-					{
+
+					if(!empty($postedToken) && isTokenValid($postedToken)){
 						//probably i should do that isset stuff
 						$model = new $this->model_name();
 						$model->set_properties($_POST);
 						$model->set_owner($_SESSION['user']->get_id());
-						if($model->is_valid())
-						{
+						if($model->is_valid()){
                             $model->create();
                             add_alert('Successfully created!', Alert_Type::SUCCESS);
                             return redirect($this->model_name, 'index');
-                        }
-                        else
-                        {
+                        }else{
                             add_alert('Please try again. 1', Alert_Type::DANGER);
                         }
-                    }
-                    else
-                    {
+                    }else{
                         add_alert('Please try again. 2', Alert_Type::DANGER);
                     }
                 }
+
                 $view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
-				if(!file_exists($view_to_show))
-				{
+				if(!file_exists($view_to_show)){
 					$view_to_show = 'views/shared/create.php';
                 }
+
                 $properties = $this->model_name::get_available_properties();
                 $types = $this->model_name::get_types();
 				unset($properties['owner']);
@@ -109,9 +108,7 @@
 				unset($properties['questions']);
 				unset($types['questions']);
                 require_once('views/shared/layout.php');
-            }
-            else
-            {
+            }else{
                 add_alert('Oops, you don\'t have any sections. Exams must be added to section. Please <a href="?controller=section&action=create">create a section</a> before creating an exam!', Alert_Type::DANGER);
                 redirect('section', 'index');
             }
@@ -120,7 +117,6 @@
 		//Create exam and questions from a text file
 		public function create_file(){
 			$success = false;
-			//need to check permissions
 
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$postedToken = filter_input(INPUT_POST, 'token');
@@ -132,8 +128,7 @@
 						$failed = true;
 					}
 
-					if(!$failed)
-					{
+					if(!$failed){
 						switch ($_FILES['file']['error']) {
 							case UPLOAD_ERR_OK:
 								break;
@@ -158,32 +153,23 @@
 						$failed = true;
 					}
 
-					if(!$failed)
-					{
+					if(!$failed){
 						$finfo = new finfo(FILEINFO_MIME_TYPE);
-						if (false === $ext = array_search(
-                                $finfo->file($_FILES['file']['tmp_name']),
-							array('text/plain', 'text/x-fortran', 'text/x-python'),
-							true
-						)) {
+						if (false === $ext = array_search($finfo->file($_FILES['file']['tmp_name']), array('text/plain', 'text/x-fortran', 'text/x-python'), true)){
 							add_alert('Invalid file format: '.$finfo->file($_FILES['file']['tmp_name']), Alert_Type::DANGER);
 							$failed = true;
 						}
 					}
 
-					if(!$failed)
-					{
+					if(!$failed){
 						require_once('importer.php');
 						//header('Content-Type: text/plain; charset=utf-8');
 						$exams = Importer::get_exams(file_get_contents($_FILES['file']['tmp_name']));
 
-						foreach($exams as $exam)
-						{
-							//validate...
+						foreach($exams as $exam){
 							$exam->set_properties(array('owner' => $_SESSION['user']->get_id(), 'section' => 1));
 							$exam->create(); //this will set the id
-							foreach($exam->get_properties()['questions'] as $question) //the getter is bad... :/
-							{
+							foreach($exam->get_properties()['questions'] as $question){
 								$question->set_properties(array('exam' => $exam->get_id(), 'language' => 1)); //python hard coded
 								$question->create();
 							}
@@ -191,9 +177,7 @@
 						$success = true;
 						add_alert('Successfully created!', Alert_Type::SUCCESS);
 					}
-				}
-				else
-				{
+				}else{
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
@@ -230,8 +214,7 @@
 			$is_ta = Section::is_teaching_assistant($section_id, $user_id);
 
 		    //must be teacher or ta for section exam belongs to
-			if($is_ta or $is_owner)
-			{
+			if($is_ta or $is_owner){
 				unset($user_id);
 				unset($is_ta);
 				unset($is_owner);
@@ -239,10 +222,8 @@
 				$exam_results = Exam::get_exam_review_for_student($exam_id, $stud_id);
 				$exam_props = $exam->get_properties();
 
-				foreach($exam_results as $e_key => $e_value)
-				{
-					if($e_value['id'] == $current_question_id)
-					{
+				foreach($exam_results as $e_key => $e_value){
+					if($e_value['id'] == $current_question_id){
 						$current_question_results = $e_value;
 						break;
 					}
@@ -253,8 +234,7 @@
 				include('models/dynamic_view_objects/dropdown_item.php');
 
 				//If there is no answer saved for the student on this question, set some defaults
-				if(!isset($current_question_results))
-				{
+				if(!isset($current_question_results)){
 					$question_props = question::get($current_question_id)->get_properties();
 					$current_question_results['contents'] = '--No Answer Recorded--';
 					$current_question_results['start_code'] = $question_props['start_code'];
@@ -266,22 +246,16 @@
 				$left_title =  'Question Selector';
 
 				//If the question was answered, show the last time is was updated in the left_subtitle area
-				if(isset($current_question_results['date_update']))
-				{
+				if(isset($current_question_results['date_update'])){
 					$time = new DateTime($current_question_results['date_update']);
-					if($time->format('G') >= 12)
-					{
+					if($time->format('G') >= 12){
 						$time = $time->format('g:iA M j, Y');
-					}
-					else
-					{
+					}else{
 						$time = $time->format('g:ia M j, Y');
 					}
 
 					$left_subtitle = 'Last Save: ' . $time;
-				}
-				else
-				{
+				}else{
 					$left_subtitle = '';
 				}
 
@@ -290,33 +264,26 @@
 				$index = 0; //used to index the $exam_results array
 				$q_index = 1; //used to put the question number in the tiles
 				$buttons = array();
-				foreach($exam_props['questions'] as $q_key => $q_value)
-				{
+				foreach($exam_props['questions'] as $q_key => $q_value){
 					$btn_color = 'btn-default';
 
 					//$exam_results has to be populated. if a student runs the code on a question, it will have an entry in $exam_results
-					if(count($exam_results) > 0)
-					{
+					if(count($exam_results) > 0){
 						//check if there is an entry for the question
-						if(array_key_exists($index, $exam_results) and $exam_results[$index]['id'] === $q_key)
-						{
+						if(array_key_exists($index, $exam_results) and $exam_results[$index]['id'] === $q_key){
 							//set $btn_color based on the completion_status
-							if($exam_results[$index]['completion_status_id'] === 1)
-							{
+							if($exam_results[$index]['completion_status_id'] === 1){
 								$btn_color = 'btn-success';
 							}
-							else if($exam_results[$index]['completion_status_id'] === 2)
-							{
+							else if($exam_results[$index]['completion_status_id'] === 2){
 								$btn_color = 'btn-started';
 							}
-
 							$index++;
 						}
 					}
 
 					//add a class to the tile for the current question to it has a border
-					if($q_key === intval($current_question_id))
-					{
+					if($q_key === intval($current_question_id)){
 						$btn_color .= ' btn-current';
 					}
 
@@ -352,9 +319,7 @@
 				$view_to_show = "";
 				require_once('views/shared/layout.php');
 				create_code_editor_view($params);
-			}
-			else
-			{
+			}else{
 				add_alert("You do not have access to this section.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}

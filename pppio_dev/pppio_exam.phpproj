@@ -207,6 +207,7 @@
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />
     <Compile Include="views\user\manage_partners.php" />
+    <Compile Include="views\user\profile.php" />
     <Compile Include="views\user\read.php" />
     <Compile Include="connection.php" />
     <Compile Include="importer.php" />
