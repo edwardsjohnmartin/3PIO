@@ -6,9 +6,27 @@
 require_once('controllers/base_controller.php');
 class UserController extends BaseController{
 	public function index(){
-		$models = ($this->model_name)::get_all();
-		$view_to_show = 'views/user/index.php';
-		require_once('views/shared/layout.php');
+		require_once('enums/role.php');
+
+		//if the user is a teacher or admin, user can access
+		//if the user is a student, user can only access if they are a ta
+
+		$can_access = false;
+
+		if($_SESSION['user']->get_properties()['role'] === Role::ADMIN or $_SESSION['user']->get_properties()['role'] === Role::TEACHER){
+			$can_access = true;
+		} else if($_SESSION['user']->get_properties()['role'] === Role::STUDENT and isset($_SESSION['sections_ta']) and count($_SESSION['sections_ta']) > 0){
+			$can_access = true;
+		}
+
+		if($can_access){
+			$models = ($this->model_name)::get_all();
+			$view_to_show = 'views/user/index.php';
+			require_once('views/shared/layout.php');
+		}else{
+			add_alert('Sorry, you dont have permission to access this page.', Alert_Type::DANGER);
+			redirect_to_index();
+		}
 	}
 
 	//Any user login. Takes in email and password through POST. Also stores what sections the user has access to in the SESSION.
@@ -363,6 +381,58 @@ class UserController extends BaseController{
 		unset($properties['password']);
 		unset($types['password']);
 		require_once('views/shared/layout.php');
+	}
+
+	//Ajax call to reset a users password to a randomly generated password
+	public function reset_password(){
+		require_once('enums/role.php');
+		require_once('models/user.php');
+
+		//make sure user is ta, teacher, or admin
+		//make sure user_id is set
+		$can_access = false;
+
+		if($_SESSION['user']->get_properties()['role'] === Role::ADMIN or $_SESSION['user']->get_properties()['role'] === Role::TEACHER){
+			$can_access = true;
+		} else if($_SESSION['user']->get_properties()['role'] === Role::STUDENT and isset($_SESSION['sections_ta']) and count($_SESSION['sections_ta']) > 0){
+			$can_access = true;
+		}
+
+		if(!isset($_POST['user_id'])){
+			$can_access = false;
+		}
+
+		if($can_access){
+
+			$user_model = User::get($_POST['user_id']);
+
+			//Get a random password
+			$password = $this->randomPassword();
+
+			//This will pass the correct values to get_for_login depending on if a salt exists or not
+			if(defined(salt)){
+				$user_model->update_students_password($_POST['user_id'], salt . $password);
+			}else{
+				$user_model->update_students_password($_POST['user_id'], $password);
+			}
+
+			$json_data = array('message' => $user_model->get_properties()['name'] . ' password was reset to ' . $password, 'success' => $can_access);
+			require_once('views/shared/json_wrapper.php');
+		}else{
+			$json_data = array('message' => $user_model->get_properties()['name'] . ' password was not able to be reset', 'success' => $can_access);
+			require_once('views/shared/json_wrapper.php');
+		}
+	}
+
+	public function randomPassword() {
+		$alphabet = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+		$pass = array(); //remember to declare $pass as an array
+		$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+		for ($i = 0; $i < 8; $i++) {
+			$n = rand(0, $alphaLength);
+			$pass[] = $alphabet[$n];
+		}
+		return implode($pass); //turn the array into a string
 	}
 }
 ?>

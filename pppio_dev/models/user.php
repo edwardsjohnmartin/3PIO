@@ -109,5 +109,13 @@
 			$req = $db->prepare(static::build_query($function_name, array('user_id', 'password')));
 			$req->execute(array('user_id' => $user_id, 'password' => $password));
 		}
+
+		public function update_students_password($user_id, $password){
+			$db = Db::getWriter();
+
+			$function_name = 'sproc_write_user_update_password';
+			$req = $db->prepare(static::build_query($function_name, array('user_id', 'password')));
+			$req->execute(array('user_id' => $user_id, 'password' => $password));
+		}
 	}
 ?>
