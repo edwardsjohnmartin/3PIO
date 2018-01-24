@@ -132,7 +132,7 @@
                             print_r($finfo->file($_FILES['file']['tmp_name']));
 							if (false === $ext = array_search(
 								$finfo->file($_FILES['file']['tmp_name']),
-								array('text/plain', 'text/x-fortran', 'text/x-python'),
+								array('text/plain', 'text/x-c++', 'text/x-fortran', 'text/x-python'),
 								true
 							)) {
 								add_alert('Invalid file format.', Alert_Type::DANGER);
