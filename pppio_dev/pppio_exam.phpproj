@@ -214,6 +214,7 @@
     <Compile Include="index.php" />
     <Compile Include="routes.php" />
     <Content Include="js\survey_question_create.js" />
+    <Content Include="js\user_editor.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\pppio_Exam\v15" />

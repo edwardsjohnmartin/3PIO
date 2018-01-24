@@ -398,28 +398,30 @@ class UserController extends BaseController{
 			$can_access = true;
 		}
 
-		if(!isset($_POST['user_id'])){
+		if(!isset($_GET['user_id'])){
 			$can_access = false;
 		}
 
+		$user_id = intval($_GET['user_id']);
+
 		if($can_access){
 
-			$user_model = User::get($_POST['user_id']);
+			$user_model = User::get($user_id);
 
 			//Get a random password
 			$password = $this->randomPassword();
 
 			//This will pass the correct values to get_for_login depending on if a salt exists or not
 			if(defined(salt)){
-				$user_model->update_students_password($_POST['user_id'], salt . $password);
+				$user_model->update_students_password($user_id, salt . $password);
 			}else{
-				$user_model->update_students_password($_POST['user_id'], $password);
+				$user_model->update_students_password($user_id, $password);
 			}
 
-			$json_data = array('message' => $user_model->get_properties()['name'] . ' password was reset to ' . $password, 'success' => $can_access);
+			$json_data = array('success' => $can_access, 'user_name' => $user_model->get_properties()['name'], 'p' => $password);
 			require_once('views/shared/json_wrapper.php');
 		}else{
-			$json_data = array('message' => $user_model->get_properties()['name'] . ' password was not able to be reset', 'success' => $can_access);
+		    $json_data = array('success' => $can_access);
 			require_once('views/shared/json_wrapper.php');
 		}
 	}
