@@ -6,10 +6,8 @@
 	require_once('models/question.php');
 	require_once('enums/type.php');
 
-	class Importer
-	{
-		public static function get_lessons($file_string)
-		{
+	class Importer{
+		public static function get_lessons($file_string){
           //print_r($file_string);
 
             //$content_regex = '((?:.|\n)*)';
@@ -24,13 +22,11 @@
             //ini_set('pcre.jit', false);
 
             //print_r($exercise_regex);
-			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE))
+			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)){
 			//if (preg_match_all(static::$regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE))
-			{
-
+			
               //print_r(count($matches[0]));
-				for ($i=0; $i < count($matches[0]); $i++)
-				{
+				for ($i=0; $i < count($matches[0]); $i++){
 					$lesson_name = $matches[1][$i][0];	//name of the current lesson
 					$lesson = new Lesson(); 	//current lesson
 
@@ -39,8 +35,7 @@
 
 					$exercises = [];	//Holds the exercises for the current lesson
 
-					for ($j=0; $j < count($exercise_matches[0]); $j++)
-					{
+					for ($j=0; $j < count($exercise_matches[0]); $j++){
 						$exercise = new Exercise();
 
 						$prompt = $exercise_matches[2][$j][0];
@@ -52,9 +47,6 @@
 						$exercise->set_properties($ex_attributes);
 
 						$exercises[] = $exercise;
-
-						//print_r($exercise->get_properties());
-
 					}
 
 					$l_attributes = array('name' => $lesson_name, 'exercises' => $exercises);
@@ -62,10 +54,7 @@
 
 					$lessons[] = $lesson;
 				}
-
-			}
-            else
-            {
+			}else{
               print_r($file_string);
               $err = preg_last_error();
               if ($err == PREG_BACKTRACK_LIMIT_ERROR) {
@@ -96,10 +85,8 @@
 			$regex_string = '/Exam: ([^\n]+)(\s*' . $question_regex . ')+/s';
 
 			$exams = [];
-			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE))
-			{
-				for ($i=0; $i < count($matches[0]); $i++)
-				{
+			if (preg_match_all($regex_string, $file_string, $matches, PREG_OFFSET_CAPTURE)){
+				for ($i=0; $i < count($matches[0]); $i++){
 					$exam_name = $matches[1][$i][0];	//name of the current exam
 					$exam = new Exam(); 	//current exam
 
@@ -107,8 +94,7 @@
 
 					$questions = [];	//Holds the questions for the current exam
 
-					for ($j=0; $j < count($question_matches[0]); $j++)
-					{
+					for ($j=0; $j < count($question_matches[0]); $j++){
 						$question = new Question();
 
 						$weight = $question_matches[2][$j][0];
@@ -128,9 +114,7 @@
 
 					$exams[] = $exam;
 				}
-			}
-			else
-			{
+			}else{
 				print_r($file_string);
 				$err = preg_last_error();
 				if ($err == PREG_BACKTRACK_LIMIT_ERROR) {

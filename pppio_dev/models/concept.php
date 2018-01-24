@@ -74,8 +74,7 @@ class Concept extends Model{
 		return $ret;
 	}
 
-	public static function get_progress($id)
-	{
+	public static function get_progress($id){
 		$db = Db::getReader();
 		$id = intval($id);
 
@@ -85,8 +84,7 @@ class Concept extends Model{
 
 		$ret = $req->fetchAll(PDO::FETCH_ASSOC); // $req->fetchAll(PDO::FETCH_BOTH); //probably i should have a key/value model or something.. right now just using array. trust.
 		//print_r($ret);
-		foreach($ret as $key => $val)
-		{
+		foreach($ret as $key => $val){
 			$ret[$key]['lesson_completion'] = json_decode($val['lesson_completion']);
 
 		}

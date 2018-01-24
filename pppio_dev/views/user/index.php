@@ -16,32 +16,28 @@ foreach($models as $model)
 {
 $props = $model->get_properties();
 ?>
+
 <tr>
-	<td>
-		<?php echo htmlspecialchars($props['name'] . ' (' . $props['email'] . ')'); ?>
-	</td>
-	<td>
-		<?php echo '<a href="?controller=role&action=read&id=' . $props['role']->key. '">' . htmlspecialchars($props['role']->value) . '</a><br>'; ?>
-	</td>
+	<td><?php echo htmlspecialchars($props['name'] . ' (' . $props['email'] . ')'); ?></td>
+	<td><?php echo '<a href="?controller=role&action=read&id=' . $props['role']->key. '">' . htmlspecialchars($props['role']->value) . '</a><br>'; ?></td>
+	<td><?php if($props['role']->key === Role::STUDENT){
+		?><button onclick="reset_password(<?php echo $model->get_id();?>)">Reset User's Password</button><?php
+		}
+?></td>
 <?php
-	if($can_read)
-	{ ?>
-	<td>
-		<a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $model->get_id();?>">View</a><br>
-	</td>
-	<?php } ?>
-<?php
-	if($can_edit)
-	{ ?>
-	<td>
-		<a href="<?php echo '?controller=user&action=update&id=' . $model->get_id(); ?>">Update</a><br>
-	</td>
-	<td>
-		<a href="<?php echo '?controller=user&action=delete&id=' . $model->get_id(); ?>" onclick="return confirm('Do you want to delete this user?')">Delete</a><br>
-	</td>
-	<?php } ?>
-</tr>
+	if($can_read){
+?>	<td><a href="<?php echo '?controller=' . $this->model_name . '&action=read&id=' . $model->get_id();?>">View</a><br></td>
+<?php 
+	} 
+	if($can_edit){
+?>	<td><a href="<?php echo '?controller=user&action=update&id=' . $model->get_id(); ?>">Update</a><br></td>
+	<td><a href="<?php echo '?controller=user&action=delete&id=' . $model->get_id(); ?>" onclick="return confirm('Do you want to delete this user?')">Delete</a><br></td>
+<?php 
+	} 
+?></tr>
 <?php
 }
-?>
-</table>
+?></table>
+<div id="div_alert"></div>
+<pre id="pre_output"></pre>
+<script src="js/user_editor.js"</script>

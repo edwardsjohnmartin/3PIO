@@ -106,7 +106,7 @@
 							if ($can_list_user || $is_ta) echo '<li><a href="?controller=question&action=read_occurrences">Occurrences</a></li>';
 							if ($can_list_survey) echo '<li><a href="?controller=survey&action=assign">Assign Surveys</a></li>';
 							if ($can_list_survey || $is_ta) echo '<li><a href="?controller=survey&action=read_responses">Survey Responses</a></li>';
-							if ($can_list_user) echo '<li><a href="?controller=user&action=index">Users</a></li>';
+							if ($can_list_user || $is_ta) echo '<li><a href="?controller=user&action=index">Users</a></li>';
 							if ($can_list_role) echo '<li><a href="?controller=role&action=index">Roles</a></li>';
 							if ($can_list_course) echo '<li><a href="?controller=course&action=index">Courses</a></li>';
 							if ($can_list_language) echo '<li><a href="?controller=language&action=index">Languages</a></li>';
@@ -125,7 +125,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<?php
 					if(isset($_SESSION['user']) && $_SESSION['user'] != null){
-						echo '<li><a>' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
+						echo '<li><a href="?controller=user&action=profile">' . htmlspecialchars($_SESSION['user']->get_properties()['name']) . '</a></li>';
 						echo '<li class="dropdown">';
 		                echo '<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Partners <span class="caret"></span></a>';
 		                echo '<ul class="dropdown-menu">';

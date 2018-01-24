@@ -229,7 +229,12 @@
 										'mark_as_completed'=>new Authorization_Requirements(true, [])//,
 									],
 						'user' => [
-										'index' => new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::LIST)]),
+										//This is using section read permission so any user can access it, but the controller checks to make sure the user is a ta, teacher, or admin
+										//'index' => new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::LIST)]),
+										'index' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+										//This is using section read permission so any user can access it
+										'profile' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
+										'reset_password' => new Authorization_Requirements(true, [new Permission(Securable::SECTION, Permission_Type::READ)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'update'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::READ)]),
 										'delete'=>new Authorization_Requirements(true, [new Permission(Securable::USER, Permission_Type::EDIT)]),
@@ -272,6 +277,8 @@
 									 'read' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'assign' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'assign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'unassign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
+									 'reassign_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::CREATE)]),
 									 'get_assigned_surveys' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'do_survey' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)]),
 									 'read_responses' => new Authorization_Requirements(true, [new Permission(Securable::SURVEY, Permission_Type::READ)])],

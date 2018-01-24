@@ -207,12 +207,14 @@
     <Compile Include="views\user\index.php" />
     <Compile Include="views\user\log_in.php" />
     <Compile Include="views\user\manage_partners.php" />
+    <Compile Include="views\user\profile.php" />
     <Compile Include="views\user\read.php" />
     <Compile Include="connection.php" />
     <Compile Include="importer.php" />
     <Compile Include="index.php" />
     <Compile Include="routes.php" />
     <Content Include="js\survey_question_create.js" />
+    <Content Include="js\user_editor.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vs\pppio_Exam\v15" />

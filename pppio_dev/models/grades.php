@@ -1,7 +1,6 @@
 <?php
 require_once('models/model.php');
-class Grades extends Model
-{
+class Grades extends Model{
 	public static function get_exam_scores($exam_id){
 		$db = Db::getReader();
 		$exam_id = intval($exam_id);

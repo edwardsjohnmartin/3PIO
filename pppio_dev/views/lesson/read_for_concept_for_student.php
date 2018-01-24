@@ -70,14 +70,23 @@
 		}
 	}
 
+	//This code only runs if a post-exercises survey exists for this concept.
 	if($post_ex_survey){
-		if(is_null($post_ex_survey['date_completed'])){
-			$class = 'default';
-			$href = 'href="?controller=survey&action=do_survey&survey_id=' . $post_ex_survey['assigned_survey_id'] . '"';
-		} else {
-			$class = 'success';
-			$href = 'href="?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '"';
+		$survey_not_completed = is_null($post_ex_survey['date_completed']);
+
+		//If all of the exercises aren't completed, disable the survey tile
+		if(!$found_current){
+			if($survey_not_completed){
+				$class = 'default';
+				$href = 'href="?controller=survey&action=do_survey&survey_id=' . $post_ex_survey['assigned_survey_id'] . '"';
+			} else {
+				$class = 'success';
+				$href = 'href="?controller=section&action=read_student&id=' . $concept->get_properties()['section']->key . '"';
+			}
+		} else{
+			$class = 'default disabled';
 		}
+
 		echo '<div class="col-md-2 col-xs-4 text-center">';
 		echo '<a ' . $href . ' class="tile btn btn-' . $class . '"><span class="tile-number">' . $i . '</span><span class="tile-label">Survey</span></a>';
 		echo '</div>';

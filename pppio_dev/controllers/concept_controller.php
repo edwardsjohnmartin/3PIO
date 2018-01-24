@@ -129,22 +129,15 @@
 			}
 		}
 
-		public function read()
-		{
-			if (!isset($_GET['id']))
-			{
+		public function read(){
+			if (!isset($_GET['id'])){
 				return call('pages', 'error');
-			}
-			else
-			{
+			}else{
 				$model = ($this->model_name)::get($_GET['id']);
-				if($model == null)
-				{
+				if($model == null){
 					add_alert('The item you are trying to access doesn\'t exist.', Alert_Type::DANGER);
 					return call('pages', 'error');
-				}
-				else
-				{
+				}else{
 					$is_owner = concept::is_owner($model->get_id(), $_SESSION['user']->get_id());
 					$is_ta = concept::is_teaching_assistant($model->get_id(), $_SESSION['user']->get_id());
 
@@ -154,8 +147,7 @@
 					$_SESSION['project_completion'] = Concept::get_project_completion($model->get_id());
 
 					$view_to_show = 'views/' . strtolower($this->model_name) . '/read.php';
-					if(!file_exists($view_to_show))
-					{
+					if(!file_exists($view_to_show)){
 						$view_to_show = 'views/shared/read.php';
 					}
 					$types = $model::get_types();

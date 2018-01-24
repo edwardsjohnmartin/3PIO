@@ -52,7 +52,24 @@ class Survey extends Model{
 			$ret[$key]['section'] = json_decode($val['section']);
 			$ret[$key]['concept'] = json_decode($val['concept']);
 			$ret[$key]['project'] = json_decode($val['project']);
-			$ret[$key]['lesson'] = json_decode($val['lesson']);
+			$ret[$key]['survey'] = json_decode($val['survey']);
+			$ret[$key]['survey_type'] = json_decode($val['survey_type']);
+		}
+	    return $ret;
+	}
+
+	public static function get_all_unassigned(){
+	    $db = Db::getReader();
+
+	    $function_name = 'sproc_read_survey_get_all_unassigned';
+	    $req = $db->prepare(static::build_query($function_name, array()));
+	    $req->execute(array());
+
+	    $ret = $req->fetchAll(PDO::FETCH_ASSOC);
+		foreach($ret as $key => $val){
+			$ret[$key]['section'] = json_decode($val['section']);
+			$ret[$key]['concept'] = json_decode($val['concept']);
+			$ret[$key]['project'] = json_decode($val['project']);
 			$ret[$key]['survey'] = json_decode($val['survey']);
 			$ret[$key]['survey_type'] = json_decode($val['survey_type']);
 		}
@@ -76,12 +93,33 @@ class Survey extends Model{
 		$db = Db::getWriter();
 
 		$function_name = 'sproc_write_survey_assign';
-		$req = $db->prepare(static::build_query($function_name, array('survey', 'concept', 'survey_type')));
-		$req->execute(array('survey' => $survey_id, 'concept' => $concept_id, 'survey_type' => $survey_type_id));
+		$req = $db->prepare(static::build_query($function_name, array('survey', 'concept', 'survey_type', 'date_assigned')));
+		$req->execute(array('survey' => $survey_id, 'concept' => $concept_id, 'survey_type' => $survey_type_id, 'date_assigned' => date("Y-m-d H:i:s")));
 		$ret = $req->fetch(PDO::FETCH_COLUMN);
 		return $ret;
 	}
 
+	public static function unassign_survey($assigned_survey_id){
+		$db = Db::getWriter();
+
+		$function_name = 'sproc_write_survey_unassign';
+		$req = $db->prepare(static::build_query($function_name, array('assigned_survey_id', 'date_unassigned')));
+		$req->execute(array('assigned_survey_id' => $assigned_survey_id, 'date_unassigned' => date("Y-m-d H:i:s")));
+		$ret = $req->fetch(PDO::FETCH_COLUMN);
+		return $ret;
+	}
+
+	public static function reassign_survey($assigned_survey_id){
+		$db = Db::getWriter();
+
+		$function_name = 'sproc_write_survey_reassign';
+		$req = $db->prepare(static::build_query($function_name, array('assigned_survey_id')));
+		$req->execute(array('assigned_survey_id' => $assigned_survey_id));
+		$ret = $req->fetch(PDO::FETCH_COLUMN);
+		return $ret;
+	}
+
+	//Returns all questions on a particular assigned_survey 
 	public static function get_to_take($assigned_survey_id){
 		$db = Db::getWriter();
 
@@ -94,6 +132,7 @@ class Survey extends Model{
 		return $ret;
 	}
 
+	//Saves a users answer to a single question to the database
 	public static function save_survey_answer($survey_question_id, $answer, $survey_question_type_id){
 		$db = Db::getWriter();
 
