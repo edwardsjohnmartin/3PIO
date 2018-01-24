@@ -33,12 +33,7 @@ class UserController extends BaseController{
 	public function log_in(){
 		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-			//This will pass the correct values to get_for_login depending on if a salt exists or not
-			if(defined(salt)){
-				$model = User::get_for_login($_POST['email'], salt . $_POST['password']);
-			}else{
-				$model = User::get_for_login($_POST['email'], $_POST['password']);
-			}
+			$model = User::get_for_login($_POST['email'], $_POST['password']);
 
 			if ($model->get_id() != null){
 				require_once('models/section.php');
@@ -74,12 +69,7 @@ class UserController extends BaseController{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 			//should make sure email and password aren't null...
 
-			//This will pass the correct values to get_for_login depending on if a salt exists or not
-			if(defined(salt)){
-				$model = User::get_for_login($_POST['email'], salt . $_POST['password']);
-			}else{
-				$model = User::get_for_login($_POST['email'], $_POST['password']);
-			}
+			$model = User::get_for_login($_POST['email'], $_POST['password']);
 
 			if ($model->get_id() == null){
 				add_alert('Email and password do not match.', Alert_Type::DANGER);
@@ -167,10 +157,12 @@ class UserController extends BaseController{
 				 */
 
 				$is_valid = true;
+
 				if(!isset($_POST['email']) || !isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['confirm_password']) || ($_POST['email'] == null) || ($_POST['name'] == null) || ($_POST['password'] == null) || ($_POST['confirm_password'] == null)){
 					$is_valid = false;
 					add_alert('Please complete all fields.', Alert_Type::DANGER);
-				} else{
+				}else{
+
 					//make email lower-case
 					$_POST['email'] = strtolower($_POST['email']);
 
@@ -198,20 +190,14 @@ class UserController extends BaseController{
 
 					//create the new user with the validated properties
 					$model = new $this->model_name();
-					$model->set_properties($_POST); //i need to add the server salt to the password!
+					$model->set_properties($_POST);
 					$model->set_properties(array('role'=>3)); //HARD CODED STUDENT!!
+					$model->set_properties(array('password'=> $_POST['password']));
 
 					if($is_valid && !$model->is_valid()){
 						$is_valid = false;
 						add_alert('This user is not valid.', Alert_Type::DANGER);
 					}
-				}
-
-				//This will pass the correct values to set_properties depending on if a salt exists or not
-				if(defined(salt)){
-					$model->set_properties(array('password'=>(salt . $model->get_properties()['password'])));
-				}else{
-					$model->set_properties(array('password'=> $_POST['password']));
 				}
 
 				if($is_valid){
@@ -345,12 +331,7 @@ class UserController extends BaseController{
 			if(!empty($postedToken) && isTokenValid($postedToken)){
 
 				//current password has to be correct
-				//This will pass the correct values to get_for_login depending on if a salt exists or not
-				if(defined(salt)){
-					$model = User::get_for_login($properties['email'], salt . $_POST['cur_password']);
-				}else{
-					$model = User::get_for_login($properties['email'], $_POST['cur_password']);
-				}
+				$model = User::get_for_login($properties['email'], $_POST['cur_password']);
 
 				if($model->get_id() == null){
 					add_alert('The current password was not entered correctly.', Alert_Type::DANGER);
@@ -363,12 +344,7 @@ class UserController extends BaseController{
 						if($_POST['new_password'] != $_POST['conf_password']){
 							add_alert('The passwords entered do not match.', Alert_Type::DANGER);
 						}else{
-							//This will pass the correct values to get_for_login depending on if a salt exists or not
-							if(defined(salt)){
-								$model->update_password(salt . $_POST['new_password']);
-							}else{
-								$model->update_password($_POST['new_password']);
-							}
+							$model->update_password($_POST['new_password']);
 							add_alert('Your password was successfully changed.', Alert_Type::SUCCESS);
 						}
 					}
@@ -411,12 +387,7 @@ class UserController extends BaseController{
 			//Get a random password
 			$password = $this->randomPassword();
 
-			//This will pass the correct values to get_for_login depending on if a salt exists or not
-			if(defined(salt)){
-				$user_model->update_students_password($user_id, salt . $password);
-			}else{
-				$user_model->update_students_password($user_id, $password);
-			}
+			$user_model->update_students_password($user_id, $password);
 
 			$json_data = array('success' => $can_access, 'user_name' => $user_model->get_properties()['name'], 'p' => $password);
 			require_once('views/shared/json_wrapper.php');

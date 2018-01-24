@@ -34,7 +34,7 @@ function clearAlerts() {
 
 function fillPreOutput(user_name, p) {
     document.getElementById('pre_output').innerHTML =
-        'Hello, ' + user_name + ',' + '\n\n' +
+        'Hello ' + user_name + ',' + '\n\n' +
         'Your password has been reset on 3pio.cose.isu.edu to a randomly generated one.\n' +
         'Your new password is: ' + p + '\n\n' +
         'Please log in using this new password and change it as soon as you can.\n' +
