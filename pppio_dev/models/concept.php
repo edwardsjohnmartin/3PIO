@@ -93,8 +93,7 @@ class Concept extends Model{
 
 	//Returns an array of project completion for every student in the section the passed in concept belongs to
 	//Each element of the array will be an array with keys [student_id]=>integer, [student_name]=>string, and [project_completed]=>boolean
-	public static function get_project_completion($concept_id)
-	{
+	public static function get_project_completion($concept_id){
 		$db = Db::getReader();
 		$concept_id = intval($concept_id);
 
@@ -105,8 +104,7 @@ class Concept extends Model{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public static function is_owner($id, $user_id)
-	{
+	public static function is_owner($id, $user_id){
 		$db = Db::getReader();
 		$id = intval($id);
 		$user_id = intval($user_id);
@@ -118,8 +116,7 @@ class Concept extends Model{
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
-	public static function is_teaching_assistant($id, $user_id)
-	{
+	public static function is_teaching_assistant($id, $user_id){
 		$db = Db::getReader();
 		$id = intval($id);
 		$user_id = intval($user_id);
@@ -133,6 +130,42 @@ class Concept extends Model{
 
 	public static function can_preview($id, $user_id){
 		return static::is_teaching_assistant($id, $user_id) || static::is_owner($id, $user_id);
+	}
+
+	//Complete all exercises in a specific lesson up to and including the passed-in exercise
+	public static function complete_prior_exercises($exercise_id, $lesson_id, $concept_id, $user_id){
+		$exercise_id = intval($exercise_id);
+		$lesson_id = intval($lesson_id);
+		$concept_id = intval($concept_id);
+		$user_id = intval($user_id);
+
+		$db = Db::getWriter();
+		$function_name = 'sproc_write_complete_all_prior_exercises_in_lesson';
+		$req = $db->prepare(static::build_query($function_name, array('exercise_id', 'lesson_id', 'concept_id', 'user_id')));
+		$req->execute(array('exercise_id' => $exercise_id, 'lesson_id' => $lesson_id, 'concept_id' => $concept_id, 'user_id' => $user_id));
+	}
+
+	//Complete all exercises in all lessons up to but not including the passed-in lesson
+	public static function complete_prior_lessons($lesson_id, $concept_id, $user_id){
+		$lesson_id = intval($lesson_id);
+		$concept_id = intval($concept_id);
+		$user_id = intval($user_id);
+
+		$db = Db::getWriter();
+		$function_name = 'sproc_write_complete_all_prior_lessons_in_concept';
+		$req = $db->prepare(static::build_query($function_name, array('lesson_id', 'concept_id', 'user_id')));
+		$req->execute(array('lesson_id' => $lesson_id, 'concept_id' => $concept_id, 'user_id' => $user_id));
+	}
+
+	//Complete all exercises in all lessons in the passed-in concept
+	public static function complete_entire_concept($concept_id, $user_id){
+		$concept_id = intval($concept_id);
+		$user_id = intval($user_id);
+
+		$db = Db::getWriter();
+		$function_name = 'sproc_write_complete_entire_concept';
+		$req = $db->prepare(static::build_query($function_name, array('concept_id', 'user_id')));
+		$req->execute(array('concept_id' => $concept_id, 'user_id' => $user_id));
 	}
 }
 ?>

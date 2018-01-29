@@ -193,7 +193,9 @@
 										'index'=>new Authorization_Requirements(null, [new Permission(Securable::CONCEPT, Permission_Type::LIST)]),
 										'read'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::READ)]),
 										'create'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::CREATE)]),
-										'update'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)])
+										'update'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)]),
+										'complete_exercises_ajax'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)]),
+										'complete_exercises'=>new Authorization_Requirements(true, [new Permission(Securable::CONCEPT, Permission_Type::EDIT)])
 									],
 						'project' =>  [
 										'index'=>new Authorization_Requirements(null, [new Permission(Securable::PROJECT, Permission_Type::LIST)]),

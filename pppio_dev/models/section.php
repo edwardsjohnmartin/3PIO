@@ -133,8 +133,18 @@ class Section extends Model{
 
 		$props = $this->get_db_properties();
 		unset($props['students']);
-		$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
-		$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
+
+		if(isset($_POST['is_study_students'])){
+			$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
+		} else {
+			$props['is_study_students'] = static::php_array_to_pg_array(array());
+		}
+
+		if(isset($_POST['is_study_students'])){
+			$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
+		} else {
+			$props['not_study_students'] = static::php_array_to_pg_array(array());
+		}
 
 		$function_name = 'sproc_write_section_create';
 		$req = $db->prepare(static::build_query($function_name, array_keys($props)));
@@ -199,8 +209,18 @@ class Section extends Model{
 	    $props = $this->get_db_properties();
 	    $props['id'] = $this->id;
 		unset($props['students']);
-		$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
-		$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
+
+		if(isset($_POST['is_study_students'])){
+			$props['is_study_students'] = static::php_array_to_pg_array($_POST['is_study_students']);
+		} else {
+			$props['is_study_students'] = static::php_array_to_pg_array(array());
+		}
+
+		if(isset($_POST['is_study_students'])){
+			$props['not_study_students'] = static::php_array_to_pg_array($_POST['not_study_students']);
+		} else {
+			$props['not_study_students'] = static::php_array_to_pg_array(array());
+		}
 
 	    $function_name = 'sproc_write_section_update';
 	    $req = $db->prepare(static::build_query($function_name, array_keys($props)));

@@ -2,16 +2,15 @@
 	require_once('controllers/base_controller.php');
 	class LessonController extends BaseController{
 		public function index(){
-
 			$models = ($this->model_name)::get_pairs_for_owner($_SESSION['user']->get_id());
 			$view_to_show = 'views/lesson/index.php';
 			require_once('views/shared/layout.php');
 		}
 
-		public function read_student() //the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
-		{
-			if (!isset($_GET['id']) || !isset($_GET['concept_id']) || !lesson::can_access($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id())) //should show a permission error possibly
-			{
+		//the correct one should be called based on who is logged in. they shouldn't be different actions to the user.
+		public function read_student(){
+		    //should show a permission error possibly
+			if (!isset($_GET['id']) || !isset($_GET['concept_id']) || !lesson::can_access($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id())){
 				return call('pages', 'error');
 			}
 			$lesson = lesson::get_for_concept_and_student($_GET['id'], $_GET['concept_id'], $_SESSION['user']->get_id());
@@ -21,7 +20,6 @@
 
 		public function read_for_concept_for_student(){
 			require_once('models/concept.php');
-
 			if (!isset($_GET['concept_id'])) {
 				return call('pages', 'error');
 			}
@@ -178,9 +176,7 @@
 			//must set id and the rest too. id is separate.
 			//for users especially, i need to be more careful.
 			//this is a basic one without permissions.
-
-			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id()))
-			{
+			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id())){
 				return call('pages', 'error');
 			}
 
@@ -194,30 +190,22 @@
 						$model->set_id($_GET['id']); //i should not trust that...
 						$model->set_properties($_POST);
 						$model->set_properties(array('owner' => $_SESSION['user']->get_id()));
-						if($model->is_valid())
-						{
+						if($model->is_valid()){
 							$model->update();
 							add_alert('Successfully updated!', Alert_Type::SUCCESS);
 							return redirect('lesson', 'index');
-						}
-						else
-						{
+						}else{
 							add_alert('Please try again.', Alert_Type::DANGER);
 						}
-				}
-				else
-				{
+				}else{
 					add_alert('Please try again.', Alert_Type::DANGER);
 				}
 			}
 
 			$model = ($this->model_name)::get($_GET['id']);
-			if($model == null)
-			{
+			if($model == null){
 				return call('pages', 'error');
-			}
-			else
-			{
+			}else{
 				// Figure out what is happening here
 				$properties = $model->get_properties();
 				$types = $model::get_types();
@@ -228,8 +216,6 @@
 				$view_to_show = 'views/shared/update.php';
 				require_once('views/shared/layout.php');
 			}
-			//i need to be better about the order of things.
-
 		}
 
 		public function delete() {
@@ -240,8 +226,7 @@
 			//for users especially, i need to be more careful.
 			//this is a basic one without permissions.
 
-			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id()))
-			{
+			if (!isset($_GET['id']) || !lesson::is_owner($_GET['id'], $_SESSION['user']->get_id())){
 				add_alert("You are not the owner to this lesson.", Alert_Type::DANGER);
 				return call('pages', 'error');
 			}
@@ -274,13 +259,10 @@
 			// }
 
 			$model = ($this->model_name)::get($_GET['id']);
-			if($model == null)
-			{
+			if($model == null){
 				add_alert("The lesson you are trying to access does not exist.", Alert_Type::DANGER);
 				return call('pages', 'error');
-			}
-			else
-			{
+			}else{
 				$model->delete($_GET['id']);
 				return redirect($this->model_name, 'index');
 			}

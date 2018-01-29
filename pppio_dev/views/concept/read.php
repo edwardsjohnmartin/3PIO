@@ -47,7 +47,7 @@
 				//Each element of $project_completion will be for a unique student in the section the concept belongs to
 				foreach ($project_completion as $student_id => $students_project_completion){
 					echo '<tr>';
-					echo '<td>' . $students_project_completion['user_name'] . '</td>';
+					echo '<td><a href="?controller=concept&action=complete_exercises&concept_id=' . $model->get_id() . '&user_id=' . $students_project_completion['user_id'] . '">' . $students_project_completion['user_name'] . '</a></td>';
 					if(count($progress) > 0){
 						//Each element of $progress[$student_id]['lesson_completion'] will be a lesson in the concept
 						foreach ($progress[$student_id]['lesson_completion'] as $lesson_completion){

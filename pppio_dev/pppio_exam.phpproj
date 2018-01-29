@@ -95,6 +95,7 @@
     <Compile Include="js\project_editor.js" />
     <Compile Include="js\python_ide_util.js" />
     <Compile Include="js\run_only.js" />
+    <Content Include="js\admin_functions.js" />
     <Content Include="js\survey_create.js" />
     <Compile Include="lib\codemirror.css" />
     <Compile Include="lib\codemirror.js" />
@@ -143,6 +144,7 @@
     <Compile Include="python\python.js" />
     <Compile Include="py_test\METHODS.py" />
     <Compile Include="theme\solarized.css" />
+    <Compile Include="views\concept\complete_exercises.php" />
     <Compile Include="views\concept\read.php" />
     <Compile Include="views\exam\create_file.php" />
     <Compile Include="views\exam\index.php" />
