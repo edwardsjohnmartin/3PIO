@@ -18,7 +18,7 @@ require_once('enums/completion_status.php');
 				$btn_class = 'btn-default';
 			}
 
-			echo '<button class="tile btn ' . $btn_class . '" onclick="complete_previous_exercises(' . $exercise_id . ',' . $les_id . ',' . $_GET['concept_id'] . ',' . $_GET['user_id'] . ')">' .
+			echo '<button id="btn_tile_' . $i . '" class="tile btn ' . $btn_class . '" onclick="complete_previous_exercises(' . $exercise_id . ',' . $les_id . ',' . $_GET['concept_id'] . ',' . $_GET['user_id'] . ', this.id)">' .
 			'<span class="tile-number">' . $i . '</span>' .
 			'<span class="tile-label">' . htmlspecialchars($lesson_props['name']) . '</span>' .
 			'</button></div>';
