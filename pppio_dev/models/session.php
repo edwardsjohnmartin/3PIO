@@ -36,18 +36,19 @@ class Session extends Model{
 		return $req->fetchALL(PDO::FETCH_CLASS, 'session');
 	}
 
-	//Save a session to the database, works no matter what the activity was
-	public static function write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count){
+	//Save a session to the database
+	public static function write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count, $partnered_session){
 		$db = Db::getWriter();
 		$function_name = 'sproc_write_session';
+
 		$req = $db->prepare(static::build_query($function_name,
 			array('user_id', 'securable_id', 'activity_id', 'start_time',
-			'end_time', 'mouse_clicks', 'key_presses', 'times_ran', 'error_count')));
+			'end_time', 'mouse_clicks', 'key_presses', 'times_ran', 'error_count', 'partnered_session')));
 		$req->execute
 			(array('user_id' => $user_id, 'securable_id' => $securable_id,
 			'activity_id' => $activity_id, 'start_time' => $start_time,
 			'end_time' => $end_time, 'mouse_clicks' => $mouse_clicks,
-			'key_presses' => $key_presses, 'times_ran' => $times_ran, 'error_count' => $error_count));
+			'key_presses' => $key_presses, 'times_ran' => $times_ran, 'error_count' => $error_count, 'partnered_session' => $partnered_session));
 	}
 
 	//Get the elapsed time of the session object in seconds (end - start)

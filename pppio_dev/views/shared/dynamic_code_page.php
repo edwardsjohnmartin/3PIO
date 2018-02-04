@@ -17,7 +17,6 @@ function create_code_editor_view($params = array())
 	{
 		unset($params['default_code']);
 	}
-
 	//Default values
 	$defaults = array(
 		'title' => 'Default Title',
@@ -32,7 +31,6 @@ function create_code_editor_view($params = array())
 		'dropdown_items' => null
 	);
 	$properties = array_merge($defaults, $params);
-
 	echo '<link rel="stylesheet" href="css/editor.css">';
 	require_once('views/shared/CodeMirror.php');
 	require_once('views/shared/Skulpt.php');

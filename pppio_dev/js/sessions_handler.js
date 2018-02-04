@@ -33,7 +33,6 @@ function timerIncrement() {
     //console.log("timer incremented to " + sessionIdleTime);
 
     if (sessionIdleTime === sessionExpireTime) {
-        //console.log("sessionIdleTime is equal to sessionExpireTime so save was called");
         saveSession();
         resetSession();
     }
@@ -43,7 +42,6 @@ function timerIncrement() {
 only tracks enter key when the code editor does not have focus
 does not track windows key, ctrl, alt, or shift at all*/
 window.onkeypress = function () {
-    //console.log("keypress occurred");
     keypresses += 1;
     resetSessionIdleTime();
 };
@@ -61,7 +59,6 @@ window.onbeforeunload = function () {
 //handles key shortcuts
 //tracks when the run button was clicked using the shortcut
 $(window).keydown(function (event) {
-    //console.log("keydown occurred");
     resetSessionIdleTime();
 
     //adds ctrl+enter shortcut for the run button
@@ -92,7 +89,6 @@ $(window).keydown(function (event) {
 
 //currently captures any mouse button; left, right, or middle
 window.onmousedown = function () {
-    //console.log("mousedown occurred");
     mouseclicks += 1;
     resetSessionIdleTime();
 };
@@ -100,11 +96,8 @@ window.onmousedown = function () {
 //ajax call to save the session to the database
 function saveSession() {
     if (mouseclicks === 0 && keypresses === 0 && timesran === 0) {
-        //console.log("no activity was detected so not saved");
     }
     else {
-
-        //console.log("activity was detected and save was called");
 
         if (typeof exercise_id !== "undefined") {
             var activity_name = "exercise";
@@ -119,14 +112,6 @@ function saveSession() {
             var activity_id = current_question_id;
         }
 
-        //Used for debugging
-        //console.log("activity_name: " + activity_name);
-        //console.log("activity_id: " + activity_id);
-        //console.log("mouseclicks: " + mouseclicks);
-        //console.log("keypresses: " + keypresses);
-        //console.log("timesran: " + timesran);
-        //console.log("errorCount: " + errorCount);
-
         $.ajax({
             method: "POST",
             url: "?controller=session&action=save",
@@ -138,7 +123,6 @@ function saveSession() {
 
 //reset sessionIdleTime since there was activity
 function resetSessionIdleTime() {
-    //console.log("session idle time was reset");
     sessionIdleTime = 0;
     activityOccurred = true;
 }
@@ -152,6 +136,4 @@ function resetSession() {
     activityOccurred = false;
     sessionIdleTime = 0;
     start = new Date().getTime() / 1000;
-
-    //console.log("resetSession occurred and the new start time is " + start);
 }

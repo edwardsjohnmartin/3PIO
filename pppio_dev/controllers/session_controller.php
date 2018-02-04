@@ -30,7 +30,17 @@
 				$times_ran = intval($_POST['timesran']);
 				$error_count = intval($_POST['errorCount']);
 
-				Session::write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count);
+				//check if any partners exist
+				if(isset($_SESSION['partners']) and count($_SESSION['partners']) > 0){
+					$partnered_session = true;
+					foreach($_SESSION['partners'] as $user_partner_id => $user){
+						Session::write_session($user_partner_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count, $partnered_session);
+					}
+				}else{
+					$partnered_session = false;
+				}
+
+				Session::write_session($user_id, $securable_id, $activity_id, $start_time, $end_time, $mouse_clicks, $key_presses, $times_ran, $error_count, $partnered_session);
 			}
 		}
 
