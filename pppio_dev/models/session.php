@@ -41,6 +41,10 @@ class Session extends Model{
 		$db = Db::getWriter();
 		$function_name = 'sproc_write_session';
 
+		if($partnered_session == false){
+			$partnered_session = "f";
+		}
+
 		$req = $db->prepare(static::build_query($function_name,
 			array('user_id', 'securable_id', 'activity_id', 'start_time',
 			'end_time', 'mouse_clicks', 'key_presses', 'times_ran', 'error_count', 'partnered_session')));
