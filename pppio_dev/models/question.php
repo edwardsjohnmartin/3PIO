@@ -32,16 +32,17 @@
 			return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 		}		
 
-		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id){
+		public static function update_code_file($question_id, $exam_id, $user_id, $contents, $completion_status_id, $score){
 			$db = Db::getWriter();
 			$question_id = intval($question_id);
 			$exam_id = intval($exam_id);
 			$user_id = intval($user_id);
+			$score = floatval($score);
 			$completion_status_id = intval($completion_status_id);
 
 			$function_name = 'sproc_write_question_update_student_answer';
-			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'contents', 'completion_status_id')));
-			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents, 'completion_status_id' => $completion_status_id));
+			$req = $db->prepare(static::build_query($function_name, array('question_id', 'exam_id', 'user_id', 'contents', 'completion_status_id', 'score')));
+			$req->execute(array('question_id' => $question_id, 'exam_id' => $exam_id, 'user_id' => $user_id, 'contents' => $contents, 'completion_status_id' => $completion_status_id, 'score' => $score));
 		}
 
 		public static function get_question_with_answer_for_student($question_id, $exam_id, $student_id){

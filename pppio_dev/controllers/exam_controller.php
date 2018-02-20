@@ -114,8 +114,56 @@
             }
         }
 
+		public function update(){
+			require_once('models/question.php');
+
+			if (!isset($_GET['id'])){
+				return call('pages', 'error');
+			}
+
+			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+				$postedToken = filter_input(INPUT_POST, 'token');
+
+				if(!empty($postedToken) && isTokenValid($postedToken)){
+					$model = new $this->model_name();
+					$model->set_id($_GET['id']); //i should not trust that...
+					$model->set_properties($_POST);
+
+					if($model->is_valid()){
+						$model->update();
+						add_alert('Successfully updated!', Alert_Type::SUCCESS);
+
+						return redirect($this->model_name, 'index');
+					}else{
+						add_alert('Please try again.', Alert_Type::DANGER);
+					}
+				}else{
+					add_alert('Please try again.', Alert_Type::DANGER);
+				}
+			}
+
+			$model = ($this->model_name)::get($_GET['id']);
+			if($model == null){
+				return call('pages', 'error');
+			}
+			else{
+				$view_to_show = 'views/' . strtolower($this->model_name) . '/update.php';
+				if(!file_exists($view_to_show)){
+					$view_to_show = 'views/shared/update.php';
+				}
+				$types = $model::get_types();
+				$properties = $model->get_properties();
+
+				$properties['questions'] = Question::get_pairs_for_exam($properties['id']);
+
+				require_once('views/shared/layout.php');
+			}
+		}
+
 		//Create exam and questions from a text file
 		public function create_file(){
+			require_once('models/section.php');
+
 			$success = false;
 
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -161,13 +209,13 @@
 						}
 					}
 
-					if(!$failed){
+					if(!$failed and isset($_POST['section'])){
 						require_once('importer.php');
-						//header('Content-Type: text/plain; charset=utf-8');
+
 						$exams = Importer::get_exams(file_get_contents($_FILES['file']['tmp_name']));
 
 						foreach($exams as $exam){
-							$exam->set_properties(array('owner' => $_SESSION['user']->get_id(), 'section' => 1));
+							$exam->set_properties(array('owner' => $_SESSION['user']->get_id(), 'section' => intval($_POST['section'])));
 							$exam->create(); //this will set the id
 							foreach($exam->get_properties()['questions'] as $question){
 								$question->set_properties(array('exam' => $exam->get_id(), 'language' => 1)); //python hard coded

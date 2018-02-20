@@ -34,17 +34,14 @@
 
 			<!--Exam Name-->
 			<div class="row text-center">
-				<h4>
-					<?php echo $exam_props['name'];?>
-				</h4>
+				<h4><?php echo $exam_props['name'];?></h4>
 			</div>
 
 			<!--Scrollable Area-->
 			<div class="scrollable-div container-fluid">
 
 				<!--Question Tiles-->
-				<div class="row">
-					<?php
+				<div class="row"><?php
 					//Draw each question tile on the left navbar
 					foreach($exam_props['questions'] as $question_id => $question_obj){
 						echo '<div class="col-xs-4 text-center">';
@@ -73,14 +70,16 @@
 						echo '<a href="?controller=question&action=read_for_student&id=' . $question_id . '&exam_id=' . $exam_props['id'] . '"';
 						echo 'class="tile btn btn-' . $question_status . '" id="question-' . $question_id . '-exam-' . $exam_props['id'] . '">';
 						echo '<span class="tile-number">' . $question_counter . '</span>';
-						echo '<div><span class="tile-number">' . round($question_obj->value/$total_weight*100) . 'pts</span></div>';
+						$q_tile_point_val = round($question_obj->value/$total_weight*100);
+						if($q_tile_point_val < 1){
+							$q_tile_point_val = 1;
+						}
+						echo '<div><span class="tile-number">' . $q_tile_point_val . 'pts</span></div>';
 						echo '</a></div>';
 
 						$question_counter++;
 					}
-                    ?>
-
-				</div>
+?></div>
 			</div>
 
 			<!--Tile Colors Legend-->
@@ -103,9 +102,13 @@
 				<div class="col-xs-12">
 
 					<!--Question Index and Point Value-->
-					<h2>
-						Q<?php echo $q_pos . ' - ' . round($question_props['weight']/$total_weight*100);?>pts
-					</h2>
+					<h2>Q<?php 
+						 $q_point_val = round($question_props['weight']/$total_weight*100);
+						 if($q_point_val < 1){
+							 $q_point_val = 1;
+						 }
+						 echo $q_pos . ' - ' . $q_point_val;
+						 ?>pts</h2>
 
 					<!--Collapsible Instructions Area-->
 					<div>
@@ -114,9 +117,7 @@
 						</h4>
 
 						<div id="instructions" class="collapse in">
-							<p id="prompt">
-								<?php echo htmlspecialchars($question_props['instructions']);?>
-							</p>
+							<p id="prompt"><?php echo htmlspecialchars($question_props['instructions']);?></p>
 						</div>
 					</div>
 
@@ -127,9 +128,7 @@
 						</h4>
 						<div id="start_code" class="collapse">
 							<p id=prompt1>
-								<pre>
-									<?php echo $question_props['start_code'];?>
-								</pre>
+								<pre><?php echo $question_props['start_code'];?></pre>
 							</p>
 						</div>
 					</div>
@@ -157,9 +156,7 @@
 
 				<!--Code Input Area-->
 				<div class="col-xs-6 height-100 overflow-hidden pad-0">
-					<textarea id="code" name="code">
-						<?php echo $start_area_code;?>
-					</textarea>
+					<textarea id="code" name="code"><?php echo $start_area_code;?></textarea>
 				</div>
 
 				<!--Code and Graphics Output Area-->
@@ -199,6 +196,7 @@
 		var current_question_id = <?php echo $current_question_id;?>;
 		var trying_last = <?php echo $trying_last;?>;
 		var link = <?php echo $link;?>;
+		var test_code = <?php echo json_encode($question_props['test_code']); ?>;
 	</script>
 	<script src="js/question_editor.js"></script>
 	<?php

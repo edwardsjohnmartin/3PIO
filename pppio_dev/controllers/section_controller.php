@@ -168,6 +168,7 @@ class SectionController extends BaseController{
 				require_once('models/lesson.php');
 
 				$concepts = concept::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
+
 				$exams = exam::get_all_for_section_and_student($_GET['id'], $_SESSION['user']->get_id());
 				$lesson_has_exercises = Lesson::get_all_check_for_exercises();
 

@@ -28,11 +28,15 @@ $question_cells = '';
 //Go through each question and generate an html string for the headers and cells
 foreach($questions as $q_key => $q_value){
 	//Use $q_index to name questions that don't have a name
+	$q_point_val =  round($q_value->weight/$exam_weight*100);
+	if($q_point_val < 1){
+		$q_point_val = 1;
+	}
 	if($q_value->name !== ''){
-	    $question_headers .= '<th>' . $q_value->name . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
+	    $question_headers .= '<th>' . $q_value->name . ' (' . $q_point_val . ')</th>';
 	}
 	else{
-	    $question_headers .= '<th>Q' . $q_index . ' (' . round($q_value->weight/$exam_weight*100) . ')</th>';
+	    $question_headers .= '<th>Q' . $q_index . ' (' . $q_point_val . ')</th>';
 	}
 
 	$q_index++;
@@ -40,23 +44,14 @@ foreach($questions as $q_key => $q_value){
 	$score_var = 0;
 
 	foreach($scores as $s_key => $s_value){
-		if($s_value->question_id == $q_value->id){		
-			//This is hardcoded to account for a small portion of students that got a .5 for a score on a question due to a bug
-			//The bug is now fixed so this can be deleted before the next semester 10/23/2017
-			if($s_value->score == 0.5){
-			    $score_var = 0;
-			    break;
-			}
-			else{
-			    //Show question weight as a number out of 100
-				$score_var = $s_value->score * round($q_value->weight/$exam_weight*100);
-				$student_score += $s_value->score * $q_value->weight;
-				break;
-			}
+		if($s_value->question_id == $q_value->id){
+			//Show question weight as a number out of 100
+			$score_var = $s_value->score * $q_point_val;
+			$student_score += $s_value->score * $q_value->weight;
+			break;
 		}
 	}
-
-	$question_cells .= '<td class="warning">' . $score_var . '</td>';
+	$question_cells .= '<td class="warning">' . round($score_var, 2) . '</td>';
 }
 ?>
 
@@ -74,7 +69,7 @@ foreach($questions as $q_key => $q_value){
 	<tbody>
 		<tr>
 			<?php echo $question_cells;?>
-			<td class="warning"><?php echo round($student_score/$exam_weight*100);?></td>
+			<td class="warning"><?php echo round($student_score/$exam_weight*100, 2);?></td>
 		</tr>
 	</tbody>
 </table>

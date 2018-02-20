@@ -175,8 +175,10 @@
 
     <?php 
 	}
-	require_once('views/exam/exam_table.php');
+	
 	} else {
 		echo '<h1>' . $section->get_properties()['name'] . '</h1>';
 		echo '<h3>No concepts exist in this section</h3>';
-	}?>
+	}
+	require_once('views/exam/exam_table.php');
+	?>

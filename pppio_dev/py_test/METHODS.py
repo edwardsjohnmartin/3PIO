@@ -106,7 +106,10 @@ def test_val(var_name, var_val):
     __returns.append(__VALIDATE_VAR(var_name, var_type, var_val))
 
 def test_type(var_name, var_type):
-    __returns.append(__VALIDATE_VAR(var_name, var_type))
+    __ret = __VALIDATE_VAR(var_name, var_type)
+    if __ret != None:
+        __returns.append(__ret)
+    #__returns.append(__VALIDATE_VAR(var_name, var_type))
 
 def test_func(func_name, desired_return, *params):
     __returns.append(__VALIDATE_FUNC(func_name, desired_return, *params))
@@ -146,3 +149,19 @@ def __TEST(student_input, student_output):
 
     return problems
 
+def __TEST_EXAM(student_input, student_output):
+    error_messages = []
+
+    for thing in __returns:
+        if thing != True:
+            error_messages.append("Incorrect")
+
+    for otherthing in __in_strings:
+        if otherthing not in student_input:
+            error_messages.append("Incorrect")
+
+    if(__out_string[0] != None):
+        if student_output != __out_string[0]:
+            error_messages.append("Incorrect")
+
+    return error_messages

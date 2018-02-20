@@ -22,7 +22,8 @@ class QuestionController extends BaseController{
 					$model = new $this->model_name();
 					//Default weight to 10 if nothing was entered
 					if(empty($_POST['weight'])){
-						$_POST['weight'] = "10";}
+						$_POST['weight'] = "10";
+					}
 					$model->set_properties($_POST);
 					//The lesson has to belong to the user
 					if($model->is_valid() && array_key_exists($model->get_properties()['exam'], $exams)) {
@@ -40,7 +41,8 @@ class QuestionController extends BaseController{
 			}
 			$view_to_show = 'views/' . strtolower($this->model_name) . '/create.php';
 			if(!file_exists($view_to_show)){
-				$view_to_show = 'views/shared/create.php';}
+				$view_to_show = 'views/shared/create.php';
+			}
 
 			$properties = $this->model_name::get_available_properties();
 			$types = $this->model_name::get_types();
@@ -109,7 +111,7 @@ class QuestionController extends BaseController{
 	//Called from AJAX. Saves the student code to the database when they press run while completing a question.
 	public function save_code(){
 		$success = false;
-		if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']) && isset($_POST['completion_status_id'])){
+		if (isset($_POST['question_id']) && isset($_POST['exam_id']) && isset($_POST['contents']) && isset($_POST['completion_status_id']) && isset($_POST['score_multiplier'])){
 			require_once('models/exam.php');
 			require_once('models/section.php');
 
@@ -144,7 +146,9 @@ class QuestionController extends BaseController{
 					return call('pages', 'error');
 				}
 
-				question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents'], $_POST['completion_status_id']);
+				$score = floatval($_POST['score_multiplier']);
+
+				question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents'], $_POST['completion_status_id'], $score);
 				$success = true;
 			}
 			else{

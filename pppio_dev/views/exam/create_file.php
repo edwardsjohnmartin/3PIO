@@ -1,5 +1,7 @@
 <?php
 require_once('views/shared/html_helper.php');
+require_once('views/shared/MultiSelect.php');
+
 if($success)
 {
 	echo '<h2>Exam and questions created:</h2>';
@@ -20,8 +22,11 @@ if($success)
 else
 {
 	echo $this->model_name;
-	$properties = array('file' => null);
-	$types = array('file' => TYPE::FILE);
+
+	$sections_list = Section::get_pairs();
+
+	$properties = array('file' => null, 'section' => $sections_list);
+	$types = array('file' => TYPE::FILE, 'section' => Type::SECTION);
 	echo HtmlHelper::form($types, $properties);
 }
 ?>
