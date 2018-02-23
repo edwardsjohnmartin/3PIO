@@ -46,6 +46,8 @@ function run() {
     var mod;
     var program = editor.getValue() + "\n" + document.getElementById('test_code_to_run').innerText;
 
+    var test_code = document.getElementById('test_code_for_score').innerText;
+
     var numTests = 0;
     numTests += (test_code.split("test_val").length - 1);
     numTests += (test_code.split("test_type").length - 1);
@@ -130,6 +132,9 @@ function save(question_id, exam_id, contents, completion_status_id, score_multip
         },
         error: function () { markError('Unable to save code.'); }
     });
+
+    var points = parseFloat((q_point_val * score_multiplier).toFixed(2).toString());
+    document.getElementById("h_points").innerHTML = "Q" + q_pos + " - " + points.toString() + "/" + q_point_val + "pts";  
 }
 
 function completeExercise() {

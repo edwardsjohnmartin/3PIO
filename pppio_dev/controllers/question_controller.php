@@ -149,6 +149,7 @@ class QuestionController extends BaseController{
 				$score = floatval($_POST['score_multiplier']);
 
 				question::update_code_file($_POST['question_id'], $_POST['exam_id'], $user_id, $_POST['contents'], $_POST['completion_status_id'], $score);
+
 				$success = true;
 			}
 			else{

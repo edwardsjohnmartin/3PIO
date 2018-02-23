@@ -1,4 +1,5 @@
 <?php
+//TODO: This is just a mess. 
 $finished_arr = $_SESSION['arr'];
 unset($_SESSION['arr']);
 if(empty($finished_arr)){

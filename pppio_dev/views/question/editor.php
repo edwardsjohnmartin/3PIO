@@ -1,5 +1,6 @@
 <div id="test-form">
 	<?php
+
 	//This is the view that is used when a student does a question on an exam
 	//TODO: Figure out how to css style better to handle scaling objects to screen resolution better and resizing with zoom.
 
@@ -24,7 +25,7 @@
 	else{
 		$start_area_code = $question_props['contents'];
 	}
-    ?>
+	?>
 
 	<!--Window Content-->
 	<div class="row height-100 overflow-hidden">
@@ -102,7 +103,7 @@
 				<div class="col-xs-12">
 
 					<!--Question Index and Point Value-->
-					<h2>Q<?php 
+					<h2 id="h_points">Q<?php 
 						 $q_point_val = round($question_props['weight']/$total_weight*100);
 						 if($q_point_val < 1){
 							 $q_point_val = 1;
@@ -187,16 +188,19 @@
 	echo '<script type="text/x-python" id="test_code_to_run">';
 	require('py_test/METHODS.py');
 	echo $question_props['test_code'] . '</script>';
-    ?>
+	echo '<script type="text/x-python" id="test_code_for_score">';
+	echo $question_props['test_code'] . '</script>';
+	?>
 	<script>
 		var current_tile_id = "question-<?php echo $current_question_id . '-exam-' . $exam_props['id'];?>";
 		document.getElementById(current_tile_id).scrollIntoView();
+		var q_point_val = <?php echo $q_point_val;?>;
+		var q_pos = <?php echo $q_pos;?>;
 		var user_id = <?php echo $_SESSION['user']->get_id();?>;
 		var exam_id = <?php echo $exam_props['id'];?>;
 		var current_question_id = <?php echo $current_question_id;?>;
 		var trying_last = <?php echo $trying_last;?>;
 		var link = <?php echo $link;?>;
-		var test_code = <?php echo json_encode($question_props['test_code']); ?>;
 	</script>
 	<script src="js/question_editor.js"></script>
 	<?php

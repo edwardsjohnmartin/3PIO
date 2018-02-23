@@ -149,6 +149,7 @@
     <Compile Include="views\exam\create_file.php" />
     <Compile Include="views\exam\index.php" />
     <Compile Include="views\exam\exam_table.php" />
+    <Compile Include="views\exam\update.php" />
     <Compile Include="views\exam\update_times.php" />
     <Compile Include="views\exercise\editor.php" />
     <Compile Include="views\exercise\editor_old.php" />

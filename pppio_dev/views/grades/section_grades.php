@@ -45,20 +45,25 @@ if(count($exams) > 0){
 
 				//Check if the student has an answer for a question. Get their score if they do or default the score to 0
 				if(array_key_exists($s_key, $exam_scores) and array_key_exists($q_value->id, $exam_scores[$s_key])){
-					$cell_score = intval($exam_scores[$s_key][$q_value->id]);
+					$cell_score = floatval($exam_scores[$s_key][$q_value->id]);
 
 					//Color the cell if the student had an answer. Green for correct answer, red for incorrect answer
-					if($cell_score === 0){
-						$cell_class_string = "class=danger";}
-					else{
-						$cell_class_string = "class=success";}
+					if($cell_score == 1){
+						$cell_class_string = "class=success";
+					}
+					else if($cell_score == 0){
+						$cell_class_string = "class=danger";
+					}
+					else {
+						$cell_class_string = "class=warning";
+					}
 				}
 				else{
 					$cell_score = 0;
 				}
 
 				$total_score += $cell_score * $q_value->weight;
-				$body_string .= '<td ' . $cell_class_string . '><a title="Review Question" href="?controller=exam&action=review_exam&stud_id=' . $s_key . '&exam_id=' . $exam_value['id'] . '&question_id=' . $exam_value['questions'][$q_key]->id . '">' . $cell_score * $q_value->weight . '</a></td>';
+				$body_string .= '<td ' . $cell_class_string . '><a title="Review Question" href="?controller=exam&action=review_exam&stud_id=' . $s_key . '&exam_id=' . $exam_value['id'] . '&question_id=' . $exam_value['questions'][$q_key]->id . '">' . round($cell_score * $q_value->weight, 2) . '</a></td>';
 				$q_index++;
 
 			}
@@ -69,8 +74,8 @@ if(count($exams) > 0){
 			}
 			$header_filled = true;
 
-			$body_string .= '<td>' . $total_score . '</td>';
-			$body_string .= '<td>' . round($total_score / $total_weight * 100) . '</td></tr>';
+			$body_string .= '<td>' . round($total_score, 2) . '</td>';
+			$body_string .= '<td>' . round($total_score / $total_weight * 100, 2) . '</td></tr>';
 		}
 		$body_string .= '</tbody></table>';
 		$html_string .= $body_string;
