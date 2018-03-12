@@ -21,7 +21,9 @@
 
 	//Nothing below will be seen for students
 	if($is_ta || $is_owner)
-		echo '<div><a class="btn btn-primary" href="?controller=lesson&action=read_for_concept_for_student&concept_id='.$model->get_id().'">Preview</a></div>';
+		echo '<div><a class="btn btn-primary" href="?controller=lesson&action=read_for_concept_for_student&concept_id='.$model->get_id().'">Preview</a>';
+		echo '<button class="btn btn-primary" onclick="enable_btn_complete(' . $model->get_id() . ')">Click to Enable Complete Button</button>';
+		echo '<a id="btn_complete" class="btn btn-primary disabled">Complete For All Users</a></div>';
 	{
 ?>
 
@@ -70,10 +72,19 @@
 					}
 					echo '</tr>';
 				}
-			?>
+            ?>
 		</tbody>
 	</table>
 </div>
+<script>
+	function enable_btn_complete(c_id) {
+		console.log("c_id is: " + c_id)
+		if (confirm("Do you want to enable the button to auto-complete exercises for all users?")) {
+			document.getElementById("btn_complete").href = "?controller=concept&action=complete_concept_for_all_users&concept_id=" + c_id;
+			document.getElementById("btn_complete").classList.remove("disabled");
+		}
+	}
+</script>
 <?php 
 	}
 ?>

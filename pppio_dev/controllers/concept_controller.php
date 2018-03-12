@@ -166,6 +166,31 @@
 			require_once('views/shared/layout.php');
 		}
 
+		public function complete_concept_for_all_users(){
+			require_once('models/section.php');
+
+			//Populate models
+			$concept_id = $_GET['concept_id'];
+			$concept = Concept::get($concept_id);
+			$concept_props = $concept->get_properties();
+			$section_id = $concept_props['section']->key;
+			$section = Section::get($section_id);
+			$section_props = $section->get_properties();
+
+			//Complete all concepts for all students up to the concept the feature was accessed in
+			foreach($section_props['students'] as $s_key => $s_value){
+				foreach($section_props['concepts'] as $c_key => $c_value){
+					Concept::complete_entire_concept($c_key, $s_key);
+					if($c_key == intval($concept_id)){
+						break;
+					}
+				}
+			}
+
+			//Reload page to see changes
+			header("Location: ?controller=concept&action=read&id=" . $concept_id);
+		}
+
 		//Ajax call for completing exercises for a student based on the tile selected
 		public function complete_exercises_ajax(){
 			if(!isset($_POST['exercise_id']) or !isset($_POST['lesson_id']) or !isset($_POST['concept_id']) or !isset($_POST['user_id'])){

@@ -10,12 +10,10 @@ require_once('views/shared/Skulpt.php');
     <div class="row no-shrink">
         <div class="col-xs-9">
             <h3><?php echo $project_props['name'];?></h3>
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-target="#description" href="#prompt">Description</a>
-            </h4>
+            <h4 class="panel-title"><a data-toggle="collapse" data-target="#description" href="#prompt">Description</a></h4>
             <div id="description" class="collapse in">
                 <p id="prompt"><?php echo $project_props['description'];?></p>
-            </div>
+			</div>
         </div>
 		<?php
 		//Create a div for the survey buttons if either survey exists
